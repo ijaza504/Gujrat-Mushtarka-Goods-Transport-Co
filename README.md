@@ -10,14 +10,12 @@ Plain HTML, CSS and JavaScript. No build step, no framework, no secrets. Files:
 
 | Item | Where |
 |---|---|
-| Phone, WhatsApp, email | `CONFIG` at top of `script.js` |
-| Office address, hours | Contact section in `index.html` (yellow placeholders) |
-| Google Maps listing | `CONFIG.mapEmbedUrl` (Google Maps > Share > Embed a map > copy the `src="..."` URL only) |
+| Phone, WhatsApp, email, address, hours, map link | Done: header, Contact section and footer in `index.html` |
 | Vehicle payloads, sizes | Fleet cards in `index.html`. Do not add until verified. |
 | Real photos | `images/hero-truck.jpg`, `fans.jpg`, `pottery.jpg`, `warehouse.jpg` (the page shows them automatically once files exist; keep under 300 KB each, ideally 1200 px wide) |
 | Year established, company story | About section |
 | Form connection | Section 4 below |
-| Canonical link and structured data | Commented blocks in `<head>`. Enable only with verified details. |
+| Canonical link | Commented line in `<head>`. Enable after you know your final site address. (Structured data is already enabled with your verified details.) |
 
 Other photo ideas: container loading, household moving. Add `<figure class="slot">` blocks like the existing ones. Use only genuine photos as "our fleet"; the site says stock images are not our fleet.
 

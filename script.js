@@ -1,9 +1,7 @@
 /* ===== EDIT THIS SECTION ONLY (no passwords or API keys here; this file is public) ===== */
 const CONFIG = {
-  phone: "",          // e.g. "+92 3XX XXXXXXX"  (leave empty until verified)
-  whatsapp: "",       // digits with country code, e.g. "923XXXXXXXXX"
-  email: "",          // e.g. "info@yourdomain.com"
-  mapEmbedUrl: "",    // Google Maps "Embed a map" src URL for the verified listing
+  whatsapp: "923066255136",  // international format, no + and no leading zero
+  email: "ijaza504@gmail.com",
   formEndpoint: ""    // Formspree URL or Google Apps Script web-app URL. Empty = form will NOT claim success.
 };
 /* ======================================================================================= */
@@ -19,19 +17,7 @@ const btn = document.querySelector(".menu-btn"), nav = document.getElementById("
 btn.addEventListener("click", () => { const o = nav.classList.toggle("open"); btn.setAttribute("aria-expanded", o); });
 nav.addEventListener("click", e => { if (e.target.tagName === "A") { nav.classList.remove("open"); btn.setAttribute("aria-expanded", false); } });
 
-// Contact placeholders: replaced only when real values are configured
-function setContact(key, href, text) {
-  const el = document.querySelector(`[data-contact="${key}"]`);
-  if (el && text) { el.href = href; el.textContent = text; el.classList.remove("ph"); }
-}
-setContact("phone", "tel:" + CONFIG.phone.replace(/[^+\d]/g, ""), CONFIG.phone);
-setContact("whatsapp", "https://wa.me/" + CONFIG.whatsapp.replace(/\D/g, ""), CONFIG.whatsapp && "+" + CONFIG.whatsapp.replace(/\D/g, ""));
-setContact("email", "mailto:" + CONFIG.email, CONFIG.email);
-if (CONFIG.mapEmbedUrl.startsWith("https://www.google.com/maps/embed")) {
-  const m = document.getElementById("map");
-  m.classList.remove("ph");
-  m.innerHTML = `<iframe title="Map showing our location in Gujrat" loading="lazy" src="${CONFIG.mapEmbedUrl}"></iframe>`;
-}
+// Contact numbers, email, map and hours are written directly in index.html.
 
 // Form
 const form = document.getElementById("quoteForm"), msg = document.getElementById("formMsg");
@@ -72,7 +58,8 @@ form.addEventListener("submit", async e => {
 
   if (!CONFIG.formEndpoint) {
     // Honest fallback: nothing was sent.
-    show("info", `<strong>Online sending is not set up yet, so your request has NOT been sent.</strong> Copy the details below and send them to us by WhatsApp, phone or email.<textarea readonly rows="8" id="copyBox">${esc(asText(data))}</textarea><button type="button" class="btn primary" id="copyBtn">Copy request</button>`);
+    const t = asText(data);
+    show("info", `<strong>Online sending is not set up yet, so your request has NOT been sent yet.</strong> Send it to us now by WhatsApp or email, or copy the details.<textarea readonly rows="8" id="copyBox">${esc(t)}</textarea><div class="actions"><a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(t)}">Send on WhatsApp</a><a class="btn primary" href="mailto:${CONFIG.email}?subject=${encodeURIComponent("Quote request")}&body=${encodeURIComponent(t)}">Send by email</a><button type="button" class="btn outline" id="copyBtn">Copy request</button></div>`);
     document.getElementById("copyBtn").onclick = async () => {
       try { await navigator.clipboard.writeText(asText(data)); document.getElementById("copyBtn").textContent = "Copied"; }
       catch { document.getElementById("copyBox").select(); }

@@ -80,3 +80,27 @@ details p{margin:0 0 14px;color:var(--mut)}
  form .grid{grid-template-columns:1fr}.section{padding:44px 0}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* ---- Contact details update ---- */
+.btn.wa{background:#25D366;color:#063b1c}.btn.wa:hover{background:#3be37b}
+.btn.outline{background:#fff;border-color:var(--navy);color:var(--navy)}
+.hdr-wa{margin-left:auto;white-space:nowrap}
+.contact-actions{margin:0 0 24px}
+.contact dd a{font-weight:700}
+.contact address{font-style:normal}
+.phones{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.phones a{display:inline-block;min-height:44px;line-height:28px;padding:8px 14px;background:#fff;border:1.5px solid #9fb6d1;border-radius:8px;text-decoration:none}
+.phones a:hover{border-color:var(--navy)}
+.hours{list-style:none;margin:0;padding:0;max-width:380px}
+.hours li{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid #cfe0f3;font-weight:400}
+.hours .closed{color:#b3261e}
+.map-card{background:#fff;border:1px solid #cfe0f3;border-top:4px solid var(--gold);border-radius:var(--r);padding:24px;align-self:start}
+.map-card p{margin:0 0 16px;color:var(--mut)}.map-card .small{margin:12px 0 0}
+.site-footer a{color:#fff}
+.foot-contact{display:flex;flex-wrap:wrap;gap:6px 22px}
+.foot-contact a{font-weight:700}
+#formMsg .actions{margin:12px 0 0}
+@media(min-width:861px){.hdr-wa{order:3;margin-left:6px}}
+@media(max-width:1040px){nav a{padding:8px 7px;font-size:.88rem}}
+@media(max-width:860px){.hdr-wa{padding:8px 12px;font-size:.9rem}}
+@media(max-width:420px){.brand svg{display:none}.brand small{display:none}.menu-btn{padding:8px 10px}.bar{gap:8px}}
