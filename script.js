@@ -2,7 +2,7 @@
 const CONFIG = {
   whatsapp: "923066255136",  // international format, no + and no leading zero
   email: "ijaza504@gmail.com",
-  formEndpoint: ""    // Formspree URL or Google Apps Script web-app URL. Empty = form will NOT claim success.
+  formEndpoint: "https://formspree.io/f/xoejwngy"    // Formspree URL or Google Apps Script web-app URL. Empty = form will NOT claim success.
 };
 /* ======================================================================================= */
 
