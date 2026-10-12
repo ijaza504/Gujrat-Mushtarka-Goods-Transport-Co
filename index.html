@@ -344,7 +344,11 @@
       <h2 class="urdu-text text-center">آن لائن کرایہ اور بکنگ معلوم کریں</h2>
       <p class="text-center eng-sub">Request a Quick Quotation</p>
       
-      <form id="quoteForm" style="margin-top:24px;">
+      <form id="quoteForm" action="https://formsubmit.co/ijaza504@gmail.com" method="POST" style="margin-top:24px;">
+        <!-- Redirect after submission (Optional) -->
+        <input type="hidden" name="_next" value="https://ijaza504.github.io/Gujrat-Mushtarka-Goods-Transport-Co/">
+        <input type="hidden" name="_subject" value="New Quote Request - Gujrat Mushtarka Transport">
+        
         <div class="form-grid">
           <label>آپ کا نام (Name) *<input type="text" name="name" required placeholder="مثلاً: محمد علی"></label>
           <label>فون نمبر (Phone Number) *<input type="tel" name="phone" required placeholder="03XX-XXXXXXX"></label>
@@ -354,11 +358,11 @@
           <label>سامان کی نوعیت (Cargo Type) *
             <select name="cargoType" required>
               <option value="">منتخب کریں</option>
-              <option>الیکٹرک فین (Electric Fans)</option>
-              <option>پاٹری / سیرامکس (Pottery)</option>
-              <option>کمرشل کارگو (Commercial Cargo)</option>
-              <option>گھریلو سامان (Household Shifting)</option>
-              <option>دیگر (Other)</option>
+              <option value="Electric Fans">الیکٹرک فین (Electric Fans)</option>
+              <option value="Pottery">پاٹری / سیرامکس (Pottery)</option>
+              <option value="Commercial Cargo">کمرشل کارگو (Commercial Cargo)</option>
+              <option value="Household Shifting">گھریلو سامان (Household Shifting)</option>
+              <option value="Other">دیگر (Other)</option>
             </select>
           </label>
           <label class="full-width">تفصیل یا نوٹ (Additional Details)<textarea name="notes" rows="3" placeholder="تعداد، اندازاً وزن وغیرہ لکھیں..."></textarea></label>
@@ -368,7 +372,6 @@
     </div>
   </div>
 </section>
-
 <!-- Contact Section -->
 <section id="contact" class="section">
   <div class="wrap two">
