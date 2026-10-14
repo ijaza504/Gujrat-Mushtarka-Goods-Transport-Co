@@ -48,7 +48,6 @@ body {
 .header-title h2 { color: var(--navy); margin: 0; }
 .header-title p { color: #64748B; margin: 5px 0 0; font-weight: 600; }
 
-/* Auth Box Styles */
 .auth-box {
   max-width: 420px;
   margin: 40px auto;
@@ -63,7 +62,6 @@ body {
 .tab-btn { flex: 1; padding: 10px; border: none; background: none; font-weight: 700; cursor: pointer; color: #64748B; }
 .tab-btn.active { color: var(--navy); border-bottom: 3px solid var(--gold); }
 
-/* Dashboard Styles */
 .user-bar {
   display: flex;
   justify-content: space-between;
@@ -113,6 +111,19 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
 .btn-danger { background: #EF4444; color: #fff; padding: 6px 12px; font-size: 0.8rem; }
 .btn-add { background: #10B981; color: #fff; font-size: 0.85rem; padding: 6px 12px; }
 
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: #FEF3C7;
+  color: #D97706;
+}
+
+.status-badge.delivered { background: #D1FAE5; color: #059669; }
+.status-badge.ontheway { background: #DBEAFE; color: #1D4ED8; }
+
 .actions-row { display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px; }
 
 /* Watermark Stamp */
@@ -139,10 +150,7 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
   z-index: 10;
 }
 
-.watermark-stamp.topay {
-  border-color: #2563EB;
-  color: #2563EB;
-}
+.watermark-stamp.topay { border-color: #2563EB; color: #2563EB; }
 
 @media print {
   body { background: #fff; padding: 0; }
@@ -154,23 +162,23 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
 </head>
 <body>
 
-<!-- AUTH SECTION (Login / Signup) -->
+<!-- AUTH SECTION -->
 <div id="authSection" class="auth-box">
   <div class="header-title">
     <h3 class="urdu">گجرات مشترکہ کسٹمر پورٹل</h3>
-    <p>Sign In to access your Dashboard</p>
+    <p>Sign In / Sign Up to access Dashboard</p>
   </div>
 
   <div class="auth-tabs">
-    <button type="button" class="tab-btn active" onclick="switchTab('login')">سائن ان (Sign In)</button>
-    <button type="button" class="tab-btn" onclick="switchTab('signup')">نیا اکاؤنٹ (Sign Up)</button>
+    <button type="button" class="tab-btn active" id="tabLoginBtn" onclick="switchTab('login')">سائن ان (Sign In)</button>
+    <button type="button" class="tab-btn" id="tabSignupBtn" onclick="switchTab('signup')">نیا اکاؤنٹ (Sign Up)</button>
   </div>
 
   <!-- Sign In Form -->
-  <form id="loginForm" onsubmit="handleAuth(event, 'login')">
+  <form id="loginForm">
     <div style="margin-bottom:15px;">
-      <label>فون نمبر / ای میل (Phone or Email)</label>
-      <input type="text" id="loginId" required placeholder="03XX-XXXXXXX">
+      <label>ای میل ایڈریس (Email)</label>
+      <input type="email" id="loginEmail" required placeholder="name@example.com">
     </div>
     <div style="margin-bottom:20px;">
       <label>پاس ورڈ (Password)</label>
@@ -180,36 +188,35 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
   </form>
 
   <!-- Sign Up Form -->
-  <form id="signupForm" onsubmit="handleAuth(event, 'signup')" style="display:none;">
+  <form id="signupForm" style="display:none;">
     <div style="margin-bottom:12px;">
       <label>آپ کا نام (Full Name)</label>
       <input type="text" id="signupName" required placeholder="محمد علی">
     </div>
     <div style="margin-bottom:12px;">
-      <label>فون نمبر (Phone Number)</label>
-      <input type="tel" id="signupPhone" required placeholder="03XX-XXXXXXX">
+      <label>ای میل ایڈریس (Email)</label>
+      <input type="email" id="signupEmail" required placeholder="name@example.com">
     </div>
     <div style="margin-bottom:20px;">
       <label>پاس ورڈ بنائیں (Password)</label>
-      <input type="password" id="signupPass" required>
+      <input type="password" id="signupPass" required minlength="6">
     </div>
     <button type="submit" class="btn btn-primary" style="width:100%;">اکاؤنٹ بنائیں (Sign Up)</button>
   </form>
 </div>
 
-
-<!-- PORTAL DASHBOARD SECTION (Hidden by default) -->
+<!-- PORTAL DASHBOARD SECTION -->
 <div id="portalSection" class="container" style="display:none;">
 
   <div id="watermarkStamp" class="watermark-stamp">PAID</div>
 
   <div class="user-bar no-print">
     <div>
-      <span>خوش آمدید! </span><strong id="userNameDisplay" class="urdu">کسٹمر</strong>
+      <span>خوش آمدید! </span><strong id="userNameDisplay">کسٹمر</strong>
     </div>
     <div>
       <button class="btn btn-primary small" onclick="showNewBookingForm()">+ نیا آرڈر / بکنگ کریں</button>
-      <button class="btn btn-danger small" onclick="logout()">لاگ آؤٹ</button>
+      <button class="btn btn-danger small" id="logoutBtn">لاگ آؤٹ</button>
     </div>
   </div>
 
@@ -224,16 +231,17 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
           <th>وصول کنندہ</th>
           <th>منزل</th>
           <th>ادائیگی</th>
-          <th>تفصیل / پرنٹ</th>
+          <th>اسٹیٹس (Status)</th>
+          <th>پرنٹ</th>
         </tr>
       </thead>
       <tbody id="historyTableBody">
-        <!-- Dynamic History Rows -->
+        <tr><td colspan="7" style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے...</td></tr>
       </tbody>
     </table>
   </div>
 
-  <!-- NEW BOOKING FORM (Hidden initially) -->
+  <!-- NEW BOOKING FORM -->
   <div id="bookingFormView" style="display:none;">
     
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;" class="no-print">
@@ -241,7 +249,7 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
       <h3 class="urdu" style="margin:0;">نیا بکنگ فارم</h3>
     </div>
 
-    <form id="biltyForm" onsubmit="saveBooking(event)">
+    <form id="biltyForm">
       
       <div class="grid-3">
         <div>
@@ -339,7 +347,7 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
 
       <div class="actions-row no-print">
         <button type="button" class="btn btn-primary" onclick="window.print()">🖨️ پرنٹ / Save PDF</button>
-        <button type="submit" class="btn btn-navy">آرڈر بھیجیں اور محفوظ کریں</button>
+        <button type="submit" class="btn btn-navy" id="sendOrderBtn">آرڈر بھیجیں (Send Order)</button>
       </div>
 
     </form>
@@ -347,66 +355,193 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
 
 </div>
 
+<!-- Firebase SDKs -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDsHjE5-6yoKjZG7mU7vKenvJtilvvXthg",
+  authDomain: "gujrat-mushtarka-transport.firebaseapp.com",
+  projectId: "gujrat-mushtarka-transport",
+  storageBucket: "gujrat-mushtarka-transport.firebasestorage.app",
+  messagingSenderId: "244664894427",
+  appId: "1:244664894427:web:b54baa08d078d5ef499dfe"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+
+// Auth State Listener
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    currentUser = user;
+    document.getElementById('userNameDisplay').innerText = user.displayName || user.email;
+    document.getElementById('authSection').style.display = 'none';
+    document.getElementById('portalSection').style.display = 'block';
+    loadUserBookings();
+  } else {
+    currentUser = null;
+    document.getElementById('authSection').style.display = 'block';
+    document.getElementById('portalSection').style.display = 'none';
+  }
+});
+
+// Sign In
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value;
+  const pass = document.getElementById('loginPass').value;
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch (err) {
+    alert("لاگ ان ناکام رہا: " + err.message);
+  }
+});
+
+// Sign Up
+document.getElementById('signupForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const name = document.getElementById('signupName').value;
+  const email = document.getElementById('signupEmail').value;
+  const pass = document.getElementById('signupPass').value;
+  try {
+    const res = await createUserWithEmailAndPassword(auth, email, pass);
+    await updateProfile(res.user, { displayName: name });
+    location.reload();
+  } catch (err) {
+    alert("سائن اپ ناکام رہا: " + err.message);
+  }
+});
+
+// Logout
+document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
+
+// Save Booking & Trigger Email Alert
+document.getElementById('biltyForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const sendBtn = document.getElementById('sendOrderBtn');
+  sendBtn.disabled = true;
+  sendBtn.innerText = "ارسال ہو رہا ہے...";
+
+  const bookingData = {
+    userId: currentUser.uid,
+    userEmail: currentUser.email,
+    userName: currentUser.displayName || currentUser.email,
+    date: document.getElementById('bookingDate').value,
+    biltyNo: document.getElementById('biltyNo').value,
+    paymentMode: document.getElementById('paymentMode').value,
+    senderName: document.getElementById('senderName').value,
+    receiverName: document.getElementById('receiverName').value,
+    fromCity: "Gujrat",
+    destCity: document.getElementById('destCity').value === "Manual" ? document.getElementById('manualCity').value : document.getElementById('destCity').value,
+    itemType: document.getElementById('itemType').value,
+    totalQty: document.getElementById('totalQty').innerText,
+    status: "Goods received", // Default Status
+    createdAt: new Date()
+  };
+
+  try {
+    // 1. Save to Firebase
+    await addDoc(collection(db, "bookings"), bookingData);
+
+    // 2. Send Instant Email Alert to ijaza504@gmail.com
+    fetch("https://formsubmit.co/ajax/ijaza504@gmail.com", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        subject: `New Booking Order #${bookingData.biltyNo}`,
+        Sender: bookingData.senderName,
+        Receiver: bookingData.receiverName,
+        Destination: bookingData.destCity,
+        Payment: bookingData.paymentMode,
+        TotalQty: bookingData.totalQty,
+        CustomerEmail: currentUser.email
+      })
+    });
+
+    alert("آپ کا آرڈر کامیابی سے محفوظ ہو گیا ہے اور ایڈمن کو نوٹیفکیشن بھیج دیا گیا ہے!");
+    showHistoryView();
+  } catch (err) {
+    alert("آرڈر سیو کرنے میں مسئلہ آیا: " + err.message);
+  } finally {
+    sendBtn.disabled = false;
+    sendBtn.innerText = "آرڈر بھیجیں (Send Order)";
+  }
+});
+
+// Load Bookings for Current User
+async function loadUserBookings() {
+  const tbody = document.getElementById('historyTableBody');
+  tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے...</td></tr>';
+  
+  try {
+    const q = query(collection(db, "bookings"), where("userId", "==", currentUser.uid));
+    const snap = await getDocs(q);
+    
+    if(snap.empty) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">کوئی پرانی بکنگ موجود نہیں ہے۔</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = '';
+    snap.forEach(doc => {
+      const b = doc.data();
+      tbody.innerHTML += `
+        <tr>
+          <td>${b.date}</td>
+          <td><strong>${b.biltyNo}</strong></td>
+          <td>${b.receiverName}</td>
+          <td>${b.destCity}</td>
+          <td><strong style="color:${b.paymentMode === 'PAID' ? 'green' : 'blue'};">${b.paymentMode}</strong></td>
+          <td><span class="status-badge">${b.status || 'Goods received'}</span></td>
+          <td><button class="btn small btn-primary" onclick="window.print()">پرنٹ / PDF</button></td>
+        </tr>
+      `;
+    });
+  } catch(err) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">ڈیٹا لوڈ کرنے میں ناکامی۔</td></tr>';
+  }
+}
+
+window.switchTab = function(tab) {
+  if(tab === 'login') {
+    document.getElementById('loginForm').style.display = 'block';
+    document.getElementById('signupForm').style.display = 'none';
+    document.getElementById('tabLoginBtn').classList.add('active');
+    document.getElementById('tabSignupBtn').classList.remove('active');
+  } else {
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('signupForm').style.display = 'block';
+    document.getElementById('tabLoginBtn').classList.remove('active');
+    document.getElementById('tabSignupBtn').classList.add('active');
+  }
+};
+
+window.showNewBookingForm = function() {
+  document.getElementById('historyView').style.display = 'none';
+  document.getElementById('bookingFormView').style.display = 'block';
+  document.getElementById('bookingDate').valueAsDate = new Date();
+  document.getElementById('biltyNo').value = "GMGT-" + Math.floor(100000 + Math.random() * 900000);
+};
+
+window.showHistoryView = function() {
+  document.getElementById('historyView').style.display = 'block';
+  document.getElementById('bookingFormView').style.display = 'none';
+  if(currentUser) loadUserBookings();
+};
+</script>
+
 <script>
 const partners = {
   "Karachi": { name: "GUJRAT HAZARA GOODS KARACHI", address: "QUAID E AZAM TRUCK STAND - KARACHI", contact: "0300-00000000" },
   "Peshawar": { name: "GUJRAT MUSHTARKA GOODS", address: "PESHAWAR", contact: "0300-00000000" },
   "Rawalpindi": { name: "AL SAAD GOODS FORWARDING AGENCY", address: "GUNJ MANDI - RAWALLPINDI", contact: "0300-00000000" }
 };
-
-let currentUser = null;
-let bookings = JSON.parse(localStorage.getItem('userBookings')) || [];
-
-function switchTab(tab) {
-  const loginForm = document.getElementById('loginForm');
-  const signupForm = document.getElementById('signupForm');
-  const btns = document.querySelectorAll('.tab-btn');
-  
-  if(tab === 'login') {
-    loginForm.style.display = 'block';
-    signupForm.style.display = 'none';
-    btns[0].classList.add('active');
-    btns[1].classList.remove('active');
-  } else {
-    loginForm.style.display = 'none';
-    signupForm.style.display = 'block';
-    btns[0].classList.remove('active');
-    btns[1].classList.add('active');
-  }
-}
-
-function handleAuth(e, type) {
-  e.preventDefault();
-  if(type === 'signup') {
-    const name = document.getElementById('signupName').value;
-    currentUser = { name: name };
-  } else {
-    currentUser = { name: "محمد علی" };
-  }
-  document.getElementById('userNameDisplay').innerText = currentUser.name;
-  document.getElementById('authSection').style.display = 'none';
-  document.getElementById('portalSection').style.display = 'block';
-  loadBookingHistory();
-}
-
-function logout() {
-  currentUser = null;
-  document.getElementById('authSection').style.display = 'block';
-  document.getElementById('portalSection').style.display = 'none';
-}
-
-function showNewBookingForm() {
-  document.getElementById('historyView').style.display = 'none';
-  document.getElementById('bookingFormView').style.display = 'block';
-  document.getElementById('bookingDate').valueAsDate = new Date();
-  document.getElementById('biltyNo').value = "GMGT-" + Math.floor(100000 + Math.random() * 900000);
-}
-
-function showHistoryView() {
-  document.getElementById('historyView').style.display = 'block';
-  document.getElementById('bookingFormView').style.display = 'none';
-  loadBookingHistory();
-}
 
 function handleCityChange() {
   const city = document.getElementById('destCity').value;
@@ -454,42 +589,6 @@ function updateWatermark() {
   const stamp = document.getElementById('watermarkStamp');
   stamp.innerText = mode;
   stamp.className = mode === "PAID" ? "watermark-stamp" : "watermark-stamp topay";
-}
-
-function saveBooking(e) {
-  e.preventDefault();
-  const booking = {
-    date: document.getElementById('bookingDate').value,
-    no: document.getElementById('biltyNo').value,
-    receiver: document.getElementById('receiverName').value,
-    city: document.getElementById('destCity').value,
-    mode: document.getElementById('paymentMode').value
-  };
-  bookings.push(booking);
-  localStorage.setItem('userBookings', JSON.stringify(bookings));
-  alert('آپ کا آرڈر کامیابی سے محفوظ اور ارسال کر دیا گیا ہے!');
-  showHistoryView();
-}
-
-function loadBookingHistory() {
-  const tbody = document.getElementById('historyTableBody');
-  tbody.innerHTML = '';
-  if(bookings.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">کوئی پرانی بکنگ موجود نہیں ہے۔</td></tr>';
-    return;
-  }
-  bookings.forEach(b => {
-    tbody.innerHTML += `
-      <tr>
-        <td>${b.date}</td>
-        <td><strong>${b.no}</strong></td>
-        <td>${b.receiver}</td>
-        <td>${b.city}</td>
-        <td><span style="color:${b.mode === 'PAID' ? 'green' : 'blue'}; font-weight:bold;">${b.mode}</span></td>
-        <td><button class="btn small btn-primary" onclick="window.print()">پرنٹ / PDF</button></td>
-      </tr>
-    `;
-  });
 }
 
 updateWatermark();
