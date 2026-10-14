@@ -79,7 +79,7 @@ Until `formEndpoint` is set, the form validates input but **does not claim succe
 - [ ] Page title and description look right in Google (Search Console > URL Inspection)
 - [ ] Run Lighthouse in Chrome (Accessibility, SEO, Performance)
 - [ ] Phone numbers, address and hours match the Google Maps listing
-- [ ] Submit test forms on both Android and iPhone
+- [ ] Submit test forms on both Android and iPhone 
 
 ## 6. Notes
 
