@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>کسٹمر پورٹل و آن لائن بکنگ | Gujrat Mushtarka Goods Transport Co.</title>
+<title>Customer Portal & Booking | Gujrat Mushtarka Goods Transport Co.</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 :root {
@@ -38,15 +38,32 @@ body {
   position: relative;
 }
 
-.header-title {
+/* Company Header Visible on Page and Print */
+.company-header {
   text-align: center;
-  border-bottom: 2px solid var(--border);
+  border-bottom: 2px solid var(--navy);
   padding-bottom: 15px;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
-
-.header-title h2 { color: var(--navy); margin: 0; }
-.header-title p { color: #64748B; margin: 5px 0 0; font-weight: 600; }
+.company-header h1 {
+  color: var(--navy);
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+.company-header h2 {
+  color: #DC2626;
+  margin: 5px 0 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+.company-header p {
+  color: #475569;
+  margin: 4px 0 0;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
 
 .auth-box {
   max-width: 420px;
@@ -121,16 +138,13 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
   color: #D97706;
 }
 
-.status-badge.delivered { background: #D1FAE5; color: #059669; }
-.status-badge.ontheway { background: #DBEAFE; color: #1D4ED8; }
-
 .actions-row { display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px; }
 
-/* Watermark Stamp */
+/* Round Watermark Stamp */
 .watermark-stamp {
-  display: none;
+  display: flex;
   position: absolute;
-  top: 40%;
+  top: 45%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(-15deg);
   width: 180px;
@@ -138,13 +152,12 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
   border-radius: 50%;
   border: 6px double #DC2626;
   color: #DC2626;
-  text-align: center;
   align-items: center;
   justify-content: center;
   font-size: 2.2rem;
   font-weight: 900;
   letter-spacing: 2px;
-  opacity: 0.25;
+  opacity: 0.2;
   pointer-events: none;
   text-transform: uppercase;
   z-index: 10;
@@ -154,9 +167,9 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
 
 @media print {
   body { background: #fff; padding: 0; }
-  .container { box-shadow: none; border: none; width: 100%; max-width: 100%; }
+  .container { box-shadow: none; border: none; width: 100%; max-width: 100%; padding: 10px; }
   .no-print { display: none !important; }
-  .watermark-stamp { display: flex !important; opacity: 0.35; }
+  .watermark-stamp { opacity: 0.35 !important; display: flex !important; }
 }
 </style>
 </head>
@@ -164,9 +177,9 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
 
 <!-- AUTH SECTION -->
 <div id="authSection" class="auth-box">
-  <div class="header-title">
-    <h3 class="urdu">گجرات مشترکہ کسٹمر پورٹل</h3>
-    <p>Sign In / Sign Up to access Dashboard</p>
+  <div class="company-header" style="border:none; padding:0; margin-bottom:15px;">
+    <h2>گجرات مشترکہ گڈز ترانسپورٹ کو</h2>
+    <p>Sign In / Sign Up to access Customer Portal</p>
   </div>
 
   <div class="auth-tabs">
@@ -208,6 +221,13 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
 <!-- PORTAL DASHBOARD SECTION -->
 <div id="portalSection" class="container" style="display:none;">
 
+  <!-- COMPANY PRINT HEADER -->
+  <div class="company-header">
+    <h1>GUJRAT MUSHTARKA GOODS TRANSPORT CO.</h1>
+    <h2 class="urdu">گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی (رجسٹرڈ)</h2>
+    <p>Head Office: Gujrat | Daily Direct Service to Karachi, Peshawar, Rawalpindi</p>
+  </div>
+
   <div id="watermarkStamp" class="watermark-stamp">PAID</div>
 
   <div class="user-bar no-print">
@@ -246,7 +266,7 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
     
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;" class="no-print">
       <button class="btn small" onclick="showHistoryView()">⬅ واپس ہسٹری پر جائیں</button>
-      <h3 class="urdu" style="margin:0;">نیا بکنگ فارم</h3>
+      <h3 class="urdu" style="margin:0;">آن لائن بلٹی / بکنگ فارم</h3>
     </div>
 
     <form id="biltyForm">
@@ -359,7 +379,7 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDsHjE5-6yoKjZG7mU7vKenvJtilvvXthg",
@@ -376,7 +396,6 @@ const db = getFirestore(app);
 
 let currentUser = null;
 
-// Auth State Listener
 onAuthStateChanged(auth, (user) => {
   if (user) {
     currentUser = user;
@@ -391,7 +410,6 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// Sign In
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const email = document.getElementById('loginEmail').value;
@@ -403,7 +421,6 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   }
 });
 
-// Sign Up
 document.getElementById('signupForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const name = document.getElementById('signupName').value;
@@ -418,15 +435,14 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
   }
 });
 
-// Logout
 document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
-// Save Booking & Trigger Email Alert
+// Save Booking & Safe Async Email Trigger
 document.getElementById('biltyForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const sendBtn = document.getElementById('sendOrderBtn');
   sendBtn.disabled = true;
-  sendBtn.innerText = "ارسال ہو رہا ہے...";
+  sendBtn.innerText = "محفوظ ہو رہا ہے...";
 
   const bookingData = {
     userId: currentUser.uid,
@@ -441,15 +457,17 @@ document.getElementById('biltyForm').addEventListener('submit', async (e) => {
     destCity: document.getElementById('destCity').value === "Manual" ? document.getElementById('manualCity').value : document.getElementById('destCity').value,
     itemType: document.getElementById('itemType').value,
     totalQty: document.getElementById('totalQty').innerText,
-    status: "Goods received", // Default Status
+    status: "Goods received",
     createdAt: new Date()
   };
 
   try {
-    // 1. Save to Firebase
+    // 1. Save directly to Firestore
     await addDoc(collection(db, "bookings"), bookingData);
 
-    // 2. Send Instant Email Alert to ijaza504@gmail.com
+    alert("آپ کا آرڈر کامیابی سے محفوظ ہو گیا ہے اور ایڈمن پینل پر منتقل کر دیا گیا ہے!");
+    
+    // 2. Trigger Email Alert in Background (Non-blocking)
     fetch("https://formsubmit.co/ajax/ijaza504@gmail.com", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -462,9 +480,8 @@ document.getElementById('biltyForm').addEventListener('submit', async (e) => {
         TotalQty: bookingData.totalQty,
         CustomerEmail: currentUser.email
       })
-    });
+    }).catch(err => console.log("Email dispatch notice:", err));
 
-    alert("آپ کا آرڈر کامیابی سے محفوظ ہو گیا ہے اور ایڈمن کو نوٹیفکیشن بھیج دیا گیا ہے!");
     showHistoryView();
   } catch (err) {
     alert("آرڈر سیو کرنے میں مسئلہ آیا: " + err.message);
@@ -474,7 +491,6 @@ document.getElementById('biltyForm').addEventListener('submit', async (e) => {
   }
 });
 
-// Load Bookings for Current User
 async function loadUserBookings() {
   const tbody = document.getElementById('historyTableBody');
   tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے...</td></tr>';
