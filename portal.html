@@ -1,1 +1,341 @@
+<!DOCTYPE html>
+<html lang="ur" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>کسٹمر پورٹل و آن لائن بکنگ | Gujrat Mushtarka Goods Transport Co.</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --navy: #0B2545;
+  --gold: #F2B705;
+  --light-bg: #F8FAFC;
+  --border: #CBD5E1;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: var(--light-bg);
+  margin: 0;
+  padding: 20px;
+  color: #1E293B;
+}
+
+.urdu { font-family: 'Noto Nastaliq Urdu', serif; line-height: 2 !important; }
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  border-top: 5px solid var(--navy);
+  position: relative;
+}
+
+.header-title {
+  text-align: center;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 15px;
+  margin-bottom: 25px;
+}
+
+.header-title h2 { color: var(--navy); margin: 0; }
+.header-title p { color: #64748B; margin: 5px 0 0; font-weight: 600; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+
+label { font-weight: 600; font-size: 0.88rem; color: #334155; display: block; margin-bottom: 4px; }
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font: inherit;
+  box-sizing: border-box;
+}
+
+.partner-info-box {
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  color: #1E40AF;
+  margin-bottom: 15px;
+}
+
+/* Dynamic Item Table */
+table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+th, td { border: 1px solid var(--border); padding: 10px; text-align: left; }
+th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+}
+.btn-primary { background: var(--gold); color: var(--navy); }
+.btn-navy { background: var(--navy); color: #fff; }
+.btn-add { background: #10B981; color: #fff; font-size: 0.85rem; padding: 6px 12px; }
+
+.actions-row { display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px; }
+
+/* ROUND WATERMARK STAMP FOR PRINT/PDF */
+.watermark-stamp {
+  display: none;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-15deg);
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 6px double #DC2626;
+  color: #DC2626;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  opacity: 0.25;
+  pointer-events: none;
+  text-transform: uppercase;
+  z-index: 10;
+}
+
+.watermark-stamp.topay {
+  border-color: #2563EB;
+  color: #2563EB;
+}
+
+/* PRINT MEDIA STYLES */
+@media print {
+  body { background: #fff; padding: 0; }
+  .container { box-shadow: none; border: none; width: 100%; max-width: 100%; }
+  .no-print { display: none !important; }
+  .watermark-stamp { display: flex !important; opacity: 0.35; }
+}
+</style>
+</head>
+<body>
+
+<div class="container" id="bookingArea">
+
+  <!-- Stamp Watermark -->
+  <div id="watermarkStamp" class="watermark-stamp">PAID</div>
+
+  <div class="header-title">
+    <h2 class="urdu">گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی</h2>
+    <p>Gujrat Mushtarka Goods Transport Co. - Official Booking Order</p>
+  </div>
+
+  <form id="biltyForm">
+    
+    <!-- Top Fields -->
+    <div class="grid-3">
+      <div>
+        <label>تاریخ (Date)</label>
+        <input type="date" id="bookingDate" required>
+      </div>
+      <div>
+        <label>بکنگ نمبر (Booking No.)</label>
+        <input type="text" id="biltyNo" readonly style="background:#F1F5F9; font-weight:700;">
+      </div>
+      <div>
+        <label>ادائیگی کی قسم (Payment Mode) *</label>
+        <select id="paymentMode" onchange="updateWatermark()" required>
+          <option value="PAID">PAID (پیڈ)</option>
+          <option value="TO PAY" selected>TO PAY (ٹو پے)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Sender & Receiver -->
+    <div class="grid-2">
+      <div>
+        <label class="urdu">مال بھیجنے والے کا نام (Sender Name) *</label>
+        <input type="text" id="senderName" required placeholder="فیکٹری / کمپنی کا نام">
+      </div>
+      <div>
+        <label class="urdu">مال وصول کرنے والے کا نام (Receiver Name) *</label>
+        <input type="text" id="receiverName" required placeholder="وصول کنندہ کا نام">
+      </div>
+    </div>
+
+    <!-- Cities & Logistics Partners -->
+    <div class="grid-3">
+      <div>
+        <label>شہر سے (From City)</label>
+        <input type="text" value="Gujrat (گجرات)" readonly style="background:#F1F5F9;">
+      </div>
+      <div>
+        <label>منزل کا شہر (Destination City) *</label>
+        <select id="destCity" onchange="handleCityChange()" required>
+          <option value="">شہر منتخب کریں</option>
+          <option value="Karachi">Karachi (کراچی)</option>
+          <option value="Peshawar">Peshawar (پشاور)</option>
+          <option value="Rawalpindi">Rawalpindi (راولپنڈی)</option>
+          <option value="Manual">دیگر (مینول لکھیں)</option>
+        </select>
+        <input type="text" id="manualCity" placeholder="شہر کا نام لکھیں" style="display:none; margin-top:6px;">
+      </div>
+      <div>
+        <label>آئٹم کی قسم (Item Type) *</label>
+        <select id="itemType" required>
+          <option value="ELECTRIC FANS">ELECTRIC FANS</option>
+          <option value="CROCKERY / CERAMICS">CROCKERY / CERAMICS</option>
+          <option value="HOUSEHOLD ITEMS">HOUSEHOLD ITEMS</option>
+          <option value="PLASTIC PIPES">PLASTIC PIPES</option>
+          <option value="FURNITURE">FURNITURE</option>
+          <option value="ELECTRIC ITEMS">ELECTRIC ITEMS</option>
+          <option value="OTHER'S">OTHER'S</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Logistics Partner Auto-Details -->
+    <div class="partner-info-box" id="partnerBox">
+      <strong>لاجسٹکس پارٹنر (Logistics Partner):</strong>
+      <span id="partnerDetails">شہر سلیکٹ کرنے پر تفاصیل یہاں نظر آئیں گی۔</span>
+    </div>
+
+    <!-- Items Table -->
+    <h3 class="urdu" style="margin-bottom:8px;">تفصیلِ سامان (Items List)</h3>
+    <table id="itemsTable">
+      <thead>
+        <tr>
+          <th>آئٹم کا نام (ITEM NAME) *</th>
+          <th style="width: 120px;">تعداد (QTY) *</th>
+          <th style="width: 140px;">وزن (WEIGHT)</th>
+          <th class="no-print" style="width: 50px;">حذف</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr>
+          <td><input type="text" class="item-name" placeholder="Item-1" required></td>
+          <td><input type="number" class="item-qty" oninput="calculateTotal()" required placeholder="0"></td>
+          <td><input type="text" class="item-weight" placeholder="-"></td>
+          <td class="no-print"><button type="button" onclick="removeRow(this)" style="color:red; background:none; border:none; cursor:pointer;">✖</button></td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr style="font-weight:700; background:#F8FAFC;">
+          <td>TOTAL QTY</td>
+          <td id="totalQty">0</td>
+          <td>-</td>
+          <td class="no-print"></td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <button type="button" class="btn btn-add no-print" onclick="addRow()">+ مزید آئٹم شامل کریں (Add Row)</button>
+
+    <!-- Action Buttons -->
+    <div class="actions-row no-print">
+      <button type="button" class="btn btn-primary" onclick="window.print()">🖨️ پرنٹ / Save PDF</button>
+      <button type="submit" class="btn btn-navy">ارسال کریں (Send Order)</button>
+    </div>
+
+  </form>
+</div>
+
+<script>
+// Logistics Partners Data
+const partners = {
+  "Karachi": {
+    name: "GUJRAT HAZARA GOODS KARACHI",
+    address: "QUAID E AZAM TRUCK STAND - KARACHI",
+    contact: "0300-00000000"
+  },
+  "Peshawar": {
+    name: "GUJRAT MUSHTARKA GOODS",
+    address: "PESHAWAR",
+    contact: "0300-00000000"
+  },
+  "Rawalpindi": {
+    name: "AL SAAD GOODS FORWARDING AGENCY",
+    address: "GUNJ MANDI - RAWALLPINDI",
+    contact: "0300-00000000"
+  }
+};
+
+// Auto Set Today's Date & Auto Bilty No.
+document.getElementById('bookingDate').valueAsDate = new Date();
+document.getElementById('biltyNo').value = "GMGT-" + Math.floor(100000 + Math.random() * 900000);
+
+// City Selection Handler
+function handleCityChange() {
+  const city = document.getElementById('destCity').value;
+  const manualInput = document.getElementById('manualCity');
+  const partnerDetails = document.getElementById('partnerDetails');
+
+  if (city === "Manual") {
+    manualInput.style.display = "block";
+    partnerDetails.innerText = "مینول ڈیسٹینیشن درج کی گئی ہے۔";
+  } else {
+    manualInput.style.display = "none";
+    if (partners[city]) {
+      partnerDetails.innerHTML = `<strong>${partners[city].name}</strong> | ${partners[city].address} | Tel: ${partners[city].contact}`;
+    } else {
+      partnerDetails.innerText = "لاجسٹک پارٹنر کی تفاصیل منتخب نہیں کی گئیں۔";
+    }
+  }
+}
+
+// Add/Remove Table Rows
+function addRow() {
+  const tbody = document.getElementById('tableBody');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" class="item-name" required></td>
+    <td><input type="number" class="item-qty" oninput="calculateTotal()" required placeholder="0"></td>
+    <td><input type="text" class="item-weight" placeholder="-"></td>
+    <td class="no-print"><button type="button" onclick="removeRow(this)" style="color:red; background:none; border:none; cursor:pointer;">✖</button></td>
+  `;
+  tbody.appendChild(tr);
+}
+
+function removeRow(btn) {
+  const row = btn.parentNode.parentNode;
+  row.parentNode.removeChild(row);
+  calculateTotal();
+}
+
+// Calculate Total Quantity
+function calculateTotal() {
+  let total = 0;
+  document.querySelectorAll('.item-qty').forEach(input => {
+    total += Number(input.value) || 0;
+  });
+  document.getElementById('totalQty').innerText = total;
+}
+
+// Update Round Watermark Stamp
+function updateWatermark() {
+  const mode = document.getElementById('paymentMode').value;
+  const stamp = document.getElementById('watermarkStamp');
+  stamp.innerText = mode;
+  
+  if (mode === "PAID") {
+    stamp.className = "watermark-stamp";
+  } else {
+    stamp.className = "watermark-stamp topay";
+  }
+}
+
+// Initialize Watermark on Load
+updateWatermark();
+</script>
+
+</body>
+</html>
