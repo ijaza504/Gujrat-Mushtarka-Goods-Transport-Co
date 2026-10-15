@@ -213,10 +213,10 @@ window.loadAllBookings = async function() {
       const bId = childSnap.key;
       const b = childSnap.val();
       
-      const statuses = ["Goods received", "In warehouse", "On the way", "Logistics partner warehouse", "Delivered"];
+      const statuses = ["Booking Received", "Goods received", "In warehouse", "On the way", "Logistics partner warehouse", "Delivered"];
       let optionsHtml = '';
       statuses.forEach(st => {
-        optionsHtml += `<option value="${st}" ${b.status === st ? 'selected' : ''}>${st}</option>`;
+        optionsHtml += `<option value="${st}" ${ (b.status || 'Booking Received') === st ? 'selected' : ''}>${st}</option>`;
       });
 
       tbody.innerHTML += `
