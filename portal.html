@@ -570,10 +570,10 @@ async function loadUserProfile() {
 document.getElementById('biltyForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const sendBtn = document.getElementById('sendOrderBtn');
-  sendBtn.disabled = true;
-  sendBtn.innerText = "Saving Order...";
-
   const editId = document.getElementById('editBookingId').value;
+  
+  sendBtn.disabled = true;
+  sendBtn.innerText = editId ? "Updating Order..." : "Saving Order...";
 
   const itemsList = [];
   document.querySelectorAll('#tableBody tr').forEach(row => {
@@ -601,14 +601,34 @@ document.getElementById('biltyForm').addEventListener('submit', async (e) => {
     totalQty: document.getElementById('totalQty').innerText,
     items: itemsList,
     status: editId ? (window.allUserBookings[editId]?.status || "Booking Received") : "Booking Received",
+    updatedAt: new Date().toISOString(),
     createdAt: editId ? (window.allUserBookings[editId]?.createdAt || new Date().toISOString()) : new Date().toISOString()
   };
 
   try {
     if(editId) {
-      // Update existing booking
+      // Update existing booking (No Duplicate Created)
       await update(ref(db, 'bookings/' + editId), bookingData);
-      alert("آپ کی بکنگ کامیابی سے اپ ڈیٹ ہو گئی ہے!");
+      alert("آپ کی آرڈر کی بکنگ کامیابی سے اپ ڈیٹ ہو گئی ہے!");
+
+      // Email Notice for Update
+      try {
+        fetch("https://formsubmit.co/ajax/ijaza504@gmail.com", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            subject: `UPDATED Booking Order #${bookingData.biltyNo}`,
+            Note: "Customer updated an existing booking order",
+            Sender: `${bookingData.senderName} (${bookingData.userPhone})`,
+            Receiver: `${bookingData.receiverName} (${bookingData.receiverPhone})`,
+            Address: bookingData.receiverAddress,
+            Destination: bookingData.destCity,
+            Payment: bookingData.paymentMode,
+            TotalQty: bookingData.totalQty
+          })
+        });
+      } catch(e) {}
+
     } else {
       // Create New booking
       const newRef = push(ref(db, 'bookings'));
@@ -637,7 +657,7 @@ document.getElementById('biltyForm').addEventListener('submit', async (e) => {
     alert("Error: " + err.message);
   } finally {
     sendBtn.disabled = false;
-    sendBtn.innerText = "Send Order";
+    sendBtn.innerText = editId ? "Update & Send Order" : "Send Order";
   }
 });
 
@@ -699,8 +719,40 @@ window.printBookingReceipt = function(bKey) {
   const b = window.allUserBookings[bKey];
   if(!b) return;
 
-  // Fill form fields with saved details
-  document.getElementById('editBookingId').value = "";
+  populateFormWithBookingData(bKey, b);
+
+  document.getElementById('historyView').style.display = 'none';
+  document.getElementById('profileView').style.display = 'none';
+  document.getElementById('bookingFormView').style.display = 'block';
+  
+  setTimeout(() => {
+    window.print();
+  }, 300);
+};
+
+// EDIT BOOKING WITH ALL PRE-FILLED ITEMS
+window.editBooking = function(bKey) {
+  const b = window.allUserBookings[bKey];
+  if(!b) return;
+
+  if((b.status || "Booking Received") !== "Booking Received") {
+    alert("معذرت! یہ آرڈر پروسیسنگ میں چلا گیا ہے، اس لیے اب ایڈت نہیں ہو سکتا۔");
+    return;
+  }
+
+  populateFormWithBookingData(bKey, b);
+
+  document.getElementById('formHeaderTitle').innerText = "بکنگ فارم میں تبدیلی کریں (Edit Booking)";
+  document.getElementById('sendOrderBtn').innerText = "Update & Send Order";
+
+  document.getElementById('historyView').style.display = 'none';
+  document.getElementById('profileView').style.display = 'none';
+  document.getElementById('bookingFormView').style.display = 'block';
+};
+
+// HELPER FUNCTION TO FILL FORM FIELDS AND ITEMS TABLE
+function populateFormWithBookingData(bKey, b) {
+  document.getElementById('editBookingId').value = bKey;
   document.getElementById('bookingDate').value = b.date;
   document.getElementById('biltyNo').value = b.biltyNo;
   document.getElementById('paymentMode').value = b.paymentMode;
@@ -721,9 +773,10 @@ window.printBookingReceipt = function(bKey) {
   handleCityChange();
   updateWatermark();
 
-  // Populate Items Table
+  // Populate Saved Items Table completely
   const tbody = document.getElementById('tableBody');
   tbody.innerHTML = '';
+
   if(b.items && b.items.length > 0) {
     b.items.forEach(it => {
       const tr = document.createElement('tr');
@@ -746,72 +799,7 @@ window.printBookingReceipt = function(bKey) {
     tbody.appendChild(tr);
   }
   calculateTotal();
-
-  // Display Form & Trigger Print Window
-  document.getElementById('historyView').style.display = 'none';
-  document.getElementById('profileView').style.display = 'none';
-  document.getElementById('bookingFormView').style.display = 'block';
-  
-  setTimeout(() => {
-    window.print();
-  }, 300);
-};
-
-// EDIT BOOKING
-window.editBooking = function(bKey) {
-  const b = window.allUserBookings[bKey];
-  if(!b) return;
-
-  if((b.status || "Booking Received") !== "Booking Received") {
-    alert("معذرت! یہ آرڈر پروسیسنگ میں چلا گیا ہے، اس لیے اب ایڈت نہیں ہو سکتا۔");
-    return;
-  }
-
-  document.getElementById('editBookingId').value = bKey;
-  document.getElementById('formHeaderTitle').innerText = "بکنگ فارم میں تبدیلی کریں (Edit Booking)";
-  document.getElementById('bookingDate').value = b.date;
-  document.getElementById('biltyNo').value = b.biltyNo;
-  document.getElementById('paymentMode').value = b.paymentMode;
-  document.getElementById('senderName').value = b.senderName;
-  document.getElementById('receiverName').value = b.receiverName;
-  document.getElementById('receiverPhone').value = b.receiverPhone;
-  document.getElementById('receiverAddress').value = b.receiverAddress;
-  document.getElementById('itemType').value = b.itemType || "ELECTRIC FANS";
-
-  if(b.destCity === "Karachi" || b.destCity === "Peshawar" || b.destCity === "Rawalpindi") {
-    document.getElementById('destCity').value = b.destCity;
-    document.getElementById('manualCity').style.display = 'none';
-  } else {
-    document.getElementById('destCity').value = "Manual";
-    document.getElementById('manualCity').style.display = 'block';
-    document.getElementById('manualCity').value = b.destCity;
-  }
-  handleCityChange();
-  updateWatermark();
-
-  // Items
-  const tbody = document.getElementById('tableBody');
-  tbody.innerHTML = '';
-  if(b.items && b.items.length > 0) {
-    b.items.forEach(it => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td><input type="text" class="item-name" value="${it.name}" required></td>
-        <td><input type="number" class="item-qty" value="${it.qty}" oninput="calculateTotal()" required></td>
-        <td><input type="text" class="item-weight" value="${it.weight || '-'}"></td>
-        <td class="no-print"><button type="button" class="btn btn-danger" onclick="removeRow(this)" style="padding:4px 8px; font-size:0.78rem;">Delete</button></td>
-      `;
-      tbody.appendChild(tr);
-    });
-  } else {
-    addRow();
-  }
-  calculateTotal();
-
-  document.getElementById('historyView').style.display = 'none';
-  document.getElementById('profileView').style.display = 'none';
-  document.getElementById('bookingFormView').style.display = 'block';
-};
+}
 
 // DELETE BOOKING
 window.deleteBooking = async function(bKey) {
@@ -851,6 +839,7 @@ window.switchTab = function(tab) {
 window.showNewBookingForm = function() {
   document.getElementById('editBookingId').value = "";
   document.getElementById('formHeaderTitle').innerText = "آن لائن بلٹی / بکنگ فارم";
+  document.getElementById('sendOrderBtn').innerText = "Send Order";
   document.getElementById('biltyForm').reset();
   
   document.getElementById('historyView').style.display = 'none';
