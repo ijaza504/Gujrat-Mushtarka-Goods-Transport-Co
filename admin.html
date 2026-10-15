@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="ur" dir="ltr">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Admin Panel | Gujrat Mushtarka Goods Transport Co.</title>
+<title>Admin Control Panel | Gujrat Mushtarka Goods Transport Co.</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 :root {
@@ -25,8 +25,6 @@ body {
   color: #1E293B;
 }
 
-.urdu { font-family: 'Noto Nastaliq Urdu', serif; line-height: 2 !important; }
-
 .container {
   max-width: 1150px;
   margin: 0 auto;
@@ -43,7 +41,8 @@ body {
   padding-bottom: 15px;
   margin-bottom: 25px;
 }
-.header-title h2 { color: var(--navy); margin: 0; }
+.header-title h1 { color: var(--navy); margin: 0; font-size: 1.8rem; font-weight: 800; }
+.header-title p { color: #64748B; margin: 5px 0 0; font-weight: 600; }
 
 .auth-box {
   max-width: 400px;
@@ -68,16 +67,34 @@ input, select {
 }
 
 .btn {
-  padding: 10px 20px;
+  padding: 9px 16px;
   border-radius: 6px;
   font-weight: 700;
   cursor: pointer;
   border: none;
+  font-size: 0.88rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  text-decoration: none;
 }
-.btn-primary { background: var(--gold); color: var(--navy); width: 100%; }
+.btn-primary { background: var(--gold); color: var(--navy); }
 .btn-navy { background: var(--navy); color: #fff; }
+.btn-secondary { background: #64748B; color: #fff; }
+.btn-danger { background: #EF4444; color: #fff; }
 
-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #EFF6FF;
+  padding: 12px 20px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+}
+
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
 th, td { border: 1px solid var(--border); padding: 10px; text-align: left; font-size: 0.88rem; }
 th { background: #F1F5F9; color: var(--navy); }
 
@@ -87,6 +104,7 @@ select.status-select {
   font-weight: 600;
   background: #FEF3C7;
   color: #D97706;
+  border: 1px solid #F59E0B;
 }
 </style>
 </head>
@@ -94,43 +112,49 @@ select.status-select {
 
 <!-- ADMIN LOGIN SECTION -->
 <div id="adminAuthBox" class="auth-box">
-  <h3 class="urdu" style="color:var(--navy); margin-top:0;">ایڈمن لاگ ان</h3>
+  <h2 style="color:var(--navy); margin-top:0;">Admin Login</h2>
   <p style="color:#64748B; font-size:0.85rem;">Gujrat Mushtarka Control Panel</p>
   
   <div style="margin-bottom:15px;">
-    <label>ایڈمن پاس کوڈ (Passcode)</label>
-    <input type="password" id="adminPassInput" placeholder="پاس کوڈ درج کریں">
+    <label>Admin Passcode</label>
+    <input type="password" id="adminPassInput" placeholder="Enter Admin Passcode">
   </div>
-  <button type="button" class="btn btn-primary" onclick="loginAdmin()">لاگ ان کریں</button>
+  <button type="button" class="btn btn-primary" style="width:100%;" onclick="loginAdmin()">Login</button>
 </div>
 
 <!-- ADMIN DASHBOARD PANEL -->
 <div id="adminDashboard" class="container" style="display:none;">
   <div class="header-title">
-    <h2 class="urdu">ایڈمن کنٹرول پینل - بکنگ مینجمنٹ</h2>
-    <p>Gujrat Mushtarka Goods Transport Co.</p>
+    <h1>GUJRAT MUSHTARKA GOODS TRANSPORT CO.</h1>
+    <p>Admin Booking & Order Management Panel</p>
   </div>
 
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-    <strong>تمام کسٹمرز کی لائیو بکنگز</strong>
-    <button class="btn btn-navy" onclick="loadAllBookings()">🔄 ریفریش کریں</button>
+  <div class="top-bar">
+    <div>
+      <strong>Live Customer Bookings</strong>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <a href="index.html" class="btn btn-secondary">🏠 Home</a>
+      <button class="btn btn-navy" onclick="loadAllBookings()">🔄 Refresh</button>
+      <button class="btn btn-danger" onclick="logoutAdmin()">🚪 Logout</button>
+    </div>
   </div>
 
   <div style="overflow-x:auto;">
     <table>
       <thead>
         <tr>
-          <th>تاریخ</th>
-          <th>بکنگ نمبر</th>
-          <th>بھیجنے والا (Sender)</th>
-          <th>وصول کنندہ تفاصیل (Receiver)</th>
-          <th>منزل (Destination)</th>
-          <th>ادائیگی</th>
-          <th>اسٹیٹس (Status Update)</th>
+          <th>Date</th>
+          <th>Booking No.</th>
+          <th>Sender Name & Contact</th>
+          <th>Receiver Name, Contact & Address</th>
+          <th>Destination</th>
+          <th>Payment Mode</th>
+          <th>Update Status</th>
         </tr>
       </thead>
       <tbody id="adminTableBody">
-        <tr><td colspan="7" style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے...</td></tr>
+        <tr><td colspan="7" style="text-align:center;">Loading data...</td></tr>
       </tbody>
     </table>
   </div>
@@ -161,20 +185,26 @@ window.loginAdmin = function() {
     document.getElementById('adminDashboard').style.display = 'block';
     loadAllBookings();
   } else {
-    alert("غلط پاس کوڈ! براہ کرم درست پاس کوڈ درج کریں۔");
+    alert("Incorrect Passcode! Please enter valid admin passcode.");
   }
+};
+
+window.logoutAdmin = function() {
+  document.getElementById('adminAuthBox').style.display = 'block';
+  document.getElementById('adminDashboard').style.display = 'none';
+  document.getElementById('adminPassInput').value = '';
 };
 
 window.loadAllBookings = async function() {
   const tbody = document.getElementById('adminTableBody');
-  tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے...</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Loading data...</td></tr>';
   
   try {
     const bookingsRef = ref(db, 'bookings');
     const snapshot = await get(bookingsRef);
     
     if(!snapshot.exists()) {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">کوئی نئی بکنگ موجود نہیں ہے۔</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No bookings found.</td></tr>';
       return;
     }
 
@@ -193,13 +223,16 @@ window.loadAllBookings = async function() {
         <tr>
           <td>${b.date}</td>
           <td><strong>${b.biltyNo}</strong></td>
-          <td>${b.senderName}<br><small style="color:#64748B;">${b.userEmail || ''}</small></td>
+          <td>
+            <strong>${b.senderName}</strong><br>
+            <small style="color:#64748B;">📞 ${b.userPhone || 'N/A'}</small>
+          </td>
           <td>
             <strong>${b.receiverName}</strong><br>
-            📞 ${b.receiverPhone || 'N/A'}<br>
-            📍 <small>${b.receiverAddress || 'N/A'}</small>
+            <small style="color:#2563EB;">📞 ${b.receiverPhone || 'N/A'}</small><br>
+            <small style="color:#475569;">📍 ${b.receiverAddress || 'N/A'}</small>
           </td>
-          <td>${b.destCity}</td>
+          <td><strong>${b.destCity}</strong></td>
           <td><strong style="color:${b.paymentMode === 'PAID' ? 'green' : 'blue'};">${b.paymentMode}</strong></td>
           <td>
             <select class="status-select" onchange="updateStatus('${bId}', this.value)">
@@ -210,16 +243,16 @@ window.loadAllBookings = async function() {
       `;
     });
   } catch(err) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">ڈیٹا لوڈ کرنے میں ناکامی: ' + err.message + '</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Failed to load data: ' + err.message + '</td></tr>';
   }
 };
 
 window.updateStatus = async function(bId, newStatus) {
   try {
     await update(ref(db, 'bookings/' + bId), { status: newStatus });
-    alert("اسٹیٹس کامیابی سے اپ ڈیٹ ہو گیا ہے!");
+    alert("Order status updated successfully!");
   } catch(err) {
-    alert("اسٹیٹس اپ ڈیٹ کرنے میں مسئلہ آیا: " + err.message);
+    alert("Status update failed: " + err.message);
   }
 };
 </script>
