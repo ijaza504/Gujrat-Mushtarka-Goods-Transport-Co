@@ -135,6 +135,7 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
   align-items: center;
   justify-content: center;
   gap: 5px;
+  text-decoration: none;
 }
 .btn-primary { background: var(--gold); color: var(--navy); }
 .btn-navy { background: var(--navy); color: #fff; }
@@ -182,6 +183,7 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
   body { background: #fff; padding: 0; }
   .container { box-shadow: none; border: none; width: 100%; max-width: 100%; padding: 10px; }
   .no-print { display: none !important; }
+  .print-only-receipt { display: block !important; }
   .watermark-stamp { opacity: 0.35 !important; display: flex !important; }
 }
 </style>
@@ -346,7 +348,6 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
         </div>
       </div>
 
-      <!-- SENDER & RECEIVER DETAILS -->
       <div class="grid-2">
         <div>
           <label class="urdu">مال بھیجنے والے کا نام (Sender Name) *</label>
@@ -443,6 +444,15 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
     </form>
   </div>
 
+  <!-- PRINT RECEIPT MODAL (For History View Printing) -->
+  <div id="printModalView" style="display:none;" class="print-only-receipt">
+    <div style="display:flex; justify-content:space-between; margin-bottom:15px;" class="no-print">
+      <button class="btn btn-secondary" onclick="closePrintModal()">⬅ Back to Dashboard</button>
+      <button class="btn btn-primary" onclick="window.print()">🖨️ Print / Save PDF</button>
+    </div>
+    <div id="receiptContent"></div>
+  </div>
+
 </div>
 
 <!-- Firebase Realtime Database SDKs -->
@@ -466,6 +476,8 @@ const auth = getAuth(app);
 const db = getDatabase(app);
 
 let currentUser = null;
+let userProfilePhone = "";
+window.allUserBookings = {};
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
@@ -473,8 +485,8 @@ onAuthStateChanged(auth, (user) => {
     document.getElementById('userNameDisplay').innerText = user.displayName || user.email;
     document.getElementById('authSection').style.display = 'none';
     document.getElementById('portalSection').style.display = 'block';
-    loadUserBookings();
     loadUserProfile();
+    loadUserBookings();
   } else {
     currentUser = null;
     document.getElementById('authSection').style.display = 'block';
@@ -528,6 +540,7 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
   try {
     await set(ref(db, 'users/' + currentUser.uid), profData);
     await updateProfile(currentUser, { displayName: profData.fullName });
+    userProfilePhone = profData.phone;
     document.getElementById('userNameDisplay').innerText = profData.fullName;
     alert("پروفائل کی تفصیلات کامیابی سے محفوظ ہو گئی ہیں!");
   } catch (err) {
@@ -547,6 +560,7 @@ async function loadUserProfile() {
     const snap = await get(userRef);
     if(snap.exists()) {
       const u = snap.val();
+      userProfilePhone = u.phone || "";
       document.getElementById('profName').value = u.fullName || currentUser.displayName || "";
       document.getElementById('profCompany').value = u.companyName || "";
       document.getElementById('profPhone').value = u.phone || "";
@@ -561,10 +575,20 @@ document.getElementById('biltyForm').addEventListener('submit', async (e) => {
   sendBtn.disabled = true;
   sendBtn.innerText = "Saving Order...";
 
+  // Extract Items
+  const itemsList = [];
+  document.querySelectorAll('#tableBody tr').forEach(row => {
+    const name = row.querySelector('.item-name').value;
+    const qty = row.querySelector('.item-qty').value;
+    const weight = row.querySelector('.item-weight').value;
+    if(name && qty) itemsList.push({ name, qty, weight });
+  });
+
   const bookingData = {
     userId: currentUser ? currentUser.uid : "guest",
     userEmail: currentUser ? currentUser.email : "N/A",
     userName: currentUser ? (currentUser.displayName || currentUser.email) : "N/A",
+    userPhone: userProfilePhone || "N/A",
     date: document.getElementById('bookingDate').value,
     biltyNo: document.getElementById('biltyNo').value,
     paymentMode: document.getElementById('paymentMode').value,
@@ -576,6 +600,7 @@ document.getElementById('biltyForm').addEventListener('submit', async (e) => {
     destCity: document.getElementById('destCity').value === "Manual" ? document.getElementById('manualCity').value : document.getElementById('destCity').value,
     itemType: document.getElementById('itemType').value,
     totalQty: document.getElementById('totalQty').innerText,
+    items: itemsList,
     status: "Goods received",
     createdAt: new Date().toISOString()
   };
@@ -585,14 +610,13 @@ document.getElementById('biltyForm').addEventListener('submit', async (e) => {
     await set(newRef, bookingData);
     alert("آپ کا آرڈر کامیابی سے محفوظ ہو گیا ہے!");
     
-    // Async Non-blocking Email Alert
     try {
       fetch("https://formsubmit.co/ajax/ijaza504@gmail.com", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           subject: `New Booking Order #${bookingData.biltyNo}`,
-          Sender: bookingData.senderName,
+          Sender: `${bookingData.senderName} (${bookingData.userPhone})`,
           Receiver: `${bookingData.receiverName} (${bookingData.receiverPhone})`,
           Address: bookingData.receiverAddress,
           Destination: bookingData.destCity,
@@ -625,9 +649,13 @@ window.loadUserBookings = async function() {
     }
 
     tbody.innerHTML = '';
+    window.allUserBookings = {};
+
     snapshot.forEach(childSnap => {
+      const bKey = childSnap.key;
       const b = childSnap.val();
       if(b.userId === currentUser.uid) {
+        window.allUserBookings[bKey] = b;
         tbody.innerHTML += `
           <tr>
             <td>${b.date}</td>
@@ -636,7 +664,7 @@ window.loadUserBookings = async function() {
             <td>${b.destCity}</td>
             <td><strong style="color:${b.paymentMode === 'PAID' ? 'green' : 'blue'};">${b.paymentMode}</strong></td>
             <td><span class="status-badge">${b.status || 'Goods received'}</span></td>
-            <td><button class="btn small btn-primary" onclick="window.print()">Print / PDF</button></td>
+            <td><button class="btn small btn-primary" onclick="printBookingReceipt('${bKey}')">Print / PDF</button></td>
           </tr>
         `;
       }
@@ -648,6 +676,66 @@ window.loadUserBookings = async function() {
   } catch(err) {
     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Failed to load history.</td></tr>';
   }
+};
+
+window.printBookingReceipt = function(bKey) {
+  const b = window.allUserBookings[bKey];
+  if(!b) return;
+
+  let itemsHtml = '';
+  if(b.items && b.items.length > 0) {
+    b.items.forEach(it => {
+      itemsHtml += `<tr><td>${it.name}</td><td>${it.qty}</td><td>${it.weight || '-'}</td></tr>`;
+    });
+  } else {
+    itemsHtml = `<tr><td>${b.itemType || 'Goods'}</td><td>${b.totalQty || '1'}</td><td>-</td></tr>`;
+  }
+
+  const stampClass = b.paymentMode === "PAID" ? "watermark-stamp" : "watermark-stamp topay";
+
+  document.getElementById('receiptContent').innerHTML = `
+    <div style="position:relative; border:2px solid var(--navy); padding:20px; border-radius:8px;">
+      <div class="${stampClass}">${b.paymentMode}</div>
+      <div class="grid-3" style="margin-bottom:15px; border-bottom:1px solid #cbd5e1; padding-bottom:10px;">
+        <div><strong>Booking No:</strong> ${b.biltyNo}</div>
+        <div><strong>Date:</strong> ${b.date}</div>
+        <div><strong>Payment:</strong> ${b.paymentMode}</div>
+      </div>
+      <div class="grid-2" style="margin-bottom:15px;">
+        <div>
+          <strong>SENDER (مال بھیجنے والا):</strong><br>
+          ${b.senderName}<br>
+          <small>Phone: ${b.userPhone || 'N/A'}</small>
+        </div>
+        <div>
+          <strong>RECEIVER (مال وصول کرنے والا):</strong><br>
+          ${b.receiverName}<br>
+          <small>Phone: ${b.receiverPhone || 'N/A'}</small><br>
+          <small>Address: ${b.receiverAddress || 'N/A'}</small>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-bottom:15px; background:#f8fafc; padding:10px; border-radius:6px;">
+        <div><strong>From:</strong> Gujrat</div>
+        <div><strong>Destination:</strong> ${b.destCity}</div>
+      </div>
+      <h4 class="urdu" style="margin-bottom:5px;">تفصیلِ سامان (Items List)</h4>
+      <table>
+        <thead><tr><th>Item Name</th><th>Qty</th><th>Weight</th></tr></thead>
+        <tbody>${itemsHtml}</tbody>
+        <tfoot><tr style="font-weight:700;"><td>Total Qty</td><td>${b.totalQty}</td><td>-</td></tr></tfoot>
+      </table>
+    </div>
+  `;
+
+  document.getElementById('historyView').style.display = 'none';
+  document.getElementById('profileView').style.display = 'none';
+  document.getElementById('bookingFormView').style.display = 'none';
+  document.getElementById('printModalView').style.display = 'block';
+};
+
+window.closePrintModal = function() {
+  document.getElementById('printModalView').style.display = 'none';
+  showHistoryView();
 };
 
 window.switchTab = function(tab) {
@@ -667,6 +755,7 @@ window.switchTab = function(tab) {
 window.showNewBookingForm = function() {
   document.getElementById('historyView').style.display = 'none';
   document.getElementById('profileView').style.display = 'none';
+  document.getElementById('printModalView').style.display = 'none';
   document.getElementById('bookingFormView').style.display = 'block';
   document.getElementById('bookingDate').valueAsDate = new Date();
   document.getElementById('biltyNo').value = "GMGT-" + Math.floor(100000 + Math.random() * 900000);
@@ -677,12 +766,14 @@ window.showHistoryView = function() {
   document.getElementById('historyView').style.display = 'block';
   document.getElementById('profileView').style.display = 'none';
   document.getElementById('bookingFormView').style.display = 'none';
+  document.getElementById('printModalView').style.display = 'none';
   if(currentUser) loadUserBookings();
 };
 
 window.showProfileView = function() {
   document.getElementById('historyView').style.display = 'none';
   document.getElementById('bookingFormView').style.display = 'none';
+  document.getElementById('printModalView').style.display = 'none';
   document.getElementById('profileView').style.display = 'block';
   loadUserProfile();
 };
