@@ -607,11 +607,9 @@ document.getElementById('biltyForm').addEventListener('submit', async (e) => {
 
   try {
     if(editId) {
-      // Update existing booking (No Duplicate Created)
       await update(ref(db, 'bookings/' + editId), bookingData);
       alert("آپ کی آرڈر کی بکنگ کامیابی سے اپ ڈیٹ ہو گئی ہے!");
 
-      // Email Notice for Update
       try {
         fetch("https://formsubmit.co/ajax/ijaza504@gmail.com", {
           method: "POST",
@@ -630,7 +628,6 @@ document.getElementById('biltyForm').addEventListener('submit', async (e) => {
       } catch(e) {}
 
     } else {
-      // Create New booking
       const newRef = push(ref(db, 'bookings'));
       await set(newRef, bookingData);
       alert("آپ کا آرڈر کامیابی سے محفوظ ہو گیا ہے!");
@@ -730,7 +727,7 @@ window.printBookingReceipt = function(bKey) {
   }, 300);
 };
 
-// EDIT BOOKING WITH ALL PRE-FILLED ITEMS
+// EDIT BOOKING WITH ALL PRE-FILLED ITEMS (FIXED ARRAY LOAD)
 window.editBooking = function(bKey) {
   const b = window.allUserBookings[bKey];
   if(!b) return;
@@ -750,7 +747,7 @@ window.editBooking = function(bKey) {
   document.getElementById('bookingFormView').style.display = 'block';
 };
 
-// HELPER FUNCTION TO FILL FORM FIELDS AND ITEMS TABLE
+// HELPER FUNCTION TO FILL FORM FIELDS AND PRESERVE ALL ITEMS EXACTLY
 function populateFormWithBookingData(bKey, b) {
   document.getElementById('editBookingId').value = bKey;
   document.getElementById('bookingDate').value = b.date;
@@ -773,16 +770,23 @@ function populateFormWithBookingData(bKey, b) {
   handleCityChange();
   updateWatermark();
 
-  // Populate Saved Items Table completely
+  // Populate Items Table without changing arrays
   const tbody = document.getElementById('tableBody');
   tbody.innerHTML = '';
 
-  if(b.items && b.items.length > 0) {
-    b.items.forEach(it => {
+  let itemsArr = [];
+  if (b.items && Array.isArray(b.items)) {
+    itemsArr = b.items;
+  } else if (b.items && typeof b.items === 'object') {
+    itemsArr = Object.values(b.items);
+  }
+
+  if(itemsArr.length > 0) {
+    itemsArr.forEach(it => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td><input type="text" class="item-name" value="${it.name}" required></td>
-        <td><input type="number" class="item-qty" value="${it.qty}" oninput="calculateTotal()" required></td>
+        <td><input type="text" class="item-name" value="${it.name || ''}" required></td>
+        <td><input type="number" class="item-qty" value="${it.qty || 0}" oninput="calculateTotal()" required></td>
         <td><input type="text" class="item-weight" value="${it.weight || '-'}"></td>
         <td class="no-print"><button type="button" class="btn btn-danger" onclick="removeRow(this)" style="padding:4px 8px; font-size:0.78rem;">Delete</button></td>
       `;
