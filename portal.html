@@ -28,7 +28,7 @@ body {
 .urdu { font-family: 'Noto Nastaliq Urdu', serif; line-height: 2 !important; }
 
 .container {
-  max-width: 900px;
+  max-width: 950px;
   margin: 0 auto;
   background: #fff;
   padding: 30px;
@@ -86,6 +86,15 @@ body {
   padding: 12px 20px;
   border-radius: 8px;
   margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.user-bar-btns {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
@@ -116,15 +125,21 @@ th, td { border: 1px solid var(--border); padding: 10px; text-align: left; }
 th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
 
 .btn {
-  padding: 10px 20px;
+  padding: 9px 16px;
   border-radius: 6px;
   font-weight: 700;
   cursor: pointer;
   border: none;
+  font-size: 0.88rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
 }
 .btn-primary { background: var(--gold); color: var(--navy); }
 .btn-navy { background: var(--navy); color: #fff; }
-.btn-danger { background: #EF4444; color: #fff; padding: 6px 12px; font-size: 0.8rem; }
+.btn-danger { background: #EF4444; color: #fff; }
+.btn-secondary { background: #64748B; color: #fff; }
 .btn-add { background: #10B981; color: #fff; font-size: 0.85rem; padding: 6px 12px; }
 
 .status-badge {
@@ -139,6 +154,7 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
 
 .actions-row { display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px; }
 
+/* Round Watermark Stamp - Only inside Booking Form */
 .watermark-stamp {
   display: flex;
   position: absolute;
@@ -181,36 +197,36 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
   </div>
 
   <div class="auth-tabs">
-    <button type="button" class="tab-btn active" id="tabLoginBtn" onclick="switchTab('login')">سائن ان (Sign In)</button>
-    <button type="button" class="tab-btn" id="tabSignupBtn" onclick="switchTab('signup')">نیا اکاؤنٹ (Sign Up)</button>
+    <button type="button" class="tab-btn active" id="tabLoginBtn" onclick="switchTab('login')">Sign In</button>
+    <button type="button" class="tab-btn" id="tabSignupBtn" onclick="switchTab('signup')">Sign Up</button>
   </div>
 
   <form id="loginForm">
     <div style="margin-bottom:15px;">
-      <label>ای میل ایڈریس (Email)</label>
+      <label>Email Address</label>
       <input type="email" id="loginEmail" required placeholder="name@example.com">
     </div>
     <div style="margin-bottom:20px;">
-      <label>پاس ورڈ (Password)</label>
+      <label>Password</label>
       <input type="password" id="loginPass" required>
     </div>
-    <button type="submit" class="btn btn-navy" style="width:100%;">لاگ ان کریں (Sign In)</button>
+    <button type="submit" class="btn btn-navy" style="width:100%;">Sign In</button>
   </form>
 
   <form id="signupForm" style="display:none;">
     <div style="margin-bottom:12px;">
-      <label>آپ کا نام (Full Name)</label>
+      <label>Full Name</label>
       <input type="text" id="signupName" required placeholder="محمد علی">
     </div>
     <div style="margin-bottom:12px;">
-      <label>ای میل ایڈریس (Email)</label>
+      <label>Email Address</label>
       <input type="email" id="signupEmail" required placeholder="name@example.com">
     </div>
     <div style="margin-bottom:20px;">
-      <label>پاس ورڈ بنائیں (Password)</label>
+      <label>Password</label>
       <input type="password" id="signupPass" required minlength="6">
     </div>
-    <button type="submit" class="btn btn-primary" style="width:100%;">اکاؤنٹ بنائیں (Sign Up)</button>
+    <button type="submit" class="btn btn-primary" style="width:100%;">Sign Up</button>
   </form>
 </div>
 
@@ -223,58 +239,108 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
     <p>Head Office: Gujrat | Daily Direct Service to Karachi, Peshawar, Rawalpindi</p>
   </div>
 
-  <div id="watermarkStamp" class="watermark-stamp">PAID</div>
-
+  <!-- USER TOP NAV BAR -->
   <div class="user-bar no-print">
     <div>
-      <span>خوش آمدید! </span><strong id="userNameDisplay">کسٹمر</strong>
+      <span>Welcome, </span><strong id="userNameDisplay">Customer</strong>
     </div>
-    <div>
-      <button class="btn btn-primary small" onclick="showNewBookingForm()">+ نیا آرڈر / بکنگ کریں</button>
-      <button class="btn btn-danger small" id="logoutBtn">لاگ آؤٹ</button>
+    <div class="user-bar-btns">
+      <a href="index.html" class="btn btn-secondary">🏠 Home</a>
+      <button class="btn btn-navy" onclick="showProfileView()">👤 Profile</button>
+      <button class="btn btn-primary" onclick="showNewBookingForm()">+ New Booking</button>
+      <button class="btn btn-danger" id="logoutBtn">Logout</button>
     </div>
   </div>
 
+  <!-- BOOKING HISTORY LIST (DASHBOARD VIEW) -->
   <div id="historyView" class="no-print">
-    <h3 class="urdu" style="margin-bottom:15px;">آپ کی پچھلی تمام بکنگز (Booking History)</h3>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+      <h3 class="urdu" style="margin:0;">آپ کی پچھلی تمام بکنگز (Booking History)</h3>
+      <button class="btn btn-secondary" onclick="loadUserBookings()">🔄 Refresh</button>
+    </div>
+    
     <table>
       <thead>
         <tr>
-          <th>تاریخ</th>
-          <th>بکنگ نمبر</th>
-          <th>وصول کنندہ</th>
-          <th>منزل</th>
-          <th>ادائیگی</th>
-          <th>اسٹیٹس (Status)</th>
-          <th>پرنٹ</th>
+          <th>Date</th>
+          <th>Booking No.</th>
+          <th>Receiver Name</th>
+          <th>Destination</th>
+          <th>Payment</th>
+          <th>Status</th>
+          <th>Print</th>
         </tr>
       </thead>
       <tbody id="historyTableBody">
-        <tr><td colspan="7" style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے...</td></tr>
+        <tr><td colspan="7" style="text-align:center;">Loading data...</td></tr>
       </tbody>
     </table>
   </div>
 
+  <!-- PROFILE VIEW SECTION -->
+  <div id="profileView" class="no-print" style="display:none;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <h3 class="urdu" style="margin:0;">کسٹمر پروفائل تفصیلات (Customer Profile)</h3>
+      <button class="btn btn-secondary" onclick="showHistoryView()">🏠 Home / Dashboard</button>
+    </div>
+
+    <form id="profileForm" style="background:#F8FAFC; padding:20px; border-radius:8px; border:1px solid var(--border);">
+      <div class="grid-2">
+        <div>
+          <label>Full Name (نام)</label>
+          <input type="text" id="profName" required placeholder="محمد علی">
+        </div>
+        <div>
+          <label>Company Name (کمپنی کا نام)</label>
+          <input type="text" id="profCompany" placeholder="مثلاً: علی الیکٹرانکس">
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <label>Mobile Number (موبائل نمبر)</label>
+          <input type="tel" id="profPhone" placeholder="0300-1234567">
+        </div>
+        <div>
+          <label>Email Address (ای میل - Readonly)</label>
+          <input type="email" id="profEmail" readonly style="background:#E2E8F0;">
+        </div>
+      </div>
+
+      <div style="margin-bottom:15px;">
+        <label>Company Address (کمپنی کا پتہ)</label>
+        <textarea id="profAddress" rows="3" placeholder="مکمل پتہ درج کریں"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-navy" id="saveProfBtn">💾 Save Profile Details</button>
+    </form>
+  </div>
+
+  <!-- NEW BOOKING FORM VIEW -->
   <div id="bookingFormView" style="display:none;">
     
+    <!-- Watermark Stamp (Appears ONLY in Booking Form & PDF) -->
+    <div id="watermarkStamp" class="watermark-stamp">PAID</div>
+
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;" class="no-print">
-      <button class="btn small" onclick="showHistoryView()">⬅ واپس ہسٹری پر جائیں</button>
+      <button class="btn btn-secondary" onclick="showHistoryView()">🏠 Home / Dashboard</button>
       <h3 class="urdu" style="margin:0;">آن لائن بلٹی / بکنگ فارم</h3>
+      <button class="btn btn-danger" onclick="cancelBooking()">✖ Cancel Booking</button>
     </div>
 
     <form id="biltyForm">
       
       <div class="grid-3">
         <div>
-          <label>تاریخ (Date)</label>
+          <label>Date</label>
           <input type="date" id="bookingDate" required>
         </div>
         <div>
-          <label>بکنگ نمبر (Booking No.)</label>
+          <label>Booking No.</label>
           <input type="text" id="biltyNo" readonly style="background:#F1F5F9; font-weight:700;">
         </div>
         <div>
-          <label>ادائیگی کی قسم (Payment Mode) *</label>
+          <label>Payment Mode *</label>
           <select id="paymentMode" onchange="updateWatermark()" required>
             <option value="PAID">PAID (پیڈ)</option>
             <option value="TO PAY" selected>TO PAY (ٹو پے)</option>
@@ -295,11 +361,11 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
 
       <div class="grid-3">
         <div>
-          <label>شہر سے (From City)</label>
+          <label>From City</label>
           <input type="text" value="Gujrat (گجرات)" readonly style="background:#F1F5F9;">
         </div>
         <div>
-          <label>منزل کا شہر (Destination City) *</label>
+          <label>Destination City *</label>
           <select id="destCity" onchange="handleCityChange()" required>
             <option value="">شہر منتخب کریں</option>
             <option value="Karachi">Karachi (کراچی)</option>
@@ -310,7 +376,7 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
           <input type="text" id="manualCity" placeholder="شہر کا نام لکھیں" style="display:none; margin-top:6px;">
         </div>
         <div>
-          <label>آئٹم کی قسم (Item Type) *</label>
+          <label>Item Type *</label>
           <select id="itemType" required>
             <option value="ELECTRIC FANS">ELECTRIC FANS</option>
             <option value="CROCKERY / CERAMICS">CROCKERY / CERAMICS</option>
@@ -324,7 +390,7 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
       </div>
 
       <div class="partner-info-box" id="partnerBox">
-        <strong>لاجسٹکس پارٹنر (Logistics Partner):</strong>
+        <strong>Logistics Partner:</strong>
         <span id="partnerDetails">شہر سلیکٹ کرنے پر تفاصیل یہاں نظر آئیں گی۔</span>
       </div>
 
@@ -332,10 +398,10 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
       <table id="itemsTable">
         <thead>
           <tr>
-            <th>آئٹم کا نام (ITEM NAME) *</th>
-            <th style="width: 120px;">تعداد (QTY) *</th>
-            <th style="width: 140px;">وزن (WEIGHT)</th>
-            <th class="no-print" style="width: 50px;">حذف</th>
+            <th>ITEM NAME *</th>
+            <th style="width: 120px;">QTY *</th>
+            <th style="width: 140px;">WEIGHT</th>
+            <th class="no-print" style="width: 70px;">Action</th>
           </tr>
         </thead>
         <tbody id="tableBody">
@@ -343,7 +409,7 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
             <td><input type="text" class="item-name" placeholder="Item-1" required></td>
             <td><input type="number" class="item-qty" oninput="calculateTotal()" required placeholder="0"></td>
             <td><input type="text" class="item-weight" placeholder="-"></td>
-            <td class="no-print"><button type="button" onclick="removeRow(this)" style="color:red; background:none; border:none; cursor:pointer;">✖</button></td>
+            <td class="no-print"><button type="button" class="btn btn-danger" onclick="removeRow(this)" style="padding:4px 8px; font-size:0.78rem;">Delete</button></td>
           </tr>
         </tbody>
         <tfoot>
@@ -356,11 +422,12 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
         </tfoot>
       </table>
 
-      <button type="button" class="btn btn-add no-print" onclick="addRow()">+ مزید آئٹم شامل کریں (Add Row)</button>
+      <button type="button" class="btn btn-add no-print" onclick="addRow()">+ Add More Item</button>
 
       <div class="actions-row no-print">
-        <button type="button" class="btn btn-primary" onclick="window.print()">🖨️ پرنٹ / Save PDF</button>
-        <button type="submit" class="btn btn-navy" id="sendOrderBtn">آرڈر بھیجیں (Send Order)</button>
+        <button type="button" class="btn btn-danger" onclick="cancelBooking()">✖ Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="window.print()">🖨️ Print / Save PDF</button>
+        <button type="submit" class="btn btn-navy" id="sendOrderBtn">Send Order</button>
       </div>
 
     </form>
@@ -372,7 +439,7 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getDatabase, ref, push, set, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import { getDatabase, ref, push, set, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDsHjE5-6yoKjZG7mU7vKenvJtilvvXthg",
@@ -397,6 +464,7 @@ onAuthStateChanged(auth, (user) => {
     document.getElementById('authSection').style.display = 'none';
     document.getElementById('portalSection').style.display = 'block';
     loadUserBookings();
+    loadUserProfile();
   } else {
     currentUser = null;
     document.getElementById('authSection').style.display = 'block';
@@ -411,7 +479,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   try {
     await signInWithEmailAndPassword(auth, email, pass);
   } catch (err) {
-    alert("لاگ ان ناکام رہا: " + err.message);
+    alert("Login failed: " + err.message);
   }
 });
 
@@ -425,17 +493,63 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
     await updateProfile(res.user, { displayName: name });
     location.reload();
   } catch (err) {
-    alert("سائن اپ ناکام رہا: " + err.message);
+    alert("Signup failed: " + err.message);
   }
 });
 
 document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
+// Save Profile
+document.getElementById('profileForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if(!currentUser) return;
+  const saveBtn = document.getElementById('saveProfBtn');
+  saveBtn.innerText = "Saving Profile...";
+  saveBtn.disabled = true;
+
+  const profData = {
+    fullName: document.getElementById('profName').value,
+    companyName: document.getElementById('profCompany').value,
+    phone: document.getElementById('profPhone').value,
+    email: currentUser.email,
+    address: document.getElementById('profAddress').value
+  };
+
+  try {
+    await set(ref(db, 'users/' + currentUser.uid), profData);
+    await updateProfile(currentUser, { displayName: profData.fullName });
+    document.getElementById('userNameDisplay').innerText = profData.fullName;
+    alert("پروفائل کی تفصیلات کامیابی سے محفوظ ہو گئی ہیں!");
+  } catch (err) {
+    alert("Error saving profile: " + err.message);
+  } finally {
+    saveBtn.innerText = "💾 Save Profile Details";
+    saveBtn.disabled = false;
+  }
+});
+
+async function loadUserProfile() {
+  if(!currentUser) return;
+  document.getElementById('profEmail').value = currentUser.email;
+  document.getElementById('profName').value = currentUser.displayName || "";
+  try {
+    const userRef = ref(db, 'users/' + currentUser.uid);
+    const snap = await get(userRef);
+    if(snap.exists()) {
+      const u = snap.val();
+      document.getElementById('profName').value = u.fullName || currentUser.displayName || "";
+      document.getElementById('profCompany').value = u.companyName || "";
+      document.getElementById('profPhone').value = u.phone || "";
+      document.getElementById('profAddress').value = u.address || "";
+    }
+  } catch(e){}
+}
+
 document.getElementById('biltyForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const sendBtn = document.getElementById('sendOrderBtn');
   sendBtn.disabled = true;
-  sendBtn.innerText = "محفوظ ہو رہا ہے...";
+  sendBtn.innerText = "Saving Order...";
 
   const bookingData = {
     userId: currentUser ? currentUser.uid : "guest",
@@ -459,7 +573,7 @@ document.getElementById('biltyForm').addEventListener('submit', async (e) => {
     await set(newRef, bookingData);
     alert("آپ کا آرڈر کامیابی سے محفوظ ہو گیا ہے!");
     
-    // Non-blocking Email
+    // Async Non-blocking Email
     try {
       fetch("https://formsubmit.co/ajax/ijaza504@gmail.com", {
         method: "POST",
@@ -477,16 +591,16 @@ document.getElementById('biltyForm').addEventListener('submit', async (e) => {
 
     showHistoryView();
   } catch (err) {
-    alert("خرابی: " + err.message);
+    alert("Error: " + err.message);
   } finally {
     sendBtn.disabled = false;
-    sendBtn.innerText = "آرڈر بھیجیں (Send Order)";
+    sendBtn.innerText = "Send Order";
   }
 });
 
-async function loadUserBookings() {
+window.loadUserBookings = async function() {
   const tbody = document.getElementById('historyTableBody');
-  tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے...</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Loading data...</td></tr>';
   
   try {
     const bookingsRef = ref(db, 'bookings');
@@ -509,7 +623,7 @@ async function loadUserBookings() {
             <td>${b.destCity}</td>
             <td><strong style="color:${b.paymentMode === 'PAID' ? 'green' : 'blue'};">${b.paymentMode}</strong></td>
             <td><span class="status-badge">${b.status || 'Goods received'}</span></td>
-            <td><button class="btn small btn-primary" onclick="window.print()">پرنٹ / PDF</button></td>
+            <td><button class="btn small btn-primary" onclick="window.print()">Print / PDF</button></td>
           </tr>
         `;
       }
@@ -519,9 +633,9 @@ async function loadUserBookings() {
       tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">کوئی پرانی بکنگ موجود نہیں ہے۔</td></tr>';
     }
   } catch(err) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">ڈیٹا لوڈ کرنے میں ناکامی۔</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Failed to load history.</td></tr>';
   }
-}
+};
 
 window.switchTab = function(tab) {
   if(tab === 'login') {
@@ -539,15 +653,32 @@ window.switchTab = function(tab) {
 
 window.showNewBookingForm = function() {
   document.getElementById('historyView').style.display = 'none';
+  document.getElementById('profileView').style.display = 'none';
   document.getElementById('bookingFormView').style.display = 'block';
   document.getElementById('bookingDate').valueAsDate = new Date();
   document.getElementById('biltyNo').value = "GMGT-" + Math.floor(100000 + Math.random() * 900000);
+  updateWatermark();
 };
 
 window.showHistoryView = function() {
   document.getElementById('historyView').style.display = 'block';
+  document.getElementById('profileView').style.display = 'none';
   document.getElementById('bookingFormView').style.display = 'none';
   if(currentUser) loadUserBookings();
+};
+
+window.showProfileView = function() {
+  document.getElementById('historyView').style.display = 'none';
+  document.getElementById('bookingFormView').style.display = 'none';
+  document.getElementById('profileView').style.display = 'block';
+  loadUserProfile();
+};
+
+window.cancelBooking = function() {
+  if(confirm("کیا آپ واقعی اس بکنگ کو منسوخ / کینسل کرنا چاہتے ہیں؟")) {
+    document.getElementById('biltyForm').reset();
+    showHistoryView();
+  }
 };
 </script>
 
@@ -583,7 +714,7 @@ function addRow() {
     <td><input type="text" class="item-name" required></td>
     <td><input type="number" class="item-qty" oninput="calculateTotal()" required placeholder="0"></td>
     <td><input type="text" class="item-weight" placeholder="-"></td>
-    <td class="no-print"><button type="button" onclick="removeRow(this)" style="color:red; background:none; border:none; cursor:pointer;">✖</button></td>
+    <td class="no-print"><button type="button" class="btn btn-danger" onclick="removeRow(this)" style="padding:4px 8px; font-size:0.78rem;">Delete</button></td>
   `;
   tbody.appendChild(tr);
 }
@@ -602,11 +733,11 @@ function calculateTotal() {
 function updateWatermark() {
   const mode = document.getElementById('paymentMode').value;
   const stamp = document.getElementById('watermarkStamp');
-  stamp.innerText = mode;
-  stamp.className = mode === "PAID" ? "watermark-stamp" : "watermark-stamp topay";
+  if(stamp) {
+    stamp.innerText = mode;
+    stamp.className = mode === "PAID" ? "watermark-stamp" : "watermark-stamp topay";
+  }
 }
-
-updateWatermark();
 </script>
 
 </body>
