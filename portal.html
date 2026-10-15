@@ -21,17 +21,17 @@ body {
   font-family: 'Plus Jakarta Sans', sans-serif;
   background-color: var(--light-bg);
   margin: 0;
-  padding: 20px;
+  padding: 15px;
   color: #1E293B;
 }
 
-.urdu { font-family: 'Noto Nastaliq Urdu', serif; line-height: 2 !important; }
+.urdu { font-family: 'Noto Nastaliq Urdu', serif; line-height: 1.8 !important; }
 
 .container {
-  max-width: 950px;
+  max-width: 900px;
   margin: 0 auto;
   background: #fff;
-  padding: 30px;
+  padding: 20px;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.08);
   border-top: 5px solid var(--navy);
@@ -41,27 +41,27 @@ body {
 .company-header {
   text-align: center;
   border-bottom: 2px solid var(--navy);
-  padding-bottom: 15px;
-  margin-bottom: 20px;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
 }
 .company-header h1 {
   color: var(--navy);
   margin: 0;
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: 800;
   letter-spacing: 1px;
 }
 .company-header h2 {
   color: #DC2626;
-  margin: 5px 0 0;
-  font-size: 1.3rem;
+  margin: 3px 0 0;
+  font-size: 1.1rem;
   font-weight: 700;
 }
 .company-header p {
   color: #475569;
-  margin: 4px 0 0;
+  margin: 2px 0 0;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 .auth-box {
@@ -83,27 +83,22 @@ body {
   justify-content: space-between;
   align-items: center;
   background: #EFF6FF;
-  padding: 12px 20px;
+  padding: 10px 15px;
   border-radius: 8px;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
   flex-wrap: wrap;
   gap: 10px;
 }
 
-.user-bar-btns {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  flex-wrap: wrap;
-}
+.user-bar-btns { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
-.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
 
-label { font-weight: 600; font-size: 0.88rem; color: #334155; display: block; margin-bottom: 4px; }
+label { font-weight: 600; font-size: 0.82rem; color: #334155; display: block; margin-bottom: 3px; }
 input, select, textarea {
   width: 100%;
-  padding: 10px;
+  padding: 8px;
   border: 1px solid var(--border);
   border-radius: 6px;
   font: inherit;
@@ -113,24 +108,24 @@ input, select, textarea {
 .partner-info-box {
   background: #EFF6FF;
   border: 1px solid #BFDBFE;
-  padding: 12px;
+  padding: 8px 12px;
   border-radius: 6px;
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   color: #1E40AF;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
 }
 
-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-th, td { border: 1px solid var(--border); padding: 10px; text-align: left; }
-th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
+table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+th, td { border: 1px solid var(--border); padding: 8px; text-align: left; font-size: 0.82rem; }
+th { background: #F1F5F9; color: var(--navy); }
 
 .btn {
-  padding: 8px 14px;
+  padding: 7px 12px;
   border-radius: 6px;
   font-weight: 700;
   cursor: pointer;
   border: none;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -144,34 +139,34 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
 .btn-danger { background: #EF4444; color: #fff; }
 .btn-secondary { background: #64748B; color: #fff; }
 .btn-warning { background: #F59E0B; color: #fff; }
-.btn-add { background: #10B981; color: #fff; font-size: 0.85rem; padding: 6px 12px; }
+.btn-add { background: #10B981; color: #fff; font-size: 0.8rem; padding: 5px 10px; }
 
 .status-badge {
   display: inline-block;
-  padding: 4px 10px;
+  padding: 3px 8px;
   border-radius: 50px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 700;
   background: #FEF3C7;
   color: #D97706;
 }
 
-.actions-row { display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px; }
+.actions-row { display: flex; gap: 10px; justify-content: flex-end; margin-top: 15px; }
 
 .watermark-stamp {
   display: flex;
   position: absolute;
-  top: 45%;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(-15deg);
-  width: 180px;
-  height: 180px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
-  border: 6px double #DC2626;
+  border: 5px double #DC2626;
   color: #DC2626;
   align-items: center;
   justify-content: center;
-  font-size: 2.2rem;
+  font-size: 1.8rem;
   font-weight: 900;
   letter-spacing: 2px;
   opacity: 0.2;
@@ -185,16 +180,20 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
 .charges-breakdown {
   background: #F8FAFC;
   border: 1px solid var(--border);
-  padding: 15px;
-  border-radius: 8px;
-  margin-top: 20px;
+  padding: 10px;
+  border-radius: 6px;
+  margin-top: 12px;
 }
 
 @media print {
-  body { background: #fff; padding: 0; }
-  .container { box-shadow: none; border: none; width: 100%; max-width: 100%; padding: 10px; }
+  body { background: #fff; padding: 0; margin: 0; }
+  .container { box-shadow: none; border: none; width: 100%; max-width: 100%; padding: 5px; }
   .no-print { display: none !important; }
-  .watermark-stamp { opacity: 0.35 !important; display: flex !important; }
+  .watermark-stamp { opacity: 0.25 !important; display: flex !important; }
+  @page {
+    size: A4;
+    margin: 8mm;
+  }
 }
 </style>
 </head>
@@ -265,7 +264,7 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
 
   <!-- BOOKING HISTORY LIST (DASHBOARD VIEW) -->
   <div id="historyView" class="no-print">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
       <h3 class="urdu" style="margin:0;">آپ کی پچھلی تمام بکنگز (Booking History)</h3>
       <button class="btn btn-secondary" onclick="loadUserBookings()">🔄 Refresh</button>
     </div>
@@ -293,12 +292,12 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
 
   <!-- PROFILE VIEW SECTION -->
   <div id="profileView" class="no-print" style="display:none;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
       <h3 class="urdu" style="margin:0;">کسٹمر پروفائل تفصیلات (Customer Profile)</h3>
       <button class="btn btn-secondary" onclick="showHistoryView()">🏠 Home / Dashboard</button>
     </div>
 
-    <form id="profileForm" style="background:#F8FAFC; padding:20px; border-radius:8px; border:1px solid var(--border);">
+    <form id="profileForm" style="background:#F8FAFC; padding:15px; border-radius:8px; border:1px solid var(--border);">
       <div class="grid-2">
         <div>
           <label>Full Name (نام)</label>
@@ -321,21 +320,21 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
         </div>
       </div>
 
-      <div style="margin-bottom:15px;">
+      <div style="margin-bottom:12px;">
         <label>Company Address (کمپنی کا پتہ)</label>
-        <textarea id="profAddress" rows="3" placeholder="مکمل پتہ درج کریں"></textarea>
+        <textarea id="profAddress" rows="2" placeholder="مکمل پتہ درج کریں"></textarea>
       </div>
 
       <button type="submit" class="btn btn-navy" id="saveProfBtn">💾 Save Profile Details</button>
     </form>
   </div>
 
-  <!-- BOOKING FORM VIEW (FOR CREATING & EDITING & PRINTING) -->
+  <!-- BOOKING FORM VIEW -->
   <div id="bookingFormView" style="display:none;">
     
     <div id="watermarkStamp" class="watermark-stamp">PAID</div>
 
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;" class="no-print">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;" class="no-print">
       <button class="btn btn-secondary" onclick="showHistoryView()">🏠 Home / Dashboard</button>
       <h3 class="urdu" id="formHeaderTitle" style="margin:0;">آن لائن بلٹی / بکنگ فارم</h3>
       <button class="btn btn-danger" onclick="cancelBooking()">✖ Cancel</button>
@@ -399,7 +398,7 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
             <option value="Rawalpindi">Rawalpindi (راولپنڈی)</option>
             <option value="Manual">دیگر (مینول لکھیں)</option>
           </select>
-          <input type="text" id="manualCity" placeholder="شہر کا نام لکھیں" style="display:none; margin-top:6px;">
+          <input type="text" id="manualCity" placeholder="شہر کا نام لکھیں" style="display:none; margin-top:4px;">
         </div>
         <div>
           <label>Item Type *</label>
@@ -420,14 +419,14 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
         <span id="partnerDetails">شہر سلیکٹ کرنے پر تفاصیل یہاں نظر آئیں گی۔</span>
       </div>
 
-      <h3 class="urdu" style="margin-bottom:8px;">تفصیلِ سامان (Items List)</h3>
-      <table id="itemsTable">
+      <h3 class="urdu" style="margin:5px 0;">تفصیلِ سامان (Items List)</h3>
+      <table id="itemsTable" style="margin:5px 0;">
         <thead>
           <tr>
             <th>ITEM NAME *</th>
-            <th style="width: 120px;">QTY *</th>
-            <th style="width: 140px;">WEIGHT</th>
-            <th class="no-print" style="width: 70px;">Action</th>
+            <th style="width: 100px;">QTY *</th>
+            <th style="width: 120px;">WEIGHT</th>
+            <th class="no-print" style="width: 60px;">Action</th>
           </tr>
         </thead>
         <tbody id="tableBody">
@@ -435,7 +434,7 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
             <td><input type="text" class="item-name" placeholder="Item-1" required></td>
             <td><input type="number" class="item-qty" oninput="calculateTotal()" required placeholder="0"></td>
             <td><input type="text" class="item-weight" placeholder="-"></td>
-            <td class="no-print"><button type="button" class="btn btn-danger" onclick="removeRow(this)" style="padding:4px 8px; font-size:0.78rem;">Delete</button></td>
+            <td class="no-print"><button type="button" class="btn btn-danger" onclick="removeRow(this)" style="padding:2px 6px; font-size:0.75rem;">Delete</button></td>
           </tr>
         </tbody>
         <tfoot>
@@ -450,17 +449,17 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
 
       <button type="button" class="btn btn-add no-print" onclick="addRow()">+ Add More Item</button>
 
-      <!-- BILTY CHARGES DISPLAY BOX (GENERATED BY ADMIN) -->
+      <!-- BILTY CHARGES BREAKDOWN -->
       <div id="biltyDisplayCharges" class="charges-breakdown" style="display:none;">
-        <h4 class="urdu" style="margin:0 0 10px 0; color:var(--navy); border-bottom:1px solid #CBD5E1; padding-bottom:5px;">کرایہ اور چارجز تفصیلات (Billing Details)</h4>
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:10px; font-size:0.88rem;">
+        <h4 class="urdu" style="margin:0 0 6px 0; color:var(--navy); border-bottom:1px solid #CBD5E1; padding-bottom:3px; font-size:0.9rem;">کرایہ اور چارجز تفصیلات (Billing Details)</h4>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap:6px; font-size:0.8rem;">
           <div><strong>Freight:</strong> Rs. <span id="dispFreight">0</span></div>
-          <div><strong>Pickup/Rickshaw:</strong> Rs. <span id="dispRickshaw">0</span></div>
+          <div><strong>Pickup:</strong> Rs. <span id="dispRickshaw">0</span></div>
           <div><strong>Labour:</strong> Rs. <span id="dispLabour">0</span></div>
-          <div><strong>Adda Charges:</strong> Rs. <span id="dispAdda">0</span></div>
+          <div><strong>Adda:</strong> Rs. <span id="dispAdda">0</span></div>
           <div><strong>Other:</strong> Rs. <span id="dispOther">0</span></div>
         </div>
-        <div style="margin-top:10px; font-weight:800; color:green; font-size:1.05rem; text-align:right; border-top:1px dashed #CBD5E1; padding-top:5px;">
+        <div style="margin-top:6px; font-weight:800; color:green; font-size:0.95rem; text-align:right; border-top:1px dashed #CBD5E1; padding-top:4px;">
           Net Total Bill: Rs. <span id="dispNetTotal">0</span>
         </div>
       </div>
@@ -542,7 +541,6 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
 
 document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
-// Save Profile
 document.getElementById('profileForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   if(!currentUser) return;
@@ -563,7 +561,7 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
     await updateProfile(currentUser, { displayName: profData.fullName });
     userProfilePhone = profData.phone;
     document.getElementById('userNameDisplay').innerText = profData.fullName;
-    alert("پروفائل کی تفصیلات کامیابی سے محفوظ ہو گئی ہیں!");
+    alert("پروفائل محفوظ ہو گئی ہے!");
   } catch (err) {
     alert("Error saving profile: " + err.message);
   } finally {
@@ -590,7 +588,6 @@ async function loadUserProfile() {
   } catch(e){}
 }
 
-// Create OR Update Booking
 document.getElementById('biltyForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const sendBtn = document.getElementById('sendOrderBtn');
@@ -632,11 +629,11 @@ document.getElementById('biltyForm').addEventListener('submit', async (e) => {
   try {
     if(editId) {
       await update(ref(db, 'bookings/' + editId), bookingData);
-      alert("آپ کی آرڈر کی بکنگ کامیابی سے اپ ڈیٹ ہو گئی ہے!");
+      alert("آرڈر اپ ڈیٹ ہو گیا ہے!");
     } else {
       const newRef = push(ref(db, 'bookings'));
       await set(newRef, bookingData);
-      alert("آپ کا آرڈر کامیابی سے محفوظ ہو گیا ہے!");
+      alert("آرڈر محفوظ ہو گیا ہے!");
     }
 
     showHistoryView();
@@ -686,8 +683,8 @@ window.loadUserBookings = async function() {
             <td>
               <div style="display:flex; gap:4px; flex-wrap:wrap;">
                 <button class="btn small btn-primary" onclick="printBookingReceipt('${bKey}')">Print / PDF</button>
-                <button class="btn small btn-warning" onclick="editBooking('${bKey}')" ${canEditDelete ? '' : 'disabled title="پروسیسنگ شروع ہونے کی وجہ سے یہ آرڈر ایڈٹ نہیں ہو سکتا"'}>Edit</button>
-                <button class="btn small btn-danger" onclick="deleteBooking('${bKey}')" ${canEditDelete ? '' : 'disabled title="پروسیسنگ شروع ہونے کی وجہ سے یہ آرڈر ڈیلیٹ نہیں ہو سکتا"'}>Delete</button>
+                <button class="btn small btn-warning" onclick="editBooking('${bKey}')" ${canEditDelete ? '' : 'disabled'}>Edit</button>
+                <button class="btn small btn-danger" onclick="deleteBooking('${bKey}')" ${canEditDelete ? '' : 'disabled'}>Delete</button>
               </div>
             </td>
           </tr>
@@ -703,7 +700,6 @@ window.loadUserBookings = async function() {
   }
 };
 
-// PRINT EXACT BILTY FORM WITH CHARGES
 window.printBookingReceipt = function(bKey) {
   const b = window.allUserBookings[bKey];
   if(!b) return;
@@ -719,7 +715,6 @@ window.printBookingReceipt = function(bKey) {
   }, 300);
 };
 
-// EDIT BOOKING WITH ALL PRE-FILLED ITEMS
 window.editBooking = function(bKey) {
   const b = window.allUserBookings[bKey];
   if(!b) return;
@@ -739,7 +734,6 @@ window.editBooking = function(bKey) {
   document.getElementById('bookingFormView').style.display = 'block';
 };
 
-// HELPER FUNCTION TO FILL FORM FIELDS AND PRESERVE CHARGES
 function populateFormWithBookingData(bKey, b) {
   document.getElementById('editBookingId').value = bKey;
   document.getElementById('bookingDate').value = b.date;
@@ -762,7 +756,6 @@ function populateFormWithBookingData(bKey, b) {
   handleCityChange();
   updateWatermark();
 
-  // Show Charges Breakdown if Bilty generated
   const chargesBox = document.getElementById('biltyDisplayCharges');
   if(b.biltyGenerated || b.netTotal) {
     chargesBox.style.display = 'block';
@@ -776,16 +769,12 @@ function populateFormWithBookingData(bKey, b) {
     chargesBox.style.display = 'none';
   }
 
-  // Populate Items Table
   const tbody = document.getElementById('tableBody');
   tbody.innerHTML = '';
 
   let itemsArr = [];
-  if (b.items && Array.isArray(b.items)) {
-    itemsArr = b.items;
-  } else if (b.items && typeof b.items === 'object') {
-    itemsArr = Object.values(b.items);
-  }
+  if (b.items && Array.isArray(b.items)) itemsArr = b.items;
+  else if (b.items && typeof b.items === 'object') itemsArr = Object.values(b.items);
 
   if(itemsArr.length > 0) {
     itemsArr.forEach(it => {
@@ -794,7 +783,7 @@ function populateFormWithBookingData(bKey, b) {
         <td><input type="text" class="item-name" value="${it.name || ''}" required></td>
         <td><input type="number" class="item-qty" value="${it.qty || 0}" oninput="calculateTotal()" required></td>
         <td><input type="text" class="item-weight" value="${it.weight || '-'}"></td>
-        <td class="no-print"><button type="button" class="btn btn-danger" onclick="removeRow(this)" style="padding:4px 8px; font-size:0.78rem;">Delete</button></td>
+        <td class="no-print"><button type="button" class="btn btn-danger" onclick="removeRow(this)" style="padding:2px 6px; font-size:0.75rem;">Delete</button></td>
       `;
       tbody.appendChild(tr);
     });
@@ -804,14 +793,13 @@ function populateFormWithBookingData(bKey, b) {
       <td><input type="text" class="item-name" value="${b.itemType || 'Goods'}" required></td>
       <td><input type="number" class="item-qty" value="${b.totalQty || '1'}" oninput="calculateTotal()" required></td>
       <td><input type="text" class="item-weight" value="-"></td>
-      <td class="no-print"><button type="button" class="btn btn-danger" onclick="removeRow(this)" style="padding:4px 8px; font-size:0.78rem;">Delete</button></td>
+      <td class="no-print"><button type="button" class="btn btn-danger" onclick="removeRow(this)" style="padding:2px 6px; font-size:0.75rem;">Delete</button></td>
     `;
     tbody.appendChild(tr);
   }
   calculateTotal();
 }
 
-// DELETE BOOKING
 window.deleteBooking = async function(bKey) {
   const b = window.allUserBookings[bKey];
   if(!b) return;
@@ -821,13 +809,13 @@ window.deleteBooking = async function(bKey) {
     return;
   }
 
-  if(confirm("کیا آپ واقعی اس بکنگ آرڈر کو ہمیشہ کے لیے ڈیلیٹ کرنا چاہتے ہیں؟")) {
+  if(confirm("کیا آپ واقعی اس بکنگ آرڈر کو ڈیلیٹ کرنا چاہتے ہیں؟")) {
     try {
       await remove(ref(db, 'bookings/' + bKey));
-      alert("آرڈر کامیابی سے ڈیلیٹ کر دیا گیا ہے!");
+      alert("آرڈر ڈیلیٹ کر دیا گیا ہے!");
       loadUserBookings();
     } catch(err) {
-      alert("ڈیلیٹ کرنے میں مسئلہ آیا: " + err.message);
+      alert("Error: " + err.message);
     }
   }
 };
@@ -865,7 +853,7 @@ window.showNewBookingForm = function() {
       <td><input type="text" class="item-name" placeholder="Item-1" required></td>
       <td><input type="number" class="item-qty" oninput="calculateTotal()" required placeholder="0"></td>
       <td><input type="text" class="item-weight" placeholder="-"></td>
-      <td class="no-print"><button type="button" class="btn btn-danger" onclick="removeRow(this)" style="padding:4px 8px; font-size:0.78rem;">Delete</button></td>
+      <td class="no-print"><button type="button" class="btn btn-danger" onclick="removeRow(this)" style="padding:2px 6px; font-size:0.75rem;">Delete</button></td>
     </tr>
   `;
   calculateTotal();
@@ -924,7 +912,7 @@ function addRow() {
     <td><input type="text" class="item-name" required></td>
     <td><input type="number" class="item-qty" oninput="calculateTotal()" required placeholder="0"></td>
     <td><input type="text" class="item-weight" placeholder="-"></td>
-    <td class="no-print"><button type="button" class="btn btn-danger" onclick="removeRow(this)" style="padding:4px 8px; font-size:0.78rem;">Delete</button></td>
+    <td class="no-print"><button type="button" class="btn btn-danger" onclick="removeRow(this)" style="padding:2px 6px; font-size:0.75rem;">Delete</button></td>
   `;
   tbody.appendChild(tr);
 }
