@@ -154,7 +154,6 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
 
 .actions-row { display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px; }
 
-/* Round Watermark Stamp - Only inside Booking Form */
 .watermark-stamp {
   display: flex;
   position: absolute;
@@ -264,7 +263,7 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
         <tr>
           <th>Date</th>
           <th>Booking No.</th>
-          <th>Receiver Name</th>
+          <th>Receiver Name & Contact</th>
           <th>Destination</th>
           <th>Payment</th>
           <th>Status</th>
@@ -319,7 +318,6 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
   <!-- NEW BOOKING FORM VIEW -->
   <div id="bookingFormView" style="display:none;">
     
-    <!-- Watermark Stamp (Appears ONLY in Booking Form & PDF) -->
     <div id="watermarkStamp" class="watermark-stamp">PAID</div>
 
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;" class="no-print">
@@ -348,6 +346,7 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
         </div>
       </div>
 
+      <!-- SENDER & RECEIVER DETAILS -->
       <div class="grid-2">
         <div>
           <label class="urdu">مال بھیجنے والے کا نام (Sender Name) *</label>
@@ -356,6 +355,17 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
         <div>
           <label class="urdu">مال وصول کرنے والے کا نام (Receiver Name) *</label>
           <input type="text" id="receiverName" required placeholder="وصول کنندہ کا نام">
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <label class="urdu">وصول کنندہ کا موبائل نمبر (Receiver Mobile) *</label>
+          <input type="tel" id="receiverPhone" required placeholder="0300-1234567">
+        </div>
+        <div>
+          <label class="urdu">وصول کنندہ کا مکمل پتہ (Receiver Address) *</label>
+          <input type="text" id="receiverAddress" required placeholder="شاپ #، مارکیٹ، روڈ، ایریا">
         </div>
       </div>
 
@@ -560,6 +570,8 @@ document.getElementById('biltyForm').addEventListener('submit', async (e) => {
     paymentMode: document.getElementById('paymentMode').value,
     senderName: document.getElementById('senderName').value,
     receiverName: document.getElementById('receiverName').value,
+    receiverPhone: document.getElementById('receiverPhone').value,
+    receiverAddress: document.getElementById('receiverAddress').value,
     fromCity: "Gujrat",
     destCity: document.getElementById('destCity').value === "Manual" ? document.getElementById('manualCity').value : document.getElementById('destCity').value,
     itemType: document.getElementById('itemType').value,
@@ -573,7 +585,7 @@ document.getElementById('biltyForm').addEventListener('submit', async (e) => {
     await set(newRef, bookingData);
     alert("آپ کا آرڈر کامیابی سے محفوظ ہو گیا ہے!");
     
-    // Async Non-blocking Email
+    // Async Non-blocking Email Alert
     try {
       fetch("https://formsubmit.co/ajax/ijaza504@gmail.com", {
         method: "POST",
@@ -581,7 +593,8 @@ document.getElementById('biltyForm').addEventListener('submit', async (e) => {
         body: JSON.stringify({
           subject: `New Booking Order #${bookingData.biltyNo}`,
           Sender: bookingData.senderName,
-          Receiver: bookingData.receiverName,
+          Receiver: `${bookingData.receiverName} (${bookingData.receiverPhone})`,
+          Address: bookingData.receiverAddress,
           Destination: bookingData.destCity,
           Payment: bookingData.paymentMode,
           TotalQty: bookingData.totalQty
@@ -619,7 +632,7 @@ window.loadUserBookings = async function() {
           <tr>
             <td>${b.date}</td>
             <td><strong>${b.biltyNo}</strong></td>
-            <td>${b.receiverName}</td>
+            <td><strong>${b.receiverName}</strong><br><small style="color:#64748B;">📞 ${b.receiverPhone || 'N/A'}</small></td>
             <td>${b.destCity}</td>
             <td><strong style="color:${b.paymentMode === 'PAID' ? 'green' : 'blue'};">${b.paymentMode}</strong></td>
             <td><span class="status-badge">${b.status || 'Goods received'}</span></td>
