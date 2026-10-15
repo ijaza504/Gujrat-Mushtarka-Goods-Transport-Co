@@ -38,7 +38,6 @@ body {
   position: relative;
 }
 
-/* Company Header Visible on Page and Print */
 .company-header {
   text-align: center;
   border-bottom: 2px solid var(--navy);
@@ -140,7 +139,6 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
 
 .actions-row { display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px; }
 
-/* Round Watermark Stamp */
 .watermark-stamp {
   display: flex;
   position: absolute;
@@ -187,7 +185,6 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
     <button type="button" class="tab-btn" id="tabSignupBtn" onclick="switchTab('signup')">نیا اکاؤنٹ (Sign Up)</button>
   </div>
 
-  <!-- Sign In Form -->
   <form id="loginForm">
     <div style="margin-bottom:15px;">
       <label>ای میل ایڈریس (Email)</label>
@@ -200,7 +197,6 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
     <button type="submit" class="btn btn-navy" style="width:100%;">لاگ ان کریں (Sign In)</button>
   </form>
 
-  <!-- Sign Up Form -->
   <form id="signupForm" style="display:none;">
     <div style="margin-bottom:12px;">
       <label>آپ کا نام (Full Name)</label>
@@ -221,7 +217,6 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
 <!-- PORTAL DASHBOARD SECTION -->
 <div id="portalSection" class="container" style="display:none;">
 
-  <!-- COMPANY PRINT HEADER -->
   <div class="company-header">
     <h1>GUJRAT MUSHTARKA GOODS TRANSPORT CO.</h1>
     <h2 class="urdu">گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی (رجسٹرڈ)</h2>
@@ -240,7 +235,6 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
     </div>
   </div>
 
-  <!-- BOOKING HISTORY LIST -->
   <div id="historyView" class="no-print">
     <h3 class="urdu" style="margin-bottom:15px;">آپ کی پچھلی تمام بکنگز (Booking History)</h3>
     <table>
@@ -261,7 +255,6 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
     </table>
   </div>
 
-  <!-- NEW BOOKING FORM -->
   <div id="bookingFormView" style="display:none;">
     
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;" class="no-print">
@@ -375,15 +368,16 @@ th { background: #F1F5F9; color: var(--navy); font-size: 0.9rem; }
 
 </div>
 
-<!-- Firebase SDKs -->
+<!-- Firebase Realtime Database SDKs -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getDatabase, ref, push, set, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDsHjE5-6yoKjZG7mU7vKenvJtilvvXthg",
   authDomain: "gujrat-mushtarka-transport.firebaseapp.com",
+  databaseURL: "https://gujrat-mushtarka-transport-default-rtdb.firebaseio.com",
   projectId: "gujrat-mushtarka-transport",
   storageBucket: "gujrat-mushtarka-transport.firebasestorage.app",
   messagingSenderId: "244664894427",
@@ -392,7 +386,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
+const db = getDatabase(app);
 
 let currentUser = null;
 
@@ -437,7 +431,6 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
 
 document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
-// Save Booking & Safe Async Email Trigger
 document.getElementById('biltyForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const sendBtn = document.getElementById('sendOrderBtn');
@@ -445,9 +438,9 @@ document.getElementById('biltyForm').addEventListener('submit', async (e) => {
   sendBtn.innerText = "محفوظ ہو رہا ہے...";
 
   const bookingData = {
-    userId: currentUser.uid,
-    userEmail: currentUser.email,
-    userName: currentUser.displayName || currentUser.email,
+    userId: currentUser ? currentUser.uid : "guest",
+    userEmail: currentUser ? currentUser.email : "N/A",
+    userName: currentUser ? (currentUser.displayName || currentUser.email) : "N/A",
     date: document.getElementById('bookingDate').value,
     biltyNo: document.getElementById('biltyNo').value,
     paymentMode: document.getElementById('paymentMode').value,
@@ -458,33 +451,33 @@ document.getElementById('biltyForm').addEventListener('submit', async (e) => {
     itemType: document.getElementById('itemType').value,
     totalQty: document.getElementById('totalQty').innerText,
     status: "Goods received",
-    createdAt: new Date()
+    createdAt: new Date().toISOString()
   };
 
   try {
-    // 1. Save directly to Firestore
-    await addDoc(collection(db, "bookings"), bookingData);
-
-    alert("آپ کا آرڈر کامیابی سے محفوظ ہو گیا ہے اور ایڈمن پینل پر منتقل کر دیا گیا ہے!");
+    const newRef = push(ref(db, 'bookings'));
+    await set(newRef, bookingData);
+    alert("آپ کا آرڈر کامیابی سے محفوظ ہو گیا ہے!");
     
-    // 2. Trigger Email Alert in Background (Non-blocking)
-    fetch("https://formsubmit.co/ajax/ijaza504@gmail.com", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        subject: `New Booking Order #${bookingData.biltyNo}`,
-        Sender: bookingData.senderName,
-        Receiver: bookingData.receiverName,
-        Destination: bookingData.destCity,
-        Payment: bookingData.paymentMode,
-        TotalQty: bookingData.totalQty,
-        CustomerEmail: currentUser.email
-      })
-    }).catch(err => console.log("Email dispatch notice:", err));
+    // Non-blocking Email
+    try {
+      fetch("https://formsubmit.co/ajax/ijaza504@gmail.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          subject: `New Booking Order #${bookingData.biltyNo}`,
+          Sender: bookingData.senderName,
+          Receiver: bookingData.receiverName,
+          Destination: bookingData.destCity,
+          Payment: bookingData.paymentMode,
+          TotalQty: bookingData.totalQty
+        })
+      });
+    } catch(e) {}
 
     showHistoryView();
   } catch (err) {
-    alert("آرڈر سیو کرنے میں مسئلہ آیا: " + err.message);
+    alert("خرابی: " + err.message);
   } finally {
     sendBtn.disabled = false;
     sendBtn.innerText = "آرڈر بھیجیں (Send Order)";
@@ -496,29 +489,35 @@ async function loadUserBookings() {
   tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے...</td></tr>';
   
   try {
-    const q = query(collection(db, "bookings"), where("userId", "==", currentUser.uid));
-    const snap = await getDocs(q);
+    const bookingsRef = ref(db, 'bookings');
+    const snapshot = await get(bookingsRef);
     
-    if(snap.empty) {
+    if(!snapshot.exists()) {
       tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">کوئی پرانی بکنگ موجود نہیں ہے۔</td></tr>';
       return;
     }
 
     tbody.innerHTML = '';
-    snap.forEach(doc => {
-      const b = doc.data();
-      tbody.innerHTML += `
-        <tr>
-          <td>${b.date}</td>
-          <td><strong>${b.biltyNo}</strong></td>
-          <td>${b.receiverName}</td>
-          <td>${b.destCity}</td>
-          <td><strong style="color:${b.paymentMode === 'PAID' ? 'green' : 'blue'};">${b.paymentMode}</strong></td>
-          <td><span class="status-badge">${b.status || 'Goods received'}</span></td>
-          <td><button class="btn small btn-primary" onclick="window.print()">پرنٹ / PDF</button></td>
-        </tr>
-      `;
+    snapshot.forEach(childSnap => {
+      const b = childSnap.val();
+      if(b.userId === currentUser.uid) {
+        tbody.innerHTML += `
+          <tr>
+            <td>${b.date}</td>
+            <td><strong>${b.biltyNo}</strong></td>
+            <td>${b.receiverName}</td>
+            <td>${b.destCity}</td>
+            <td><strong style="color:${b.paymentMode === 'PAID' ? 'green' : 'blue'};">${b.paymentMode}</strong></td>
+            <td><span class="status-badge">${b.status || 'Goods received'}</span></td>
+            <td><button class="btn small btn-primary" onclick="window.print()">پرنٹ / PDF</button></td>
+          </tr>
+        `;
+      }
     });
+
+    if(tbody.innerHTML === '') {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">کوئی پرانی بکنگ موجود نہیں ہے۔</td></tr>';
+    }
   } catch(err) {
     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">ڈیٹا لوڈ کرنے میں ناکامی۔</td></tr>';
   }
