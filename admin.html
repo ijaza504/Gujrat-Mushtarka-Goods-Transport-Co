@@ -66,12 +66,12 @@ input, select {
 }
 
 .btn {
-  padding: 9px 16px;
+  padding: 8px 14px;
   border-radius: 6px;
   font-weight: 700;
   cursor: pointer;
   border: none;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -82,6 +82,7 @@ input, select {
 .btn-navy { background: var(--navy); color: #fff; }
 .btn-secondary { background: #64748B; color: #fff; }
 .btn-danger { background: #EF4444; color: #fff; }
+.btn-success { background: #10B981; color: #fff; }
 
 .top-bar {
   display: flex;
@@ -93,7 +94,6 @@ input, select {
   margin-bottom: 20px;
 }
 
-/* FILTER BAR STYLES */
 .filter-card {
   background: #F1F5F9;
   border: 1px solid var(--border);
@@ -121,6 +121,28 @@ select.status-select {
   border: 1px solid #F59E0B;
   width: auto;
 }
+
+/* MODAL STYLES FOR MAKE BILTY */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-box {
+  background: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 </style>
 </head>
 <body>
@@ -176,9 +198,6 @@ select.status-select {
         <label for="filterCity">Select Destination City:</label>
         <select id="filterCity" onchange="applyFilters()">
           <option value="ALL">All Cities (تمام شہر)</option>
-          <option value="Karachi">Karachi</option>
-          <option value="Peshawar">Peshawar</option>
-          <option value="Rawalpindi">Rawalpindi</option>
         </select>
       </div>
 
@@ -195,16 +214,61 @@ select.status-select {
           <th>Date</th>
           <th>Booking No.</th>
           <th>Sender Name & Contact</th>
-          <th>Receiver Name, Contact & Address</th>
-          <th>Destination</th>
-          <th>Payment Mode</th>
+          <th>Receiver Name & Dest.</th>
+          <th>Total Bill</th>
           <th>Update Status</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody id="adminTableBody">
         <tr><td colspan="7" style="text-align:center;">Loading data...</td></tr>
       </tbody>
     </table>
+  </div>
+</div>
+
+<!-- MAKE BILTY MODAL DIALOG WITH UPDATED CHARGES -->
+<div id="biltyModal" class="modal-overlay">
+  <div class="modal-box">
+    <h3 style="color:var(--navy); margin-top:0; border-bottom:2px solid var(--gold); padding-bottom:10px;" id="modalBiltyTitle">Make Bilty - #GMGT-0000</h3>
+    
+    <input type="hidden" id="modalBookingId">
+
+    <div style="margin-bottom:12px;">
+      <label>Freight Charges / سروس کرایہ (PKR) *</label>
+      <input type="number" id="freightCharges" placeholder="0" oninput="calculateBiltyTotal()" value="0">
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <label>Local Pickup / Rickshaw Fare / رکشہ بھیڑا (PKR)</label>
+      <input type="number" id="rickshawFare" placeholder="0" oninput="calculateBiltyTotal()" value="0">
+      <small style="color:#64748B;">(فیکٹری سے اڈے تک رکشہ/سوزوکی کا کرایہ)</small>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:12px;">
+      <div>
+        <label>Labour Charges / مزدوری (PKR)</label>
+        <input type="number" id="labourCharges" placeholder="0" oninput="calculateBiltyTotal()" value="0">
+      </div>
+      <div>
+        <label>Adda Charges / اڈا کرایہ (PKR)</label>
+        <input type="number" id="addaCharges" placeholder="0" oninput="calculateBiltyTotal()" value="0">
+      </div>
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <label>Other Charges / دیگر اخراجات (PKR)</label>
+      <input type="number" id="otherCharges" placeholder="0" oninput="calculateBiltyTotal()" value="0">
+    </div>
+
+    <div style="background:#EFF6FF; padding:12px; border-radius:6px; margin-bottom:15px; text-align:right;">
+      <strong style="color:var(--navy); font-size:1.15rem;">Net Total (کل واجب الادا رقم): Rs. <span id="modalNetTotal">0</span></strong>
+    </div>
+
+    <div style="display:flex; justify-content:flex-end; gap:10px;">
+      <button type="button" class="btn btn-secondary" onclick="closeBiltyModal()">Cancel</button>
+      <button type="button" class="btn btn-success" id="saveBiltyBtn" onclick="saveBiltyCharges()">💾 Save & Generate Bilty</button>
+    </div>
   </div>
 </div>
 
@@ -235,7 +299,7 @@ window.loginAdmin = function() {
     document.getElementById('adminDashboard').style.display = 'block';
     loadAllBookings();
   } else {
-    alert("Incorrect Passcode! Please enter valid admin passcode.");
+    alert("Incorrect Passcode!");
   }
 };
 
@@ -271,7 +335,6 @@ window.loadAllBookings = async function() {
       }
     });
 
-    // Dynamically update city filter dropdown
     const citySelect = document.getElementById('filterCity');
     const currentSelectedCity = citySelect.value;
     citySelect.innerHTML = '<option value="ALL">All Cities (تمام شہر)</option>';
@@ -317,6 +380,8 @@ window.applyFilters = function() {
         optionsHtml += `<option value="${st}" ${bStatus === st ? 'selected' : ''}>${st}</option>`;
       });
 
+      const totalBill = b.netTotal || 0;
+
       tbody.innerHTML += `
         <tr>
           <td>${b.date}</td>
@@ -326,16 +391,17 @@ window.applyFilters = function() {
             <small style="color:#64748B;">📞 ${b.userPhone || 'N/A'}</small>
           </td>
           <td>
-            <strong>${b.receiverName}</strong><br>
-            <small style="color:#2563EB;">📞 ${b.receiverPhone || 'N/A'}</small><br>
-            <small style="color:#475569;">📍 ${b.receiverAddress || 'N/A'}</small>
+            <strong>${b.receiverName}</strong> (${b.destCity})<br>
+            <small style="color:#2563EB;">📞 ${b.receiverPhone || 'N/A'}</small>
           </td>
-          <td><strong>${b.destCity}</strong></td>
-          <td><strong style="color:${b.paymentMode === 'PAID' ? 'green' : 'blue'};">${b.paymentMode}</strong></td>
+          <td><strong style="color:green;">Rs. ${totalBill}</strong></td>
           <td>
             <select class="status-select" onchange="updateStatus('${bId}', this.value)">
               ${optionsHtml}
             </select>
+          </td>
+          <td>
+            <button class="btn btn-navy" onclick="openBiltyModal('${bId}')">📝 Make Bilty</button>
           </td>
         </tr>
       `;
@@ -343,7 +409,7 @@ window.applyFilters = function() {
   });
 
   if (matchCount === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">منتخب کردہ فلٹر کے مطابق کوئی بکنگ نہیں ملی۔ (No bookings match selected filter)</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">منتخب کردہ فلٹر کے مطابق کوئی بکنگ نہیں ملی۔</td></tr>';
   }
 };
 
@@ -363,6 +429,86 @@ window.updateStatus = async function(bId, newStatus) {
     applyFilters();
   } catch(err) {
     alert("Status update failed: " + err.message);
+  }
+};
+
+window.openBiltyModal = function(bId) {
+  const b = window.allAdminBookings[bId];
+  if(!b) return;
+
+  document.getElementById('modalBookingId').value = bId;
+  document.getElementById('modalBiltyTitle').innerText = "Make Bilty - #" + b.biltyNo;
+  document.getElementById('freightCharges').value = b.freightCharges || 0;
+  document.getElementById('rickshawFare').value = b.rickshawFare || 0;
+  document.getElementById('labourCharges').value = b.labourCharges || 0;
+  document.getElementById('addaCharges').value = b.addaCharges || 0;
+  document.getElementById('otherCharges').value = b.otherCharges || 0;
+
+  calculateBiltyTotal();
+  document.getElementById('biltyModal').style.display = 'flex';
+};
+
+window.closeBiltyModal = function() {
+  document.getElementById('biltyModal').style.display = 'none';
+};
+
+window.calculateBiltyTotal = function() {
+  const freight = Number(document.getElementById('freightCharges').value) || 0;
+  const rickshaw = Number(document.getElementById('rickshawFare').value) || 0;
+  const labour = Number(document.getElementById('labourCharges').value) || 0;
+  const adda = Number(document.getElementById('addaCharges').value) || 0;
+  const other = Number(document.getElementById('otherCharges').value) || 0;
+  
+  const netTotal = freight + rickshaw + labour + adda + other;
+  document.getElementById('modalNetTotal').innerText = netTotal;
+};
+
+window.saveBiltyCharges = async function() {
+  const bId = document.getElementById('modalBookingId').value;
+  if(!bId) return;
+
+  const saveBtn = document.getElementById('saveBiltyBtn');
+  saveBtn.disabled = true;
+  saveBtn.innerText = "Saving...";
+
+  const freight = Number(document.getElementById('freightCharges').value) || 0;
+  const rickshaw = Number(document.getElementById('rickshawFare').value) || 0;
+  const labour = Number(document.getElementById('labourCharges').value) || 0;
+  const adda = Number(document.getElementById('addaCharges').value) || 0;
+  const other = Number(document.getElementById('otherCharges').value) || 0;
+  
+  const netTotal = freight + rickshaw + labour + adda + other;
+
+  try {
+    await update(ref(db, 'bookings/' + bId), {
+      freightCharges: freight,
+      rickshawFare: rickshaw,
+      labourCharges: labour,
+      addaCharges: adda,
+      otherCharges: other,
+      netTotal: netTotal,
+      biltyGenerated: true,
+      status: "Goods received"
+    });
+
+    if(window.allAdminBookings[bId]) {
+      window.allAdminBookings[bId].freightCharges = freight;
+      window.allAdminBookings[bId].rickshawFare = rickshaw;
+      window.allAdminBookings[bId].labourCharges = labour;
+      window.allAdminBookings[bId].addaCharges = adda;
+      window.allAdminBookings[bId].otherCharges = other;
+      window.allAdminBookings[bId].netTotal = netTotal;
+      window.allAdminBookings[bId].status = "Goods received";
+    }
+
+    alert("بلٹی کی رقم اور تمام اخراجات کامیابی سے محفوظ ہو گئے ہیں!");
+    closeBiltyModal();
+    applyFilters();
+  } catch(err) {
+    alert("Error: " + err.message);
+  } finally {
+    saveBtn.disabled = false;
+    saveBtn.innerText = "💾 Save & Generate Bilty";
   }
 };
 </script>
