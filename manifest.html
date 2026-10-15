@@ -21,97 +21,99 @@ body {
   font-family: 'Plus Jakarta Sans', 'Noto Nastaliq Urdu', serif;
   background-color: var(--light-bg);
   margin: 0;
-  padding: 15px;
+  padding: 12px;
   color: #1E293B;
   direction: rtl;
   text-align: right;
 }
 
-.urdu { font-family: 'Noto Nastaliq Urdu', serif; line-height: 1.8 !important; }
+.urdu { font-family: 'Noto Nastaliq Urdu', serif; line-height: 1.6 !important; }
 
 .container {
   max-width: 1050px;
   margin: 0 auto;
   background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
   border-top: 5px solid var(--navy);
 }
 
 .header-title {
   text-align: center;
   border-bottom: 2px solid var(--navy);
-  padding-bottom: 10px;
-  margin-bottom: 15px;
+  padding-bottom: 6px;
+  margin-bottom: 12px;
 }
-.header-title h1 { color: var(--navy); margin: 0; font-size: 1.6rem; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; }
-.header-title h2 { color: #DC2626; margin: 3px 0 0; font-size: 1.2rem; font-weight: 700; }
+.header-title h1 { color: var(--navy); margin: 0; font-size: 1.5rem; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; }
+.header-title h2 { color: #DC2626; margin: 2px 0 0; font-size: 1.1rem; font-weight: 700; }
 
 .top-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: #EFF6FF;
-  padding: 10px 15px;
-  border-radius: 8px;
-  margin-bottom: 15px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 12px;
 }
 
-label { font-weight: 600; font-size: 0.85rem; color: #334155; display: block; margin-bottom: 4px; }
+label { font-weight: 600; font-size: 0.82rem; color: #334155; display: block; margin-bottom: 3px; }
 input, select {
   width: 100%;
-  padding: 8px;
+  padding: 6px 8px;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 5px;
   font: inherit;
   box-sizing: border-box;
+  font-size: 0.85rem;
 }
 
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
 
 .btn {
-  padding: 8px 14px;
-  border-radius: 6px;
+  padding: 6px 12px;
+  border-radius: 5px;
   font-weight: 700;
   cursor: pointer;
   border: none;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   text-decoration: none;
 }
 .btn-primary { background: var(--gold); color: var(--navy); }
 .btn-navy { background: var(--navy); color: #fff; }
 .btn-secondary { background: #64748B; color: #fff; }
 .btn-success { background: #10B981; color: #fff; }
+.btn-warning { background: #F59E0B; color: #fff; }
 
-table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 0.85rem; }
-th, td { border: 1px solid var(--border); padding: 8px; text-align: right; }
+table { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 0.82rem; }
+th, td { border: 1px solid var(--border); padding: 5px 8px; text-align: right; }
 th { background: #F1F5F9; color: var(--navy); }
 
 .card {
   background: #fff;
   border: 1px solid var(--border);
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 20px;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
 }
 
 .summary-box {
   background: #EFF6FF;
   border: 1px solid #BFDBFE;
-  padding: 12px;
+  padding: 8px 12px;
   border-radius: 6px;
   display: flex;
   justify-content: space-between;
-  margin-top: 15px;
+  margin-top: 12px;
   font-weight: 700;
 }
 
-/* PRINT SHEET STYLING (A4 FIT) */
+/* COMPACT PRINT SHEET STYLING FOR A4 FIT WITH ZERO WASTED MARGINS */
 #printArea { display: none; }
 
 @media print {
@@ -120,9 +122,9 @@ th { background: #F1F5F9; color: var(--navy); }
   #printArea {
     display: block !important;
     position: absolute;
-    left: 0; top: 0; width: 100%; margin: 0; padding: 5px;
+    left: 0; top: 0; width: 100%; margin: 0; padding: 0;
   }
-  @page { size: A4; margin: 8mm; }
+  @page { size: A4; margin: 5mm 6mm; }
   table { page-break-inside: auto; }
   tr { page-break-inside: avoid; page-break-after: auto; }
 }
@@ -137,18 +139,20 @@ th { background: #F1F5F9; color: var(--navy); }
   </div>
 
   <div class="top-bar">
-    <div><strong class="urdu">🚛 نیا ٹرک مینی فیسٹ / لوڈنگ شیٹ بنائیں</strong></div>
+    <div><strong class="urdu" id="formMainTitle">🚛 نیا ٹرک مینی فیسٹ / لوڈنگ شیٹ بنائیں</strong></div>
     <div style="display:flex; gap:8px;">
       <a href="admin.html" class="btn btn-navy">📋 ایڈمن پینل</a>
       <a href="index.html" class="btn btn-secondary">🏠 ہوم پیج</a>
     </div>
   </div>
 
-  <!-- FORM TO CREATE NEW MANIFEST -->
+  <!-- FORM TO CREATE / EDIT MANIFEST -->
   <div class="card">
-    <h3 class="urdu" style="margin-top:0; color:var(--navy); border-bottom:2px solid var(--gold); padding-bottom:6px;">1. ٹرک اور ڈرائیور کی تفصیلات درج کریں</h3>
+    <h3 class="urdu" style="margin-top:0; color:var(--navy); border-bottom:2px solid var(--gold); padding-bottom:4px;" id="sectionHeader1">1. ٹرک اور ڈرائیور کی تفصیلات درج کریں</h3>
     
-    <div class="grid-3" style="margin-bottom:12px;">
+    <input type="hidden" id="editManifestId" value="">
+
+    <div class="grid-3" style="margin-bottom:10px;">
       <div>
         <label class="urdu">گاڑی / ٹرک نمبر *</label>
         <input type="text" id="truckNo" placeholder="مثلاً: LES-1234" required>
@@ -163,7 +167,7 @@ th { background: #F1F5F9; color: var(--navy); }
       </div>
     </div>
 
-    <div class="grid-2" style="margin-bottom:15px;">
+    <div class="grid-2" style="margin-bottom:12px;">
       <div>
         <label class="urdu">روٹ / روانی کی تاریخ *</label>
         <input type="date" id="dispatchDate" required>
@@ -174,7 +178,7 @@ th { background: #F1F5F9; color: var(--navy); }
       </div>
     </div>
 
-    <h3 class="urdu" style="color:var(--navy); border-bottom:2px solid var(--gold); padding-bottom:6px; margin-top:20px;">2. گاڑی میں لوڈ کرنے کے لیے گودام کی بلٹیاں منتخب کریں</h3>
+    <h3 class="urdu" style="color:var(--navy); border-bottom:2px solid var(--gold); padding-bottom:4px; margin-top:15px;" id="sectionHeader2">2. گاڑی میں لوڈ کرنے کے لیے گودام کی بلٹیاں منتخب کریں</h3>
     
     <div style="overflow-x:auto;">
       <table>
@@ -199,12 +203,13 @@ th { background: #F1F5F9; color: var(--navy); }
     <!-- SUMMARY -->
     <div class="summary-box urdu">
       <div>منتخب شدہ بلٹیاں: <span id="sumQty" style="color:var(--navy);">0</span></div>
-      <div>ڈرائیور کا کل وصولی کرایہ (Freight Total): Rs. <span id="sumFreight" style="color:green; font-size:1.1rem;">0</span></div>
+      <div>ڈرائیور کا کل وصولی کرایہ (Freight Total): Rs. <span id="sumFreight" style="color:green; font-size:1.05rem;">0</span></div>
       <div>کل بلٹی رقم (Total Value): Rs. <span id="sumCollection" style="color:navy;">0</span></div>
     </div>
 
-    <div style="text-align:left; margin-top:15px;">
-      <button type="button" class="btn btn-success" style="padding:10px 20px; font-size:0.95rem;" onclick="saveAndDispatchManifest()">🚛 مینی فیسٹ محفوظ کریں اور گاڑی روانہ کریں</button>
+    <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
+      <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display:none;" onclick="cancelManifestEdit()">کنسل / ملغی کریں</button>
+      <button type="button" class="btn btn-success" style="padding:8px 18px; font-size:0.9rem;" id="saveManifestBtn" onclick="saveAndDispatchManifest()">🚛 مینی فیسٹ محفوظ کریں اور گاڑی روانہ کریں</button>
     </div>
   </div>
 
@@ -233,7 +238,7 @@ th { background: #F1F5F9; color: var(--navy); }
 
 </div>
 
-<!-- PRINT AREA FOR DRIVER URDU MANIFEST -->
+<!-- PRINT AREA FOR HIGHLY COMPACT DRIVER URDU MANIFEST -->
 <div id="printArea"></div>
 
 <!-- Firebase Realtime Database SDKs -->
@@ -257,7 +262,6 @@ const db = getDatabase(app);
 window.availableBookings = {};
 window.allManifests = {};
 
-// LOGISTICS PARTNERS DATABASE
 const partnerDetailsMap = {
   "Karachi": { name: "گجرات ہزادہ گڈز کراچی", address: "قائد اعظم ٹرک اسٹینڈ، کراچی", phone: "0300-1234567" },
   "Peshawar": { name: "گجرات مشترکہ گڈز پشاور", address: "مین جی ٹی روڈ اڈہ، پشاور", phone: "0300-7654321" },
@@ -268,9 +272,9 @@ const partnerDetailsMap = {
 
 document.getElementById('dispatchDate').valueAsDate = new Date();
 
-async function loadWarehouseBookings() {
+async function loadWarehouseBookings(selectedIdsToCheck = []) {
   const tbody = document.getElementById('warehouseTableBody');
-  tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">گودام کی لسٹ لوڈ ہو رہی ہے...</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">گودام کا ڈیٹا لوڈ ہو رہا ہے...</td></tr>';
 
   try {
     const snap = await get(ref(db, 'bookings'));
@@ -287,13 +291,17 @@ async function loadWarehouseBookings() {
       const bId = child.key;
       const b = child.val();
       
-      if(b.status === "Goods received" || b.status === "In warehouse" || b.status === "Booking Received") {
+      const isSelectedForEdit = selectedIdsToCheck.includes(bId);
+
+      if(b.status === "Goods received" || b.status === "In warehouse" || b.status === "Booking Received" || isSelectedForEdit) {
         window.availableBookings[bId] = b;
         count++;
 
+        const isChecked = isSelectedForEdit ? 'checked' : '';
+
         tbody.innerHTML += `
           <tr>
-            <td><input type="checkbox" class="manifest-check" value="${bId}" onchange="calculateManifestSummary()"></td>
+            <td><input type="checkbox" class="manifest-check" value="${bId}" ${isChecked} onchange="calculateManifestSummary()"></td>
             <td><strong>${b.biltyNo}</strong></td>
             <td>${b.date}</td>
             <td>${b.senderName}</td>
@@ -308,6 +316,8 @@ async function loadWarehouseBookings() {
 
     if(count === 0) {
       tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">ویئر ہاؤس میں لوڈنگ کے لیے کوئی بکنگ موجود نہیں ہے۔</td></tr>';
+    } else {
+      calculateManifestSummary();
     }
 
   } catch(e) {
@@ -342,6 +352,7 @@ window.calculateManifestSummary = function() {
 };
 
 window.saveAndDispatchManifest = async function() {
+  const editId = document.getElementById('editManifestId').value;
   const truckNo = document.getElementById('truckNo').value;
   const driverName = document.getElementById('driverName').value;
   const driverPhone = document.getElementById('driverPhone').value;
@@ -374,42 +385,116 @@ window.saveAndDispatchManifest = async function() {
     }
   });
 
-  const manifestNo = "MAN-" + Math.floor(100000 + Math.random() * 900000);
-
-  const manifestData = {
-    manifestNo: manifestNo,
-    truckNo: truckNo,
-    driverName: driverName,
-    driverPhone: driverPhone,
-    routeCities: routeCities,
-    dispatchDate: dispatchDate,
-    totalFreight: totalFreight,
-    totalNet: totalNet,
-    bookingIds: selectedBookingIds,
-    createdAt: new Date().toISOString()
-  };
+  const saveBtn = document.getElementById('saveManifestBtn');
+  saveBtn.disabled = true;
+  saveBtn.innerText = "محفوظ ہو رہا ہے...";
 
   try {
-    const newManifestRef = push(ref(db, 'manifests'));
-    await set(newManifestRef, manifestData);
-
-    // Update status and attach Truck info for customer portal tracking
-    for(let bId of selectedBookingIds) {
-      await update(ref(db, 'bookings/' + bId), {
-        status: "On the way",
+    if(editId) {
+      // UPDATE EXISTING MANIFEST
+      const manifestNo = window.allManifests[editId]?.manifestNo || ("MAN-" + Math.floor(100000 + Math.random() * 900000));
+      
+      const manifestData = {
+        manifestNo: manifestNo,
         truckNo: truckNo,
         driverName: driverName,
         driverPhone: driverPhone,
-        manifestNo: manifestNo
-      });
+        routeCities: routeCities,
+        dispatchDate: dispatchDate,
+        totalFreight: totalFreight,
+        totalNet: totalNet,
+        bookingIds: selectedBookingIds,
+        updatedAt: new Date().toISOString()
+      };
+
+      await update(ref(db, 'manifests/' + editId), manifestData);
+
+      for(let bId of selectedBookingIds) {
+        await update(ref(db, 'bookings/' + bId), {
+          status: "On the way",
+          truckNo: truckNo,
+          driverName: driverName,
+          driverPhone: driverPhone,
+          manifestNo: manifestNo
+        });
+      }
+
+      alert("مینی فیسٹ کی معلومات کامیابی سے اپ ڈیٹ ہو گئی ہیں!");
+
+    } else {
+      // CREATE NEW MANIFEST
+      const manifestNo = "MAN-" + Math.floor(100000 + Math.random() * 900000);
+
+      const manifestData = {
+        manifestNo: manifestNo,
+        truckNo: truckNo,
+        driverName: driverName,
+        driverPhone: driverPhone,
+        routeCities: routeCities,
+        dispatchDate: dispatchDate,
+        totalFreight: totalFreight,
+        totalNet: totalNet,
+        bookingIds: selectedBookingIds,
+        createdAt: new Date().toISOString()
+      };
+
+      const newManifestRef = push(ref(db, 'manifests'));
+      await set(newManifestRef, manifestData);
+
+      for(let bId of selectedBookingIds) {
+        await update(ref(db, 'bookings/' + bId), {
+          status: "On the way",
+          truckNo: truckNo,
+          driverName: driverName,
+          driverPhone: driverPhone,
+          manifestNo: manifestNo
+        });
+      }
+
+      alert("نیا مینی فیسٹ کامیابی سے محفوظ ہو گیا اور گاڑی On the way کر دی گئی ہے!");
     }
 
-    alert("مینی فیسٹ کامیابی سے محفوظ ہو گیا اور گاڑی On the way کر دی گئی ہے!");
     location.reload();
 
   } catch(e) {
     alert("Error: " + e.message);
+  } finally {
+    saveBtn.disabled = false;
   }
+};
+
+window.editManifest = function(mId) {
+  const m = window.allManifests[mId];
+  if(!m) return;
+
+  document.getElementById('editManifestId').value = mId;
+  document.getElementById('truckNo').value = m.truckNo || "";
+  document.getElementById('driverName').value = m.driverName || "";
+  document.getElementById('driverPhone').value = m.driverPhone || "";
+  document.getElementById('routeCities').value = m.routeCities || "";
+  document.getElementById('dispatchDate').value = m.dispatchDate || "";
+
+  document.getElementById('formMainTitle').innerText = "📝 مینی فیسٹ میں تبدیلی کریں (Edit Manifest #" + m.manifestNo + ")";
+  document.getElementById('saveManifestBtn').innerText = "💾 اپ ڈیٹ کریں (Update Manifest)";
+  document.getElementById('cancelEditBtn').style.display = "inline-flex";
+
+  // Reload table and select previous bookings
+  loadWarehouseBookings(m.bookingIds || []);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+window.cancelManifestEdit = function() {
+  document.getElementById('editManifestId').value = "";
+  document.getElementById('truckNo').value = "";
+  document.getElementById('driverName').value = "";
+  document.getElementById('driverPhone').value = "";
+  document.getElementById('routeCities').value = "";
+  
+  document.getElementById('formMainTitle').innerText = "🚛 نیا ٹرک مینی فیسٹ / لوڈنگ شیٹ بنائیں";
+  document.getElementById('saveManifestBtn').innerText = "🚛 مینی فیسٹ محفوظ کریں اور گاڑی روانہ کریں";
+  document.getElementById('cancelEditBtn').style.display = "none";
+
+  loadWarehouseBookings();
 };
 
 async function loadManifestHistory() {
@@ -437,7 +522,12 @@ async function loadManifestHistory() {
           <td>${m.driverName} (${m.driverPhone})</td>
           <td>${m.bookingIds ? m.bookingIds.length : 0}</td>
           <td><strong style="color:green;">Rs. ${m.totalFreight || 0}</strong></td>
-          <td><button class="btn btn-primary" onclick="printManifestSheet('${mId}')">🖨️ پرنٹ مینی فیسٹ (اردو)</button></td>
+          <td>
+            <div style="display:flex; gap:4px;">
+              <button class="btn btn-warning" onclick="editManifest('${mId}')">📝 تعدیل / Edit</button>
+              <button class="btn btn-primary" onclick="printManifestSheet('${mId}')">🖨️ پرنٹ مینی فیسٹ</button>
+            </div>
+          </td>
         </tr>
       `;
     });
@@ -446,11 +536,11 @@ async function loadManifestHistory() {
   }
 }
 
+// PRINT FUNCTION WITH REMOVED RECEIVER PHONE AND ZERO WASTED SPACE
 window.printManifestSheet = async function(mId) {
   const m = window.allManifests[mId];
   if(!m) return;
 
-  // Group Bookings By Destination City
   const cityGroupedBookings = {};
 
   if(m.bookingIds) {
@@ -486,15 +576,16 @@ window.printManifestSheet = async function(mId) {
       cityFreightSum += fAmount;
       cityNetSum += nAmount;
 
+      // RECEIVER PHONE NUMBER REMOVED AS REQUESTED TO SAVE HORIZONTAL & VERTICAL SPACE
       cityRows += `
         <tr>
-          <td style="border:1px solid #cbd5e1; padding:6px; text-align:center;">${count++}</td>
-          <td style="border:1px solid #cbd5e1; padding:6px;"><b>${b.biltyNo}</b></td>
-          <td style="border:1px solid #cbd5e1; padding:6px;">${b.senderName}</td>
-          <td style="border:1px solid #cbd5e1; padding:6px;"><b>${b.receiverName}</b><br><small>📞 ${b.receiverPhone || 'N/A'}</small></td>
-          <td style="border:1px solid #cbd5e1; padding:6px; text-align:center;">${b.totalQty || 0} Pcs</td>
-          <td style="border:1px solid #cbd5e1; padding:6px; text-align:right; font-weight:700; color:green;">Rs. ${fAmount}</td>
-          <td style="border:1px solid #cbd5e1; padding:6px; text-align:right;">Rs. ${nAmount}</td>
+          <td style="border:1px solid #cbd5e1; padding:3px 5px; text-align:center;">${count++}</td>
+          <td style="border:1px solid #cbd5e1; padding:3px 5px;"><b>${b.biltyNo}</b></td>
+          <td style="border:1px solid #cbd5e1; padding:3px 5px;">${b.senderName}</td>
+          <td style="border:1px solid #cbd5e1; padding:3px 5px;"><b>${b.receiverName}</b></td>
+          <td style="border:1px solid #cbd5e1; padding:3px 5px; text-align:center;">${b.totalQty || 0} Pcs</td>
+          <td style="border:1px solid #cbd5e1; padding:3px 5px; text-align:right; font-weight:700; color:green;">Rs. ${fAmount}</td>
+          <td style="border:1px solid #cbd5e1; padding:3px 5px; text-align:right;">Rs. ${nAmount}</td>
         </tr>
       `;
     });
@@ -503,42 +594,42 @@ window.printManifestSheet = async function(mId) {
     grandTotalNet += cityNetSum;
 
     htmlContent += `
-      <div style="border:2px solid #0B2545; border-radius:6px; padding:10px; margin-bottom:15px; background:#fff;">
+      <div style="border:1.5px solid #0B2545; border-radius:4px; padding:6px; margin-bottom:8px; background:#fff;">
         
         <!-- LOGISTICS PARTNER HEADER -->
-        <div style="background:#EFF6FF; border-bottom:2px solid #0B2545; padding:8px; border-radius:4px; margin-bottom:8px;">
+        <div style="background:#EFF6FF; border-bottom:1px solid #0B2545; padding:4px 6px; margin-bottom:4px; font-size:0.8rem;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <div>
-              <h3 style="margin:0; color:#0B2545; font-size:1.1rem;" class="urdu">اڈہ / ڈسٹینیشن: <span style="color:#DC2626;">${city}</span></h3>
-              <div style="font-size:0.85rem; margin-top:2px;"><b>لاجسٹک پارٹنر:</b> ${partner.name} | <b>پتہ:</b> ${partner.address}</div>
+              <strong style="color:#0B2545;" class="urdu">اڈہ / ڈسٹینیشن: <span style="color:#DC2626;">${city}</span></strong>
+              | <span><b>پارٹنر:</b> ${partner.name}</span>
             </div>
-            <div style="font-size:0.9rem; background:#DBEAFE; padding:4px 10px; border-radius:4px; border:1px solid #93C5FD;">
-              <b>فون نمبر:</b> <span style="direction:ltr; display:inline-block;">${partner.phone}</span>
+            <div>
+              <span><b>پتہ:</b> ${partner.address}</span> | <b>فون:</b> <span style="direction:ltr; display:inline-block;">${partner.phone}</span>
             </div>
           </div>
         </div>
 
         <!-- CITY BILTY TABLE -->
-        <table style="width:100%; border-collapse:collapse; font-size:0.82rem; margin-bottom:6px;">
+        <table style="width:100%; border-collapse:collapse; font-size:0.78rem; margin-bottom:2px;">
           <thead>
             <tr style="background:#F1F5F9; color:#0B2545;">
-              <th style="border:1px solid #cbd5e1; padding:6px; width:30px;">#</th>
-              <th style="border:1px solid #cbd5e1; padding:6px;">بلٹی نمبر</th>
-              <th style="border:1px solid #cbd5e1; padding:6px;">مال بھیجنے والا</th>
-              <th style="border:1px solid #cbd5e1; padding:6px;">وصول کنندہ و رابطہ</th>
-              <th style="border:1px solid #cbd5e1; padding:6px;">تعداد</th>
-              <th style="border:1px solid #cbd5e1; padding:6px;">ڈرائیور وصولی کرایہ (Freight)</th>
-              <th style="border:1px solid #cbd5e1; padding:6px;">کل بلٹی رقم</th>
+              <th style="border:1px solid #cbd5e1; padding:3px 5px; width:25px;">#</th>
+              <th style="border:1px solid #cbd5e1; padding:3px 5px;">بلٹی #</th>
+              <th style="border:1px solid #cbd5e1; padding:3px 5px;">مال بھیجنے والا</th>
+              <th style="border:1px solid #cbd5e1; padding:3px 5px;">مال وصول کنندہ</th>
+              <th style="border:1px solid #cbd5e1; padding:3px 5px; width:60px;">تعداد</th>
+              <th style="border:1px solid #cbd5e1; padding:3px 5px;">وصولی کرایہ (Freight)</th>
+              <th style="border:1px solid #cbd5e1; padding:3px 5px;">کل بلٹی رقم</th>
             </tr>
           </thead>
           <tbody>
             ${cityRows}
           </tbody>
           <tfoot>
-            <tr style="background:#FEF3C7; font-weight:800; font-size:0.9rem; color:#B45309;">
-              <td colspan="5" style="border:1px solid #cbd5e1; padding:6px; text-align:left;" class="urdu">اس اڈے سے ڈرائیور کی کل وصولی کرایہ (Total Freight to Collect):</td>
-              <td style="border:1px solid #cbd5e1; padding:6px; text-align:right; color:green; font-size:1rem;">Rs. ${cityFreightSum}</td>
-              <td style="border:1px solid #cbd5e1; padding:6px; text-align:right;">Rs. ${cityNetSum}</td>
+            <tr style="background:#FEF3C7; font-weight:800; font-size:0.82rem; color:#B45309;">
+              <td colspan="5" style="border:1px solid #cbd5e1; padding:3px 5px; text-align:left;" class="urdu">اس اڈے سے ڈرائیور کی کل وصولی کرایہ (Total Freight to Collect):</td>
+              <td style="border:1px solid #cbd5e1; padding:3px 5px; text-align:right; color:green;">Rs. ${cityFreightSum}</td>
+              <td style="border:1px solid #cbd5e1; padding:3px 5px; text-align:right;">Rs. ${cityNetSum}</td>
             </tr>
           </tfoot>
         </table>
@@ -549,36 +640,36 @@ window.printManifestSheet = async function(mId) {
 
   const printArea = document.getElementById('printArea');
   printArea.innerHTML = `
-    <div style="padding:10px; font-family:'Noto Nastaliq Urdu', 'Plus Jakarta Sans', sans-serif; direction:rtl; text-align:right;">
+    <div style="padding:2px; font-family:'Noto Nastaliq Urdu', 'Plus Jakarta Sans', sans-serif; direction:rtl; text-align:right; font-size:0.8rem;">
       
       <!-- MAIN HEADER -->
-      <div style="text-align:center; border-bottom:3px double #0B2545; padding-bottom:6px; margin-bottom:12px;">
-        <h1 style="color:#0B2545; margin:0; font-size:1.5rem; font-weight:800; font-family:'Plus Jakarta Sans';">GUJRAT MUSHTARKA GOODS TRANSPORT CO.</h1>
-        <h2 class="urdu" style="color:#DC2626; margin:2px 0 0; font-size:1.2rem;">گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی (ٹرک مینی فیسٹ / لوڈنگ شیٹ)</h2>
+      <div style="text-align:center; border-bottom:2px solid #0B2545; padding-bottom:4px; margin-bottom:6px;">
+        <h2 style="color:#0B2545; margin:0; font-size:1.2rem; font-weight:800; font-family:'Plus Jakarta Sans';">GUJRAT MUSHTARKA GOODS TRANSPORT CO.</h2>
+        <h3 class="urdu" style="color:#DC2626; margin:1px 0 0; font-size:0.95rem;">گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی (ٹرک مینی فیسٹ / لوڈنگ شیٹ)</h3>
       </div>
 
       <!-- TRUCK & DRIVER INFO -->
-      <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px; margin-bottom:15px; font-size:0.88rem; background:#F8FAFC; padding:10px; border:1px solid #cbd5e1; border-radius:6px;" class="urdu">
-        <div><b>مینی فیسٹ نمبر:</b> ${m.manifestNo}</div>
-        <div><b>تاریخ روانی:</b> ${m.dispatchDate}</div>
-        <div><b>گاڑی نمبر:</b> <b style="color:navy; font-size:1rem; font-family:'Plus Jakarta Sans';">${m.truckNo}</b></div>
-        <div><b>ڈرائیور کا نام:</b> ${m.driverName}</div>
-        <div><b>ڈرائیور کا فون:</b> ${m.driverPhone}</div>
+      <div style="display:grid; grid-template-columns: repeat(6, 1fr); gap:4px; margin-bottom:8px; font-size:0.78rem; background:#F8FAFC; padding:6px; border:1px solid #cbd5e1; border-radius:4px;" class="urdu">
+        <div><b>مینی فیسٹ #:</b> ${m.manifestNo}</div>
+        <div><b>روانی:</b> ${m.dispatchDate}</div>
+        <div><b>گاڑی #:</b> <b style="color:navy; font-family:'Plus Jakarta Sans';">${m.truckNo}</b></div>
+        <div><b>ڈرائیور:</b> ${m.driverName}</div>
+        <div><b>موبائل:</b> ${m.driverPhone}</div>
         <div><b>روٹ:</b> ${m.routeCities || 'گجرات روٹ'}</div>
       </div>
 
-      <!-- CITY-WISE TABLES -->
+      <!-- CITY-WISE COMPACT TABLES -->
       ${htmlContent}
 
       <!-- GRAND TOTAL SUMMARY FOR DRIVER -->
-      <div style="background:#0B2545; color:#fff; padding:12px; border-radius:6px; margin-top:15px; font-size:1rem;" class="urdu">
+      <div style="background:#0B2545; color:#fff; padding:6px 10px; border-radius:4px; margin-top:8px; font-size:0.88rem;" class="urdu">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <div><strong>پورے روٹ سے ڈرائیور کی کل وصولی کرایہ (Grand Total Freight to Collect):</strong></div>
-          <div style="font-size:1.4rem; color:#F2B705; font-weight:800;">Rs. ${grandTotalFreight}</div>
+          <div style="font-size:1.1rem; color:#F2B705; font-weight:800;">Rs. ${grandTotalFreight}</div>
         </div>
       </div>
 
-      <div style="display:flex; justify-content:space-between; margin-top:35px; font-size:0.85rem;" class="urdu">
+      <div style="display:flex; justify-content:space-between; margin-top:20px; font-size:0.75rem;" class="urdu">
         <div>_______________________<br><b>دستخط مینیجر اڈہ (Gujrat Mushtarka)</b></div>
         <div>_______________________<br><b>دستخط ڈرائیور (Driver Signature)</b></div>
       </div>
