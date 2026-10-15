@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ur" dir="rtl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dispatch Manifest & Truck Management | Gujrat Mushtarka Transport</title>
+<title>ٹرک لوڈنگ مینی فیسٹ | گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,17 +18,19 @@
 }
 
 body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Noto Nastaliq Urdu', serif;
   background-color: var(--light-bg);
   margin: 0;
-  padding: 20px;
+  padding: 15px;
   color: #1E293B;
+  direction: rtl;
+  text-align: right;
 }
 
 .urdu { font-family: 'Noto Nastaliq Urdu', serif; line-height: 1.8 !important; }
 
 .container {
-  max-width: 1100px;
+  max-width: 1050px;
   margin: 0 auto;
   background: #fff;
   padding: 20px;
@@ -39,11 +41,12 @@ body {
 
 .header-title {
   text-align: center;
-  border-bottom: 2px solid var(--border);
+  border-bottom: 2px solid var(--navy);
   padding-bottom: 10px;
   margin-bottom: 15px;
 }
-.header-title h1 { color: var(--navy); margin: 0; font-size: 1.6rem; font-weight: 800; }
+.header-title h1 { color: var(--navy); margin: 0; font-size: 1.6rem; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; }
+.header-title h2 { color: #DC2626; margin: 3px 0 0; font-size: 1.2rem; font-weight: 700; }
 
 .top-bar {
   display: flex;
@@ -55,7 +58,7 @@ body {
   margin-bottom: 15px;
 }
 
-label { font-weight: 600; font-size: 0.82rem; color: #334155; display: block; margin-bottom: 4px; }
+label { font-weight: 600; font-size: 0.85rem; color: #334155; display: block; margin-bottom: 4px; }
 input, select {
   width: 100%;
   padding: 8px;
@@ -67,7 +70,6 @@ input, select {
 
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; }
 
 .btn {
   padding: 8px 14px;
@@ -75,7 +77,7 @@ input, select {
   font-weight: 700;
   cursor: pointer;
   border: none;
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -86,8 +88,8 @@ input, select {
 .btn-secondary { background: #64748B; color: #fff; }
 .btn-success { background: #10B981; color: #fff; }
 
-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-th, td { border: 1px solid var(--border); padding: 8px; text-align: left; font-size: 0.82rem; }
+table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 0.85rem; }
+th, td { border: 1px solid var(--border); padding: 8px; text-align: right; }
 th { background: #F1F5F9; color: var(--navy); }
 
 .card {
@@ -104,11 +106,12 @@ th { background: #F1F5F9; color: var(--navy); }
   padding: 12px;
   border-radius: 6px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   margin-top: 15px;
   font-weight: 700;
 }
 
+/* PRINT SHEET STYLING (A4 FIT) */
 #printArea { display: none; }
 
 @media print {
@@ -117,9 +120,11 @@ th { background: #F1F5F9; color: var(--navy); }
   #printArea {
     display: block !important;
     position: absolute;
-    left: 0; top: 0; width: 100%; margin: 0; padding: 10px;
+    left: 0; top: 0; width: 100%; margin: 0; padding: 5px;
   }
   @page { size: A4; margin: 8mm; }
+  table { page-break-inside: auto; }
+  tr { page-break-inside: avoid; page-break-after: auto; }
 }
 </style>
 </head>
@@ -128,104 +133,99 @@ th { background: #F1F5F9; color: var(--navy); }
 <div class="container no-print">
   <div class="header-title">
     <h1>GUJRAT MUSHTARKA GOODS TRANSPORT CO.</h1>
-    <p>Dispatch Manifest & Truck Loading Sheet Management</p>
+    <h2 class="urdu">گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی (ٹرک مینی فیسٹ ماڈیول)</h2>
   </div>
 
   <div class="top-bar">
-    <div><strong>🚛 Create & View Truck Loading Sheets</strong></div>
+    <div><strong class="urdu">🚛 نیا ٹرک مینی فیسٹ / لوڈنگ شیٹ بنائیں</strong></div>
     <div style="display:flex; gap:8px;">
-      <a href="admin.html" class="btn btn-navy">📋 Admin Panel</a>
-      <a href="index.html" class="btn btn-secondary">🏠 Home</a>
+      <a href="admin.html" class="btn btn-navy">📋 ایڈمن پینل</a>
+      <a href="index.html" class="btn btn-secondary">🏠 ہوم پیج</a>
     </div>
   </div>
 
   <!-- FORM TO CREATE NEW MANIFEST -->
   <div class="card">
-    <h3 style="margin-top:0; color:var(--navy); border-bottom:2px solid var(--gold); padding-bottom:6px;">1. Enter Truck & Driver Details</h3>
+    <h3 class="urdu" style="margin-top:0; color:var(--navy); border-bottom:2px solid var(--gold); padding-bottom:6px;">1. ٹرک اور ڈرائیور کی تفصیلات درج کریں</h3>
     
-    <div class="grid-4" style="margin-bottom:12px;">
+    <div class="grid-3" style="margin-bottom:12px;">
       <div>
-        <label>Truck / Vehicle No. *</label>
-        <input type="text" id="truckNo" placeholder="e.g. LES-1234" required>
+        <label class="urdu">گاڑی / ٹرک نمبر *</label>
+        <input type="text" id="truckNo" placeholder="مثلاً: LES-1234" required>
       </div>
       <div>
-        <label>Driver Name *</label>
-        <input type="text" id="driverName" placeholder="e.g. احمد خان" required>
+        <label class="urdu">ڈرائیور کا نام *</label>
+        <input type="text" id="driverName" placeholder="مثلاً: احمد خان" required>
       </div>
       <div>
-        <label>Driver Mobile No. *</label>
+        <label class="urdu">ڈرائیور کا موبائل نمبر *</label>
         <input type="tel" id="driverPhone" placeholder="0300-1234567" required>
-      </div>
-      <div>
-        <label>Dispatch Date *</label>
-        <input type="date" id="dispatchDate" required>
       </div>
     </div>
 
     <div class="grid-2" style="margin-bottom:15px;">
       <div>
-        <label>Route / Destination Cities *</label>
-        <input type="text" id="routeCities" placeholder="e.g. Gujrat to Karachi via Multan, Hyderabad" required>
+        <label class="urdu">روٹ / روانی کی تاریخ *</label>
+        <input type="date" id="dispatchDate" required>
       </div>
       <div>
-        <label>Driver Freight / Truck Fare Expense (PKR) *</label>
-        <input type="number" id="driverFare" placeholder="0" oninput="calculateManifestSummary()" value="0">
+        <label class="urdu">روٹ / ڈسٹینیشن (مثلاً: گجرات تا کراچی براستہ ملتان)</label>
+        <input type="text" id="routeCities" placeholder="گجرات تا کراچی براستہ ملتان، حیدرآباد" required>
       </div>
     </div>
 
-    <h3 style="color:var(--navy); border-bottom:2px solid var(--gold); padding-bottom:6px; margin-top:20px;">2. Select Warehouse Bookings to Load in this Truck</h3>
+    <h3 class="urdu" style="color:var(--navy); border-bottom:2px solid var(--gold); padding-bottom:6px; margin-top:20px;">2. گاڑی میں لوڈ کرنے کے لیے گودام کی بلٹیاں منتخب کریں</h3>
     
     <div style="overflow-x:auto;">
       <table>
         <thead>
           <tr>
             <th style="width:30px;"><input type="checkbox" id="selectAllBookings" onchange="toggleSelectAll(this)"></th>
-            <th>Booking No.</th>
-            <th>Date</th>
-            <th>Sender</th>
-            <th>Receiver & Destination</th>
-            <th>Total Items Qty</th>
-            <th>Bilty Amount</th>
+            <th class="urdu">بلٹی نمبر</th>
+            <th class="urdu">تاریخ</th>
+            <th class="urdu">مال بھیجنے والا</th>
+            <th class="urdu">وصول کنندہ و شہر</th>
+            <th class="urdu">تعداد (Pcs)</th>
+            <th class="urdu">سروس کرایہ (Freight)</th>
+            <th class="urdu">کل بلٹی رقم (Total)</th>
           </tr>
         </thead>
         <tbody id="warehouseTableBody">
-          <tr><td colspan="7" style="text-align:center;">Loading available warehouse bookings...</td></tr>
+          <tr><td colspan="8" style="text-align:center;">گودام کا ڈیٹا لوڈ ہو رہا ہے...</td></tr>
         </tbody>
       </table>
     </div>
 
     <!-- SUMMARY -->
-    <div class="summary-box">
-      <div>Selected Bookings: <span id="sumQty" style="color:var(--navy);">0</span></div>
-      <div>Total Collection: Rs. <span id="sumCollection" style="color:green;">0</span></div>
-      <div>Truck Expense: Rs. <span id="sumExpense" style="color:red;">0</span></div>
-      <div>Net Profit: Rs. <span id="sumProfit" style="color:navy;">0</span></div>
+    <div class="summary-box urdu">
+      <div>منتخب شدہ بلٹیاں: <span id="sumQty" style="color:var(--navy);">0</span></div>
+      <div>ڈرائیور کا کل وصولی کرایہ (Freight Total): Rs. <span id="sumFreight" style="color:green; font-size:1.1rem;">0</span></div>
+      <div>کل بلٹی رقم (Total Value): Rs. <span id="sumCollection" style="color:navy;">0</span></div>
     </div>
 
-    <div style="text-align:right; margin-top:15px;">
-      <button type="button" class="btn btn-success" style="padding:10px 20px; font-size:0.9rem;" onclick="saveAndDispatchManifest()">🚛 Save Manifest & Dispatch Truck</button>
+    <div style="text-align:left; margin-top:15px;">
+      <button type="button" class="btn btn-success" style="padding:10px 20px; font-size:0.95rem;" onclick="saveAndDispatchManifest()">🚛 مینی فیسٹ محفوظ کریں اور گاڑی روانہ کریں</button>
     </div>
   </div>
 
-  <!-- SAVED MANIFESTS LIST -->
+  <!-- SAVED MANIFESTS HISTORY -->
   <div class="card">
-    <h3 style="margin-top:0; color:var(--navy);">3. Previous Dispatched Manifests History</h3>
+    <h3 class="urdu" style="margin-top:0; color:var(--navy);">3. پچھلے تمام مینی فیسٹ / گاڑیوں کا ریکارڈ</h3>
     <div style="overflow-x:auto;">
       <table>
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Manifest No.</th>
-            <th>Truck No.</th>
-            <th>Driver & Phone</th>
-            <th>Total Bookings</th>
-            <th>Total Freight</th>
-            <th>Profit</th>
-            <th>Action</th>
+            <th class="urdu">تاریخ</th>
+            <th class="urdu">مینی فیسٹ #</th>
+            <th class="urdu">گاڑی نمبر</th>
+            <th class="urdu">ڈرائیور و موبائل</th>
+            <th class="urdu">کل بلٹیاں</th>
+            <th class="urdu">ڈرائیور کرایہ (Freight)</th>
+            <th class="urdu">ایکشن</th>
           </tr>
         </thead>
         <tbody id="manifestHistoryBody">
-          <tr><td colspan="8" style="text-align:center;">Loading history...</td></tr>
+          <tr><td colspan="7" style="text-align:center;">ریکارڈ لوڈ ہو رہا ہے...</td></tr>
         </tbody>
       </table>
     </div>
@@ -233,9 +233,10 @@ th { background: #F1F5F9; color: var(--navy); }
 
 </div>
 
-<!-- PRINT AREA FOR LOADING SHEET -->
+<!-- PRINT AREA FOR DRIVER URDU MANIFEST -->
 <div id="printArea"></div>
 
+<!-- Firebase Realtime Database SDKs -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, ref, get, set, push, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -256,16 +257,25 @@ const db = getDatabase(app);
 window.availableBookings = {};
 window.allManifests = {};
 
+// LOGISTICS PARTNERS DATABASE
+const partnerDetailsMap = {
+  "Karachi": { name: "گجرات ہزادہ گڈز کراچی", address: "قائد اعظم ٹرک اسٹینڈ، کراچی", phone: "0300-1234567" },
+  "Peshawar": { name: "گجرات مشترکہ گڈز پشاور", address: "مین جی ٹی روڈ اڈہ، پشاور", phone: "0300-7654321" },
+  "Rawalpindi": { name: "الساعد گڈز فارورڈنگ ایجنسی", address: "گنج منڈی، راولپنڈی", phone: "0300-9876543" },
+  "Multan": { name: "ملتان ترانسپورٹ اڈہ", address: "شاہ شمس روڈ، ملتان", phone: "0300-5555555" },
+  "Hyderabad": { name: "حیدرآباد گڈز ایجنسی", address: "حیدرآباد بائی پاس اڈہ", phone: "0300-4444444" }
+};
+
 document.getElementById('dispatchDate').valueAsDate = new Date();
 
 async function loadWarehouseBookings() {
   const tbody = document.getElementById('warehouseTableBody');
-  tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Loading...</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">گودام کی لسٹ لوڈ ہو رہی ہے...</td></tr>';
 
   try {
     const snap = await get(ref(db, 'bookings'));
     if(!snap.exists()) {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No bookings found.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">کوئی بکنگ موجود نہیں ہے۔</td></tr>';
       return;
     }
 
@@ -277,7 +287,6 @@ async function loadWarehouseBookings() {
       const bId = child.key;
       const b = child.val();
       
-      // Load bookings that are in warehouse / ready for loading
       if(b.status === "Goods received" || b.status === "In warehouse" || b.status === "Booking Received") {
         window.availableBookings[bId] = b;
         count++;
@@ -290,18 +299,19 @@ async function loadWarehouseBookings() {
             <td>${b.senderName}</td>
             <td><strong>${b.receiverName}</strong> (${b.destCity})</td>
             <td>${b.totalQty || 0}</td>
-            <td><strong style="color:green;">Rs. ${b.netTotal || 0}</strong></td>
+            <td><strong style="color:green;">Rs. ${b.freightCharges || 0}</strong></td>
+            <td>Rs. ${b.netTotal || 0}</td>
           </tr>
         `;
       }
     });
 
     if(count === 0) {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">ویئر ہاؤس میں لوڈنگ کے لیے کوئی بکنگ موجود نہیں ہے۔</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">ویئر ہاؤس میں لوڈنگ کے لیے کوئی بکنگ موجود نہیں ہے۔</td></tr>';
     }
 
   } catch(e) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Failed to load.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:red;">لوڈ کرنے میں ناکامی: ' + e.message + '</td></tr>';
   }
 }
 
@@ -314,23 +324,21 @@ window.toggleSelectAll = function(masterCheck) {
 
 window.calculateManifestSummary = function() {
   const selected = document.querySelectorAll('.manifest-check:checked');
-  let totalCollection = 0;
+  let totalFreight = 0;
+  let totalNet = 0;
 
   selected.forEach(chk => {
     const bId = chk.value;
     const b = window.availableBookings[bId];
     if(b) {
-      totalCollection += Number(b.netTotal) || 0;
+      totalFreight += Number(b.freightCharges) || 0;
+      totalNet += Number(b.netTotal) || 0;
     }
   });
 
-  const driverExpense = Number(document.getElementById('driverFare').value) || 0;
-  const netProfit = totalCollection - driverExpense;
-
   document.getElementById('sumQty').innerText = selected.length;
-  document.getElementById('sumCollection').innerText = totalCollection;
-  document.getElementById('sumExpense').innerText = driverExpense;
-  document.getElementById('sumProfit').innerText = netProfit;
+  document.getElementById('sumFreight').innerText = totalFreight;
+  document.getElementById('sumCollection').innerText = totalNet;
 };
 
 window.saveAndDispatchManifest = async function() {
@@ -339,7 +347,6 @@ window.saveAndDispatchManifest = async function() {
   const driverPhone = document.getElementById('driverPhone').value;
   const routeCities = document.getElementById('routeCities').value;
   const dispatchDate = document.getElementById('dispatchDate').value;
-  const driverFare = Number(document.getElementById('driverFare').value) || 0;
 
   const selectedCheckboxes = document.querySelectorAll('.manifest-check:checked');
 
@@ -354,21 +361,20 @@ window.saveAndDispatchManifest = async function() {
   }
 
   const selectedBookingIds = [];
-  const selectedBookingDetails = [];
-  let totalCollection = 0;
+  let totalFreight = 0;
+  let totalNet = 0;
 
   selectedCheckboxes.forEach(chk => {
     const bId = chk.value;
     const b = window.availableBookings[bId];
     if(b) {
       selectedBookingIds.push(bId);
-      selectedBookingDetails.push(b);
-      totalCollection += Number(b.netTotal) || 0;
+      totalFreight += Number(b.freightCharges) || 0;
+      totalNet += Number(b.netTotal) || 0;
     }
   });
 
   const manifestNo = "MAN-" + Math.floor(100000 + Math.random() * 900000);
-  const netProfit = totalCollection - driverFare;
 
   const manifestData = {
     manifestNo: manifestNo,
@@ -377,19 +383,17 @@ window.saveAndDispatchManifest = async function() {
     driverPhone: driverPhone,
     routeCities: routeCities,
     dispatchDate: dispatchDate,
-    driverFare: driverFare,
-    totalCollection: totalCollection,
-    netProfit: netProfit,
+    totalFreight: totalFreight,
+    totalNet: totalNet,
     bookingIds: selectedBookingIds,
     createdAt: new Date().toISOString()
   };
 
   try {
-    // 1. Save Manifest
     const newManifestRef = push(ref(db, 'manifests'));
     await set(newManifestRef, manifestData);
 
-    // 2. Update status of all attached bookings to "On the way" & attach Truck Details (STEP 3 integration)
+    // Update status and attach Truck info for customer portal tracking
     for(let bId of selectedBookingIds) {
       await update(ref(db, 'bookings/' + bId), {
         status: "On the way",
@@ -413,7 +417,7 @@ async function loadManifestHistory() {
   try {
     const snap = await get(ref(db, 'manifests'));
     if(!snap.exists()) {
-      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No history found.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">کوئی پرانا ریکارڈ موجود نہیں ہے۔</td></tr>';
       return;
     }
 
@@ -432,14 +436,13 @@ async function loadManifestHistory() {
           <td><strong style="color:navy;">${m.truckNo}</strong></td>
           <td>${m.driverName} (${m.driverPhone})</td>
           <td>${m.bookingIds ? m.bookingIds.length : 0}</td>
-          <td>Rs. ${m.totalCollection}</td>
-          <td><strong style="color:green;">Rs. ${m.netProfit}</strong></td>
-          <td><button class="btn btn-primary" onclick="printManifestSheet('${mId}')">🖨️ Print Sheet</button></td>
+          <td><strong style="color:green;">Rs. ${m.totalFreight || 0}</strong></td>
+          <td><button class="btn btn-primary" onclick="printManifestSheet('${mId}')">🖨️ پرنٹ مینی فیسٹ (اردو)</button></td>
         </tr>
       `;
     });
   } catch(e) {
-    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:red;">Failed to load.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">لوڈ کرنے میں مسئلہ آیا۔</td></tr>';
   }
 }
 
@@ -447,73 +450,139 @@ window.printManifestSheet = async function(mId) {
   const m = window.allManifests[mId];
   if(!m) return;
 
-  let rowsHtml = '';
-  let count = 1;
+  // Group Bookings By Destination City
+  const cityGroupedBookings = {};
 
   if(m.bookingIds) {
     for(let bId of m.bookingIds) {
       const snap = await get(ref(db, 'bookings/' + bId));
       if(snap.exists()) {
         const b = snap.val();
-        rowsHtml += `
-          <tr>
-            <td>${count++}</td>
-            <td><b>${b.biltyNo}</b></td>
-            <td>${b.senderName}</td>
-            <td>${b.receiverName} (${b.receiverPhone})</td>
-            <td>${b.destCity}</td>
-            <td>${b.totalQty || 0}</td>
-            <td>Rs. ${b.netTotal || 0}</td>
-            <td>${b.paymentMode}</td>
-          </tr>
-        `;
+        const city = b.destCity || "دیگر شہر";
+        if(!cityGroupedBookings[city]) {
+          cityGroupedBookings[city] = [];
+        }
+        cityGroupedBookings[city].push(b);
       }
     }
   }
 
+  let htmlContent = '';
+  let grandTotalFreight = 0;
+  let grandTotalNet = 0;
+
+  Object.keys(cityGroupedBookings).forEach(city => {
+    const bookings = cityGroupedBookings[city];
+    const partner = partnerDetailsMap[city] || { name: `لاجسٹک پارٹنر (${city})`, address: `${city} اڈہ`, phone: "N/A" };
+
+    let cityRows = '';
+    let cityFreightSum = 0;
+    let cityNetSum = 0;
+    let count = 1;
+
+    bookings.forEach(b => {
+      const fAmount = Number(b.freightCharges) || 0;
+      const nAmount = Number(b.netTotal) || 0;
+      cityFreightSum += fAmount;
+      cityNetSum += nAmount;
+
+      cityRows += `
+        <tr>
+          <td style="border:1px solid #cbd5e1; padding:6px; text-align:center;">${count++}</td>
+          <td style="border:1px solid #cbd5e1; padding:6px;"><b>${b.biltyNo}</b></td>
+          <td style="border:1px solid #cbd5e1; padding:6px;">${b.senderName}</td>
+          <td style="border:1px solid #cbd5e1; padding:6px;"><b>${b.receiverName}</b><br><small>📞 ${b.receiverPhone || 'N/A'}</small></td>
+          <td style="border:1px solid #cbd5e1; padding:6px; text-align:center;">${b.totalQty || 0} Pcs</td>
+          <td style="border:1px solid #cbd5e1; padding:6px; text-align:right; font-weight:700; color:green;">Rs. ${fAmount}</td>
+          <td style="border:1px solid #cbd5e1; padding:6px; text-align:right;">Rs. ${nAmount}</td>
+        </tr>
+      `;
+    });
+
+    grandTotalFreight += cityFreightSum;
+    grandTotalNet += cityNetSum;
+
+    htmlContent += `
+      <div style="border:2px solid #0B2545; border-radius:6px; padding:10px; margin-bottom:15px; background:#fff;">
+        
+        <!-- LOGISTICS PARTNER HEADER -->
+        <div style="background:#EFF6FF; border-bottom:2px solid #0B2545; padding:8px; border-radius:4px; margin-bottom:8px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <h3 style="margin:0; color:#0B2545; font-size:1.1rem;" class="urdu">اڈہ / ڈسٹینیشن: <span style="color:#DC2626;">${city}</span></h3>
+              <div style="font-size:0.85rem; margin-top:2px;"><b>لاجسٹک پارٹنر:</b> ${partner.name} | <b>پتہ:</b> ${partner.address}</div>
+            </div>
+            <div style="font-size:0.9rem; background:#DBEAFE; padding:4px 10px; border-radius:4px; border:1px solid #93C5FD;">
+              <b>فون نمبر:</b> <span style="direction:ltr; display:inline-block;">${partner.phone}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CITY BILTY TABLE -->
+        <table style="width:100%; border-collapse:collapse; font-size:0.82rem; margin-bottom:6px;">
+          <thead>
+            <tr style="background:#F1F5F9; color:#0B2545;">
+              <th style="border:1px solid #cbd5e1; padding:6px; width:30px;">#</th>
+              <th style="border:1px solid #cbd5e1; padding:6px;">بلٹی نمبر</th>
+              <th style="border:1px solid #cbd5e1; padding:6px;">مال بھیجنے والا</th>
+              <th style="border:1px solid #cbd5e1; padding:6px;">وصول کنندہ و رابطہ</th>
+              <th style="border:1px solid #cbd5e1; padding:6px;">تعداد</th>
+              <th style="border:1px solid #cbd5e1; padding:6px;">ڈرائیور وصولی کرایہ (Freight)</th>
+              <th style="border:1px solid #cbd5e1; padding:6px;">کل بلٹی رقم</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${cityRows}
+          </tbody>
+          <tfoot>
+            <tr style="background:#FEF3C7; font-weight:800; font-size:0.9rem; color:#B45309;">
+              <td colspan="5" style="border:1px solid #cbd5e1; padding:6px; text-align:left;" class="urdu">اس اڈے سے ڈرائیور کی کل وصولی کرایہ (Total Freight to Collect):</td>
+              <td style="border:1px solid #cbd5e1; padding:6px; text-align:right; color:green; font-size:1rem;">Rs. ${cityFreightSum}</td>
+              <td style="border:1px solid #cbd5e1; padding:6px; text-align:right;">Rs. ${cityNetSum}</td>
+            </tr>
+          </tfoot>
+        </table>
+
+      </div>
+    `;
+  });
+
   const printArea = document.getElementById('printArea');
   printArea.innerHTML = `
-    <div style="border:2px solid #0B2545; padding:15px; border-radius:6px; background:#fff; font-family:'Plus Jakarta Sans', sans-serif;">
-      <div style="text-align:center; border-bottom:2px solid #0B2545; padding-bottom:6px; margin-bottom:10px;">
-        <h2 style="color:#0B2545; margin:0; font-size:1.4rem;">GUJRAT MUSHTARKA GOODS TRANSPORT CO.</h2>
-        <h3 class="urdu" style="color:#DC2626; margin:2px 0 0; font-size:1.1rem;">ٹرک لوڈنگ شیٹ / مینی فیسٹ (LOADING MANIFEST)</h3>
+    <div style="padding:10px; font-family:'Noto Nastaliq Urdu', 'Plus Jakarta Sans', sans-serif; direction:rtl; text-align:right;">
+      
+      <!-- MAIN HEADER -->
+      <div style="text-align:center; border-bottom:3px double #0B2545; padding-bottom:6px; margin-bottom:12px;">
+        <h1 style="color:#0B2545; margin:0; font-size:1.5rem; font-weight:800; font-family:'Plus Jakarta Sans';">GUJRAT MUSHTARKA GOODS TRANSPORT CO.</h1>
+        <h2 class="urdu" style="color:#DC2626; margin:2px 0 0; font-size:1.2rem;">گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی (ٹرک مینی فیسٹ / لوڈنگ شیٹ)</h2>
       </div>
 
-      <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; margin-bottom:12px; font-size:0.85rem; background:#EFF6FF; padding:8px; border-radius:4px;">
-        <div><strong>Manifest No:</strong> ${m.manifestNo}</div>
-        <div><strong>Dispatch Date:</strong> ${m.dispatchDate}</div>
-        <div><strong>Truck No:</strong> <b style="color:navy;">${m.truckNo}</b></div>
-        <div><strong>Driver:</strong> ${m.driverName}</div>
-        <div><strong>Driver Phone:</strong> ${m.driverPhone}</div>
-        <div><strong>Route:</strong> ${m.routeCities}</div>
+      <!-- TRUCK & DRIVER INFO -->
+      <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px; margin-bottom:15px; font-size:0.88rem; background:#F8FAFC; padding:10px; border:1px solid #cbd5e1; border-radius:6px;" class="urdu">
+        <div><b>مینی فیسٹ نمبر:</b> ${m.manifestNo}</div>
+        <div><b>تاریخ روانی:</b> ${m.dispatchDate}</div>
+        <div><b>گاڑی نمبر:</b> <b style="color:navy; font-size:1rem; font-family:'Plus Jakarta Sans';">${m.truckNo}</b></div>
+        <div><b>ڈرائیور کا نام:</b> ${m.driverName}</div>
+        <div><b>ڈرائیور کا فون:</b> ${m.driverPhone}</div>
+        <div><b>روٹ:</b> ${m.routeCities || 'گجرات روٹ'}</div>
       </div>
 
-      <table style="width:100%; border-collapse:collapse; margin-bottom:15px; font-size:0.8rem;">
-        <thead>
-          <tr style="background:#f1f5f9;">
-            <th style="border:1px solid #cbd5e1; padding:6px;">#</th>
-            <th style="border:1px solid #cbd5e1; padding:6px;">Bilty No.</th>
-            <th style="border:1px solid #cbd5e1; padding:6px;">Sender</th>
-            <th style="border:1px solid #cbd5e1; padding:6px;">Receiver & Phone</th>
-            <th style="border:1px solid #cbd5e1; padding:6px;">Destination</th>
-            <th style="border:1px solid #cbd5e1; padding:6px;">Qty</th>
-            <th style="border:1px solid #cbd5e1; padding:6px;">Amount</th>
-            <th style="border:1px solid #cbd5e1; padding:6px;">Mode</th>
-          </tr>
-        </thead>
-        <tbody>${rowsHtml}</tbody>
-      </table>
+      <!-- CITY-WISE TABLES -->
+      ${htmlContent}
 
-      <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; font-size:0.85rem; background:#F8FAFC; padding:10px; border:1px solid #cbd5e1; border-radius:4px;">
-        <div>Total Collection: <b>Rs. ${m.totalCollection}</b></div>
-        <div>Truck Fare Expense: <b>Rs. ${m.driverFare}</b></div>
-        <div>Net Profit: <b style="color:green;">Rs. ${m.netProfit}</b></div>
+      <!-- GRAND TOTAL SUMMARY FOR DRIVER -->
+      <div style="background:#0B2545; color:#fff; padding:12px; border-radius:6px; margin-top:15px; font-size:1rem;" class="urdu">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div><strong>پورے روٹ سے ڈرائیور کی کل وصولی کرایہ (Grand Total Freight to Collect):</strong></div>
+          <div style="font-size:1.4rem; color:#F2B705; font-weight:800;">Rs. ${grandTotalFreight}</div>
+        </div>
       </div>
 
-      <div style="display:flex; justify-content:space-between; margin-top:40px; font-size:0.85rem;">
-        <div>_______________________<br><b>Warehouse Manager Sign</b></div>
-        <div>_______________________<br><b>Driver Signature</b></div>
+      <div style="display:flex; justify-content:space-between; margin-top:35px; font-size:0.85rem;" class="urdu">
+        <div>_______________________<br><b>دستخط مینیجر اڈہ (Gujrat Mushtarka)</b></div>
+        <div>_______________________<br><b>دستخط ڈرائیور (Driver Signature)</b></div>
       </div>
+
     </div>
   `;
 
