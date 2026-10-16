@@ -29,7 +29,7 @@ body {
 
 /* Expanded Width for Customer Portal Dashboard */
 .container {
-  max-width: 1250px;
+  max-width: 1300px;
   margin: 0 auto;
   background: #fff;
   padding: 20px;
@@ -120,6 +120,11 @@ table { width: 100%; border-collapse: collapse; margin: 12px 0; }
 th, td { border: 1px solid var(--border); padding: 8px; text-align: left; font-size: 0.8rem; }
 th { background: #F1F5F9; color: var(--navy); }
 
+/* STRICT SINGLE LINE WRAPPING FOR DATE & BILTY NO */
+.single-line {
+  white-space: nowrap !important;
+}
+
 .btn {
   padding: 7px 12px;
   border-radius: 6px;
@@ -150,6 +155,7 @@ th { background: #F1F5F9; color: var(--navy); }
   font-weight: 700;
   background: #FEF3C7;
   color: #D97706;
+  white-space: nowrap;
 }
 
 .actions-row { display: flex; gap: 10px; justify-content: flex-end; margin-top: 15px; }
@@ -274,20 +280,21 @@ th { background: #F1F5F9; color: var(--navy); }
       <table>
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Booking No.</th>
+            <th class="single-line">Booking Date</th>
+            <th class="single-line">Bilty No.</th>
             <th>Receiver & Contact</th>
             <th>Destination</th>
             <th>Total Bill</th>
             <th>Payment</th>
             <th>Status</th>
-            <th>Dispatch & Driver Info</th>
+            <th class="single-line">Dispatch Date</th>
+            <th>Driver & Truck Info</th>
             <th>Logistic Partner</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody id="historyTableBody">
-          <tr><td colspan="10" style="text-align:center;">Loading data...</td></tr>
+          <tr><td colspan="11" style="text-align:center;">Loading data...</td></tr>
         </tbody>
       </table>
     </div>
@@ -721,14 +728,14 @@ document.getElementById('biltyForm').addEventListener('submit', async (e) => {
 
 window.loadUserBookings = async function() {
   const tbody = document.getElementById('historyTableBody');
-  tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">Loading data...</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;">Loading data...</td></tr>';
   
   try {
     const bookingsRef = ref(db, 'bookings');
     const snapshot = await get(bookingsRef);
     
     if(!snapshot.exists()) {
-      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">کوئی پرانی بکنگ موجود نہیں ہے۔</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;">کوئی پرانی بکنگ موجود نہیں ہے۔</td></tr>';
       return;
     }
 
@@ -745,9 +752,11 @@ window.loadUserBookings = async function() {
         const canEditDelete = (currentStatus === "Booking Received");
         const totalBill = b.netTotal ? `Rs. ${b.netTotal}` : 'Pending';
 
-        let dispatchInfo = '<span style="color:#94A3B8;">Not Dispatched yet</span>';
+        const dispatchDateVal = b.dispatchDate ? `<span class="single-line" style="font-weight:700; color:#0B2545;">${b.dispatchDate}</span>` : '<span style="color:#94A3B8;">-</span>';
+
+        let driverInfo = '<span style="color:#94A3B8;">Not Dispatched yet</span>';
         if(b.truckNo) {
-          dispatchInfo = `<strong style="color:#0B2545;">🚛 ${b.truckNo}</strong><br><small>👤 ${b.driverName || 'N/A'} (${b.driverPhone || ''})</small><br><small>📅 ${b.dispatchDate || 'N/A'}</small>`;
+          driverInfo = `<strong style="color:#0B2545;">🚛 ${b.truckNo}</strong><br><small>👤 ${b.driverName || 'N/A'} (${b.driverPhone || ''})</small><br><small>M#: ${b.manifestNo || 'N/A'}</small>`;
         }
 
         const partner = partnerDetailsMap[b.destCity] || { name: 'Gujrat Mushtarka Godown', phone: '053-3729517' };
@@ -755,14 +764,15 @@ window.loadUserBookings = async function() {
 
         tbody.innerHTML += `
           <tr>
-            <td>${b.date}</td>
-            <td><strong>${b.biltyNo}</strong></td>
+            <td class="single-line"><strong>${b.date}</strong></td>
+            <td class="single-line"><strong>${b.biltyNo}</strong></td>
             <td><strong>${b.receiverName}</strong><br><small style="color:#64748B;">📞 ${b.receiverPhone || 'N/A'}</small></td>
             <td>${b.destCity}</td>
             <td><strong style="color:green;">${totalBill}</strong></td>
             <td><strong style="color:${b.paymentMode === 'PAID' ? 'green' : 'blue'};">${b.paymentMode}</strong></td>
             <td><span class="status-badge">${currentStatus}</span></td>
-            <td>${dispatchInfo}</td>
+            <td>${dispatchDateVal}</td>
+            <td>${driverInfo}</td>
             <td>${partnerInfo}</td>
             <td>
               <div style="display:flex; gap:4px; flex-wrap:wrap;">
@@ -777,10 +787,10 @@ window.loadUserBookings = async function() {
     });
 
     if(tbody.innerHTML === '') {
-      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">کوئی پرانی بکنگ موجود نہیں ہے۔</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;">کوئی پرانی بکنگ موجود نہیں ہے۔</td></tr>';
     }
   } catch(err) {
-    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; color:red;">Failed to load history.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; color:red;">Failed to load history.</td></tr>';
   }
 };
 
