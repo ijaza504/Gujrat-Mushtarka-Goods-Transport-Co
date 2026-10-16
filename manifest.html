@@ -29,6 +29,18 @@ body {
 
 .urdu { font-family: 'Noto Nastaliq Urdu', serif; line-height: 1.5 !important; }
 
+/* AUTH LOGIN BOX STYLING */
+.auth-box {
+  max-width: 400px;
+  margin: 50px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  border-top: 5px solid var(--gold);
+  text-align: center;
+}
+
 .container {
   max-width: 1050px;
   margin: 0 auto;
@@ -88,6 +100,7 @@ input, select {
 .btn-navy { background: var(--navy); color: #fff; }
 .btn-secondary { background: #64748B; color: #fff; }
 .btn-success { background: #10B981; color: #fff; }
+.btn-danger { background: #EF4444; color: #fff; }
 .btn-warning { background: #F59E0B; color: #fff; }
 .btn-info { background: #0284C7; color: #fff; }
 
@@ -152,7 +165,20 @@ th { background: #F1F5F9; color: var(--navy); }
 </head>
 <body>
 
-<div class="container no-print">
+<!-- MANIFEST AUTH LOGIN SECTION -->
+<div id="manifestAuthBox" class="auth-box">
+  <h2 style="color:var(--navy); margin-top:0;" class="urdu">مینی فیسٹ لاگ ان</h2>
+  <p style="color:#64748B; font-size:0.85rem;" class="urdu">گجرات مشترکہ گڈز ٹرانسپورٹ - کنٹرول پینل</p>
+  
+  <div style="margin-bottom:15px; text-align:right;">
+    <label class="urdu">ایڈمن پاس کوڈ (Passcode):</label>
+    <input type="password" id="manifestPassInput" placeholder="پاس کوڈ درج کریں" onkeypress="if(event.key==='Enter') loginManifestAdmin()">
+  </div>
+  <button type="button" class="btn btn-primary" style="width:100%; justify-content:center;" onclick="loginManifestAdmin()">سائن ان کریں (Login)</button>
+</div>
+
+<!-- MAIN MANIFEST CONTAINER (HIDDEN UNTIL LOGIN) -->
+<div id="manifestMainContainer" class="container no-print" style="display:none;">
   <div class="header-title">
     <h1>GUJRAT MUSHTARKA GOODS TRANSPORT CO.</h1>
     <h2 class="urdu">گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی (ٹرک مینی فیسٹ ماڈیول)</h2>
@@ -163,6 +189,7 @@ th { background: #F1F5F9; color: var(--navy); }
     <div style="display:flex; gap:8px;">
       <a href="admin.html" class="btn btn-navy">📋 ایڈمن پینل</a>
       <a href="index.html" class="btn btn-secondary">🏠 ہوم پیج</a>
+      <button class="btn btn-danger" onclick="logoutManifestAdmin()">🚪 لاگ آؤٹ</button>
     </div>
   </div>
 
@@ -307,6 +334,25 @@ const db = getDatabase(app);
 
 window.availableBookings = {};
 window.allManifests = {};
+
+// AUTHENTICATION LOGIC FOR MANIFEST
+window.loginManifestAdmin = function() {
+  const pass = document.getElementById('manifestPassInput').value;
+  if(pass === "gujrat2001") {
+    document.getElementById('manifestAuthBox').style.display = 'none';
+    document.getElementById('manifestMainContainer').style.display = 'block';
+    loadWarehouseBookings();
+    loadManifestHistory();
+  } else {
+    alert("پاس کوڈ غلط ہے! براہ کرم درست پاسورڈ درج کریں۔");
+  }
+};
+
+window.logoutManifestAdmin = function() {
+  document.getElementById('manifestAuthBox').style.display = 'block';
+  document.getElementById('manifestMainContainer').style.display = 'none';
+  document.getElementById('manifestPassInput').value = '';
+};
 
 const partnerDetailsMap = {
   "Karachi": { name: "گجرات ہزادہ گڈز کراچی", address: "قائد اعظم ٹرک اسٹینڈ، کراچی", phone: "0300-1234567" },
@@ -640,7 +686,7 @@ window.closeViewModal = function() {
   document.getElementById('viewManifestModal').style.display = 'none';
 };
 
-// HIGHLY OPTIMIZED COMPACT SINGLE-LINE PRINT FORMAT (STRICTLY ONE LINE PER ROW)
+// HIGHLY OPTIMIZED COMPACT SINGLE-LINE PRINT FORMAT
 async function generateManifestHTMLContent(m) {
   const cityGroupedBookings = {};
 
@@ -826,9 +872,6 @@ window.printManifestSheet = async function(mId) {
   printArea.innerHTML = `<div style="padding:0;">${content}</div>`;
   window.print();
 };
-
-loadWarehouseBookings();
-loadManifestHistory();
 </script>
 
 </body>
