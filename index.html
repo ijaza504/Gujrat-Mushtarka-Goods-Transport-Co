@@ -18,11 +18,12 @@
 
 <link rel="stylesheet" href="style.css">
 
-<!-- Custom Watermark Map CSS -->
+<!-- Custom Real Pakistan Vector Watermark Map CSS -->
 <style>
 .hero {
   position: relative;
   overflow: hidden;
+  background: var(--navy);
 }
 .map-watermark {
   position: absolute;
@@ -30,9 +31,9 @@
   left: 50%;
   transform: translate(-50%, -50%);
   width: 100%;
-  max-width: 900px;
+  max-width: 850px;
   height: 100%;
-  opacity: 0.16;
+  opacity: 0.18;
   pointer-events: none;
   z-index: 1;
 }
@@ -40,13 +41,13 @@
   position: relative;
   z-index: 2;
 }
-@keyframes pulse {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-  70% { transform: scale(1); box-shadow: 0 0 0 14px rgba(239, 68, 68, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+@keyframes pulse-red {
+  0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.8); }
+  70% { transform: scale(1.1); box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
+  100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
 }
 .gujrat-pin {
-  animation: pulse 2s infinite;
+  animation: pulse-red 2s infinite;
 }
 </style>
 
@@ -85,50 +86,56 @@
 
 <section id="home" class="hero">
   
-  <!-- BIG PAKISTAN WATERMAP & ROUTES BACKGROUND -->
+  <!-- ACCURATE PAKISTAN VECTOR MAP WATERMARK WITH GUJRAT HQ & ROUTES -->
   <div class="map-watermark">
-    <svg viewBox="0 0 600 600" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Pakistan Stylized Outline -->
-      <path d="M250,80 Q320,60 380,100 T450,220 Q480,300 420,380 T300,500 Q200,520 180,440 T150,300 Q140,200 200,140 Z" fill="#ffffff" stroke="#ffffff" stroke-width="3" opacity="0.45"/>
+    <svg viewBox="0 0 1000 900" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Accurate Pakistan Geographical Boundary Outline -->
+      <path d="M720,100 L760,130 L740,180 L800,210 L840,190 L880,240 L810,310 L750,330 L690,290 L650,340 L670,410 L710,480 L680,560 L620,600 L560,650 L480,720 L400,780 L320,810 L250,790 L180,760 L120,740 L80,690 L110,640 L170,630 L220,590 L190,520 L150,490 L180,430 L240,410 L280,360 L330,380 L380,330 L410,270 L480,250 L520,290 L580,240 L620,200 L650,130 Z" fill="#ffffff" stroke="#ffffff" stroke-width="4" opacity="0.35"/>
       
-      <!-- Route Lines from Gujrat (Center-North) to Nationwide Cities -->
-      <g stroke="#F2B705" stroke-width="2.5" stroke-dasharray="6,6" opacity="0.9">
-        <!-- Gujrat to Karachi -->
-        <path d="M280,180 Q350,320 380,480" />
-        <!-- Gujrat to Peshawar -->
-        <path d="M280,180 Q220,130 180,110" />
-        <!-- Gujrat to Rawalpindi / Islamabad -->
-        <path d="M280,180 Q270,140 260,120" />
-        <!-- Gujrat to Quetta -->
-        <path d="M280,180 Q200,300 150,420" />
-        <!-- Gujrat to Multan / Lahore -->
-        <path d="M280,180 Q310,240 330,300" />
+      <!-- ROUTE LINES FROM GUJRAT HQ -->
+      <g stroke="#F2B705" stroke-width="3" stroke-dasharray="8,8" opacity="0.9">
+        <!-- Gujrat (630, 290) to Karachi (320, 810) -->
+        <path d="M630,290 L520,480 L400,680 L320,810" />
+        <!-- Gujrat (630, 290) to Peshawar (520, 210) -->
+        <path d="M630,290 L580,250 L520,210" />
+        <!-- Gujrat (630, 290) to Rawalpindi / Islamabad (570, 230) -->
+        <path d="M630,290 L570,230" />
+        <!-- Gujrat (630, 290) to Quetta (280, 520) -->
+        <path d="M630,290 L480,410 L280,520" />
+        <!-- Gujrat (630, 290) to Multan (510, 420) -->
+        <path d="M630,290 L570,350 L510,420" />
       </g>
 
-      <!-- Gujrat Headquarters Marker -->
-      <circle cx="280" cy="180" r="11" fill="#EF4444" class="gujrat-pin"/>
-      <text x="295" y="185" fill="#ffffff" font-size="14" font-weight="bold">گجرات (HQ)</text>
+      <!-- GUJRAT HEADQUARTERS PIN -->
+      <circle cx="630" cy="290" r="14" fill="#EF4444" class="gujrat-pin"/>
+      <circle cx="630" cy="290" r="6" fill="#ffffff"/>
+      <text x="650" y="295" fill="#F2B705" font-size="22" font-weight="bold">گجرات (Head Office)</text>
 
+      <!-- CITY LOCATIONS & LABELS -->
       <!-- Karachi -->
-      <circle cx="380" cy="480" r="6" fill="#F2B705"/>
-      <text x="395" y="485" fill="#ffffff" font-size="11">کراچی</text>
+      <circle cx="320" cy="810" r="8" fill="#F2B705"/>
+      <text x="340" y="820" fill="#ffffff" font-size="18" font-weight="bold">کراچی</text>
 
       <!-- Peshawar -->
-      <circle cx="180" cy="110" r="6" fill="#F2B705"/>
-      <text x="115" y="115" fill="#ffffff" font-size="11">پشاور</text>
+      <circle cx="520" cy="210" r="8" fill="#F2B705"/>
+      <text x="430" y="215" fill="#ffffff" font-size="18" font-weight="bold">پشاور</text>
 
       <!-- Rawalpindi -->
-      <circle cx="260" cy="120" r="6" fill="#F2B705"/>
-      <text x="205" y="135" fill="#ffffff" font-size="11">راولپنڈی</text>
+      <circle cx="570" cy="230" r="8" fill="#F2B705"/>
+      <text x="480" y="245" fill="#ffffff" font-size="18" font-weight="bold">راولپنڈی</text>
 
       <!-- Quetta -->
-      <circle cx="150" cy="420" r="6" fill="#F2B705"/>
-      <text x="95" y="425" fill="#ffffff" font-size="11">کوئٹہ</text>
+      <circle cx="280" cy="520" r="8" fill="#F2B705"/>
+      <text x="200" y="525" fill="#ffffff" font-size="18" font-weight="bold">کوئٹہ</text>
 
-      <!-- Moving Truck Icons along routes -->
-      <text x="330" y="320" font-size="18">🚛</text>
-      <text x="215" y="140" font-size="18">🚚</text>
-      <text x="210" y="320" font-size="16">🚛</text>
+      <!-- Multan -->
+      <circle cx="510" cy="420" r="8" fill="#F2B705"/>
+      <text x="530" y="430" fill="#ffffff" font-size="18" font-weight="bold">ملتان</text>
+
+      <!-- TRUCK ICONS ON ROUTES -->
+      <text x="450" y="600" font-size="26">🚛</text>
+      <text x="560" y="245" font-size="24">🚚</text>
+      <text x="410" y="440" font-size="24">🚛</text>
     </svg>
   </div>
 
@@ -188,7 +195,7 @@
       <div class="story-content urdu-text">
         <p><strong>گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی</strong> کا آغاز <strong>2001ء میں چوہدری جاوید صاحب </strong> نے ایک چھوٹے سے دفتر سے ایک عزم اور نظریے کے ساتھ کیا — کہ گجرات کے صنعتی اور تجارتی طبقے کو ایماندارانہ، وقت کی پابند اور اعلیٰ معیار کی ٹرانسپورٹ سروس فراہم کی جائے۔</p>
         <p>گذشتہ دو دہائیوں سے زیادہ عرصے میں محنت، مضبوط تعلقات اور صداقت کے اصولوں پر قائم رہتے ہوئے، کمپنی نے گجرات اور پاکستان کے دیگر تمام بڑے شہروں میں ایک معتبر اور قابلِ اعتماد نام بنایا ہے۔</p>
-        <p>ہمارے بانی کی مسلسل رہنمائی، ہمارے اڈہ مینیجرز <strong>حبیب اللہ، مجاہد رؤوف اور محمد افضل</strong> اور ہماری محنتی ٹیم کی بدولت، ہم نے الیکٹرک فین (پنکھا سازی), پاٹری (مٹی کے برتن) اور سیرامکس انڈسٹری کے ساتھ مضبوط اور دیرپا تجارتی تعلقات استوار کیے ہیں۔</p>
+        <p>ہمارے بانی کی مسلسل رہنمائی، ہمارے اڈہ مینیجرز <strong>حبیب اللہ، مجاہد رؤوف اور محمد افضل</strong> اور ہماری محنتی ٹیم کی بدولت، ہم نے الیکٹرک فین (پنکھا سازی)، پاٹری (مٹی کے برتن) اور سیرامکس انڈسٹری کے ساتھ مضبوط اور دیرپا تجارتی تعلقات استوار کیے ہیں۔</p>
       </div>
     </div>
     <div class="about-highlights">
