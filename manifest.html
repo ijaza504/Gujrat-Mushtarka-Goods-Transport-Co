@@ -214,6 +214,7 @@ th { background: #F1F5F9; color: var(--navy); }
     </div>
     <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
       <button class="btn btn-success" style="padding:7px 14px; font-size:0.88rem;" onclick="showCreateManifestForm()">➕ نیا مینی فیسٹ بنائیں (Create New)</button>
+      <button class="btn btn-navy" onclick="loadAllDataAndInit()">🔄 ریفرش (Refresh)</button>
       <a href="admin.html" class="btn btn-navy">📋 ایڈمن پینل</a>
       <a href="index.html" class="btn btn-secondary">🏠 ہوم پیج</a>
       <button class="btn btn-danger" onclick="logoutManifestAdmin()">🚪 لاگ آؤٹ</button>
@@ -482,11 +483,11 @@ const partnerDetailsMap = {
 
 document.getElementById('dispatchDate').valueAsDate = new Date();
 
-async function loadAllDataAndInit() {
+window.loadAllDataAndInit = async function() {
   await loadWarehouseBookings();
   await loadManifestHistory();
   calculateDashboardStats();
-}
+};
 
 async function loadWarehouseBookings(selectedIdsToCheck = []) {
   const tbody = document.getElementById('warehouseTableBody');
