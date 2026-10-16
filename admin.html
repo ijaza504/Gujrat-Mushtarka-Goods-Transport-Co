@@ -28,7 +28,7 @@ body {
 .urdu { font-family: 'Noto Nastaliq Urdu', serif; line-height: 1.8 !important; }
 
 .container {
-  max-width: 1150px;
+  max-width: 1250px;
   margin: 0 auto;
   background: #fff;
   padding: 20px;
@@ -111,7 +111,7 @@ input, select {
 }
 
 table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-th, td { border: 1px solid var(--border); padding: 8px; text-align: left; font-size: 0.82rem; }
+th, td { border: 1px solid var(--border); padding: 8px; text-align: left; font-size: 0.8rem; }
 th { background: #F1F5F9; color: var(--navy); }
 
 select.status-select {
@@ -245,16 +245,18 @@ select.status-select {
         <tr>
           <th style="width:30px;"><input type="checkbox" id="selectAllCheck" onchange="toggleSelectAll(this)"></th>
           <th>Date</th>
-          <th>Booking No.</th>
+          <th>Bilty No.</th>
           <th>Sender</th>
           <th>Receiver & Dest.</th>
+          <th>Qty</th>
+          <th>Truck & Driver / Manifest</th>
           <th>Total Bill</th>
           <th>Status</th>
-          <th style="width:160px;">Actions</th>
+          <th style="width:150px;">Actions</th>
         </tr>
       </thead>
       <tbody id="adminTableBody">
-        <tr><td colspan="8" style="text-align:center;">Loading data...</td></tr>
+        <tr><td colspan="10" style="text-align:center;">Loading data...</td></tr>
       </tbody>
     </table>
   </div>
@@ -347,14 +349,14 @@ window.logoutAdmin = function() {
 
 window.loadAllBookings = async function() {
   const tbody = document.getElementById('adminTableBody');
-  tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">Loading data...</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">Loading data...</td></tr>';
   
   try {
     const bookingsRef = ref(db, 'bookings');
     const snapshot = await get(bookingsRef);
     
     if(!snapshot.exists()) {
-      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No bookings found.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">No bookings found.</td></tr>';
       return;
     }
 
@@ -386,7 +388,7 @@ window.loadAllBookings = async function() {
     applyFilters();
 
   } catch(err) {
-    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:red;">Failed to load data: ' + err.message + '</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; color:red;">Failed to load data: ' + err.message + '</td></tr>';
   }
 };
 
@@ -417,6 +419,7 @@ window.applyFilters = function() {
       });
 
       const totalBill = b.netTotal ? `Rs. ${b.netTotal}` : 'Pending';
+      const truckInfo = b.truckNo ? `<strong style="color:#0B2545;">🚛 ${b.truckNo}</strong><br><small style="color:#475569;">👤 ${b.driverName || 'N/A'} (${b.driverPhone || ''})</small><br><small style="color:#2563EB;">M#: ${b.manifestNo || 'N/A'}</small>` : '<span style="color:#94A3B8;">Not Loaded yet</span>';
 
       tbody.innerHTML += `
         <tr>
@@ -425,6 +428,8 @@ window.applyFilters = function() {
           <td><strong>${b.biltyNo}</strong></td>
           <td><strong>${b.senderName}</strong><br><small style="color:#64748B;">📞 ${b.userPhone || 'N/A'}</small></td>
           <td><strong>${b.receiverName}</strong> (${b.destCity})<br><small style="color:#2563EB;">📞 ${b.receiverPhone || 'N/A'}</small></td>
+          <td style="text-align:center; font-weight:700;">${b.totalQty || 0}</td>
+          <td>${truckInfo}</td>
           <td><strong style="color:green;">${totalBill}</strong></td>
           <td>
             <select class="status-select" onchange="updateStatus('${bId}', this.value)">
@@ -432,9 +437,9 @@ window.applyFilters = function() {
             </select>
           </td>
           <td>
-            <div style="display:flex; gap:4px;">
+            <div style="display:flex; gap:4px; flex-wrap:wrap;">
               <button class="btn btn-navy" onclick="openBiltyModal('${bId}')">📝 Make</button>
-              <button class="btn btn-primary" onclick="printSingleBilty('${bId}')">🖨️ View/Print</button>
+              <button class="btn btn-primary" onclick="printSingleBilty('${bId}')">🖨️ Print</button>
             </div>
           </td>
         </tr>
@@ -446,7 +451,7 @@ window.applyFilters = function() {
   updateSelectedCount();
 
   if (matchCount === 0) {
-    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">منتخب کردہ فلٹر کے مطابق کوئی بکنگ نہیں ملی۔</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">منتخب کردہ فلٹر کے مطابق کوئی بکنگ نہیں ملی۔</td></tr>';
   }
 };
 
