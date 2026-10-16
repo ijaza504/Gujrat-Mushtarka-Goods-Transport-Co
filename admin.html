@@ -21,14 +21,14 @@ body {
   font-family: 'Plus Jakarta Sans', sans-serif;
   background-color: var(--light-bg);
   margin: 0;
-  padding: 20px;
+  padding: 15px;
   color: #1E293B;
 }
 
 .urdu { font-family: 'Noto Nastaliq Urdu', serif; line-height: 1.8 !important; }
 
 .container {
-  max-width: 1250px;
+  max-width: 1350px;
   margin: 0 auto;
   background: #fff;
   padding: 20px;
@@ -111,8 +111,20 @@ input, select {
 }
 
 table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-th, td { border: 1px solid var(--border); padding: 8px; text-align: left; font-size: 0.8rem; }
+th, td { border: 1px solid var(--border); padding: 8px; text-align: left; font-size: 0.8rem; vertical-align: middle; }
 th { background: #F1F5F9; color: var(--navy); }
+
+/* STRICT SINGLE LINE WRAPPING FOR DATE & BILTY NO */
+.single-line {
+  white-space: nowrap !important;
+}
+
+/* COMPACT SENDER COLUMN (MAX 2 LINES) */
+.sender-cell {
+  max-width: 160px;
+  word-wrap: break-word;
+  line-height: 1.25;
+}
 
 select.status-select {
   padding: 4px;
@@ -244,19 +256,20 @@ select.status-select {
       <thead>
         <tr>
           <th style="width:30px;"><input type="checkbox" id="selectAllCheck" onchange="toggleSelectAll(this)"></th>
-          <th>Date</th>
-          <th>Bilty No.</th>
-          <th>Sender</th>
-          <th>Receiver & Dest.</th>
-          <th>Qty</th>
+          <th class="single-line">Date</th>
+          <th class="single-line">Bilty No.</th>
+          <th>Sender & Contact</th>
+          <th>Receiver & Contact</th>
+          <th class="single-line">Destination City</th>
+          <th style="text-align:center;">Qty</th>
           <th>Truck & Driver / Manifest</th>
           <th>Total Bill</th>
           <th>Status</th>
-          <th style="width:150px;">Actions</th>
+          <th style="width:140px;">Actions</th>
         </tr>
       </thead>
       <tbody id="adminTableBody">
-        <tr><td colspan="10" style="text-align:center;">Loading data...</td></tr>
+        <tr><td colspan="11" style="text-align:center;">Loading data...</td></tr>
       </tbody>
     </table>
   </div>
@@ -349,14 +362,14 @@ window.logoutAdmin = function() {
 
 window.loadAllBookings = async function() {
   const tbody = document.getElementById('adminTableBody');
-  tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">Loading data...</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;">Loading data...</td></tr>';
   
   try {
     const bookingsRef = ref(db, 'bookings');
     const snapshot = await get(bookingsRef);
     
     if(!snapshot.exists()) {
-      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">No bookings found.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;">No bookings found.</td></tr>';
       return;
     }
 
@@ -388,7 +401,7 @@ window.loadAllBookings = async function() {
     applyFilters();
 
   } catch(err) {
-    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; color:red;">Failed to load data: ' + err.message + '</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; color:red;">Failed to load data: ' + err.message + '</td></tr>';
   }
 };
 
@@ -424,10 +437,11 @@ window.applyFilters = function() {
       tbody.innerHTML += `
         <tr>
           <td><input type="checkbox" class="booking-check" value="${bId}" onchange="updateSelectedCount()"></td>
-          <td>${b.date}</td>
-          <td><strong>${b.biltyNo}</strong></td>
-          <td><strong>${b.senderName}</strong><br><small style="color:#64748B;">📞 ${b.userPhone || 'N/A'}</small></td>
-          <td><strong>${b.receiverName}</strong> (${b.destCity})<br><small style="color:#2563EB;">📞 ${b.receiverPhone || 'N/A'}</small></td>
+          <td class="single-line"><strong>${b.date}</strong></td>
+          <td class="single-line"><strong>${b.biltyNo}</strong></td>
+          <td class="sender-cell"><strong>${b.senderName}</strong><br><small style="color:#64748B;">📞 ${b.userPhone || 'N/A'}</small></td>
+          <td><strong>${b.receiverName}</strong><br><small style="color:#2563EB;">📞 ${b.receiverPhone || 'N/A'}</small></td>
+          <td class="single-line"><strong style="color:#0B2545;">${b.destCity}</strong></td>
           <td style="text-align:center; font-weight:700;">${b.totalQty || 0}</td>
           <td>${truckInfo}</td>
           <td><strong style="color:green;">${totalBill}</strong></td>
@@ -451,7 +465,7 @@ window.applyFilters = function() {
   updateSelectedCount();
 
   if (matchCount === 0) {
-    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">منتخب کردہ فلٹر کے مطابق کوئی بکنگ نہیں ملی۔</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;">منتخب کردہ فلٹر کے مطابق کوئی بکنگ نہیں ملی۔</td></tr>';
   }
 };
 
