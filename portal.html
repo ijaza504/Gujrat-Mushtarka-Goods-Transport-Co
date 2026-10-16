@@ -27,8 +27,9 @@ body {
 
 .urdu { font-family: 'Noto Nastaliq Urdu', serif; line-height: 1.8 !important; }
 
+/* Expanded Width for Customer Portal Dashboard */
 .container {
-  max-width: 900px;
+  max-width: 1250px;
   margin: 0 auto;
   background: #fff;
   padding: 20px;
@@ -116,7 +117,7 @@ input, select, textarea {
 }
 
 table { width: 100%; border-collapse: collapse; margin: 12px 0; }
-th, td { border: 1px solid var(--border); padding: 8px; text-align: left; font-size: 0.82rem; }
+th, td { border: 1px solid var(--border); padding: 8px; text-align: left; font-size: 0.8rem; }
 th { background: #F1F5F9; color: var(--navy); }
 
 .btn {
@@ -265,7 +266,7 @@ th { background: #F1F5F9; color: var(--navy); }
   <!-- BOOKING HISTORY LIST (DASHBOARD VIEW) -->
   <div id="historyView" class="no-print">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-      <h3 class="urdu" style="margin:0;">آپ کی پچھلی تمام بکنگز (Booking History)</h3>
+      <h3 class="urdu" style="margin:0;">آپ کی پچھلی تمام بکنگز (Booking History & Live Tracking)</h3>
       <button class="btn btn-secondary" onclick="loadUserBookings()">🔄 Refresh</button>
     </div>
     
@@ -280,11 +281,13 @@ th { background: #F1F5F9; color: var(--navy); }
             <th>Total Bill</th>
             <th>Payment</th>
             <th>Status</th>
+            <th>Dispatch & Driver Info</th>
+            <th>Logistic Partner</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody id="historyTableBody">
-          <tr><td colspan="8" style="text-align:center;">Loading data...</td></tr>
+          <tr><td colspan="10" style="text-align:center;">Loading data...</td></tr>
         </tbody>
       </table>
     </div>
@@ -396,6 +399,8 @@ th { background: #F1F5F9; color: var(--navy); }
             <option value="Karachi">Karachi (کراچی)</option>
             <option value="Peshawar">Peshawar (پشاور)</option>
             <option value="Rawalpindi">Rawalpindi (راولپنڈی)</option>
+            <option value="Multan">Multan (ملتان)</option>
+            <option value="Hyderabad">Hyderabad (حیدرآباد)</option>
             <option value="Manual">دیگر (مینول لکھیں)</option>
           </select>
           <input type="text" id="manualCity" placeholder="شہر کا نام لکھیں" style="display:none; margin-top:4px;">
@@ -499,6 +504,14 @@ let currentUser = null;
 let userProfilePhone = "";
 window.allUserBookings = {};
 
+const partnerDetailsMap = {
+  "Karachi": { name: "گجرات ہزادہ گڈز کراچی", address: "قائد اعظم ٹرک اسٹینڈ، کراچی", phone: "0300-1234567" },
+  "Peshawar": { name: "گجرات مشترکہ گڈز پشاور", address: "مین جی ٹی روڈ اڈہ، پشاور", phone: "0300-7654321" },
+  "Rawalpindi": { name: "الساعد گڈز فارورڈنگ ایجنسی", address: "گنج منڈی، راولپنڈی", phone: "0300-9876543" },
+  "Multan": { name: "ملتان ترانسپورٹ اڈہ", address: "شاہ شمس روڈ، ملتان", phone: "0300-5555555" },
+  "Hyderabad": { name: "حیدرآباد گڈز ایجنسی", address: "حیدرآباد بائی پاس اڈہ", phone: "0300-4444444" }
+};
+
 onAuthStateChanged(auth, (user) => {
   if (user) {
     currentUser = user;
@@ -588,6 +601,65 @@ async function loadUserProfile() {
   } catch(e){}
 }
 
+window.handleCityChange = function() {
+  const sel = document.getElementById('destCity').value;
+  const man = document.getElementById('manualCity');
+  const box = document.getElementById('partnerDetails');
+  
+  if(sel === "Manual") {
+    man.style.display = 'block';
+    box.innerHTML = 'دیگر شہر کے لیے لاجسٹک پارٹنر مینول ڈیسائیڈ کیا جائے گا۔';
+  } else {
+    man.style.display = 'none';
+    const p = partnerDetailsMap[sel];
+    if(p) {
+      box.innerHTML = `<strong>${p.name}</strong> | پتہ: ${p.address} | فون: <b>${p.phone}</b>`;
+    } else {
+      box.innerHTML = 'شہر سلیکٹ کرنے پر تفاصیل یہاں نظر آئیں گی۔';
+    }
+  }
+};
+
+window.updateWatermark = function() {
+  const mode = document.getElementById('paymentMode').value;
+  const stamp = document.getElementById('watermarkStamp');
+  stamp.innerText = mode;
+  if(mode === "PAID") {
+    stamp.classList.remove('topay');
+  } else {
+    stamp.classList.add('topay');
+  }
+};
+
+window.addRow = function() {
+  const tbody = document.getElementById('tableBody');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" class="item-name" placeholder="Item Name" required></td>
+    <td><input type="number" class="item-qty" oninput="calculateTotal()" required placeholder="0"></td>
+    <td><input type="text" class="item-weight" placeholder="-"></td>
+    <td class="no-print"><button type="button" class="btn btn-danger" onclick="removeRow(this)" style="padding:2px 6px; font-size:0.75rem;">Delete</button></td>
+  `;
+  tbody.appendChild(tr);
+};
+
+window.removeRow = function(btn) {
+  if(document.querySelectorAll('#tableBody tr').length > 1) {
+    btn.closest('tr').remove();
+    calculateTotal();
+  } else {
+    alert("کم از کم ایک آئٹم ضروری ہے!");
+  }
+};
+
+window.calculateTotal = function() {
+  let sum = 0;
+  document.querySelectorAll('.item-qty').forEach(inp => {
+    sum += Number(inp.value) || 0;
+  });
+  document.getElementById('totalQty').innerText = sum;
+};
+
 document.getElementById('biltyForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const sendBtn = document.getElementById('sendOrderBtn');
@@ -604,6 +676,8 @@ document.getElementById('biltyForm').addEventListener('submit', async (e) => {
     if(name && qty) itemsList.push({ name, qty, weight });
   });
 
+  const destVal = document.getElementById('destCity').value === "Manual" ? document.getElementById('manualCity').value : document.getElementById('destCity').value;
+
   const bookingData = {
     userId: currentUser ? currentUser.uid : "guest",
     userEmail: currentUser ? currentUser.email : "N/A",
@@ -617,7 +691,7 @@ document.getElementById('biltyForm').addEventListener('submit', async (e) => {
     receiverPhone: document.getElementById('receiverPhone').value,
     receiverAddress: document.getElementById('receiverAddress').value,
     fromCity: "Gujrat",
-    destCity: document.getElementById('destCity').value === "Manual" ? document.getElementById('manualCity').value : document.getElementById('destCity').value,
+    destCity: destVal,
     itemType: document.getElementById('itemType').value,
     totalQty: document.getElementById('totalQty').innerText,
     items: itemsList,
@@ -647,14 +721,14 @@ document.getElementById('biltyForm').addEventListener('submit', async (e) => {
 
 window.loadUserBookings = async function() {
   const tbody = document.getElementById('historyTableBody');
-  tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">Loading data...</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">Loading data...</td></tr>';
   
   try {
     const bookingsRef = ref(db, 'bookings');
     const snapshot = await get(bookingsRef);
     
     if(!snapshot.exists()) {
-      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">کوئی پرانی بکنگ موجود نہیں ہے۔</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">کوئی پرانی بکنگ موجود نہیں ہے۔</td></tr>';
       return;
     }
 
@@ -671,6 +745,14 @@ window.loadUserBookings = async function() {
         const canEditDelete = (currentStatus === "Booking Received");
         const totalBill = b.netTotal ? `Rs. ${b.netTotal}` : 'Pending';
 
+        let dispatchInfo = '<span style="color:#94A3B8;">Not Dispatched yet</span>';
+        if(b.truckNo) {
+          dispatchInfo = `<strong style="color:#0B2545;">🚛 ${b.truckNo}</strong><br><small>👤 ${b.driverName || 'N/A'} (${b.driverPhone || ''})</small><br><small>📅 ${b.dispatchDate || 'N/A'}</small>`;
+        }
+
+        const partner = partnerDetailsMap[b.destCity] || { name: 'Gujrat Mushtarka Godown', phone: '053-3729517' };
+        const partnerInfo = `<strong>${partner.name}</strong><br><small>📞 ${partner.phone}</small>`;
+
         tbody.innerHTML += `
           <tr>
             <td>${b.date}</td>
@@ -680,9 +762,11 @@ window.loadUserBookings = async function() {
             <td><strong style="color:green;">${totalBill}</strong></td>
             <td><strong style="color:${b.paymentMode === 'PAID' ? 'green' : 'blue'};">${b.paymentMode}</strong></td>
             <td><span class="status-badge">${currentStatus}</span></td>
+            <td>${dispatchInfo}</td>
+            <td>${partnerInfo}</td>
             <td>
               <div style="display:flex; gap:4px; flex-wrap:wrap;">
-                <button class="btn small btn-primary" onclick="printBookingReceipt('${bKey}')">Print / PDF</button>
+                <button class="btn small btn-primary" onclick="printBookingReceipt('${bKey}')">Print</button>
                 <button class="btn small btn-warning" onclick="editBooking('${bKey}')" ${canEditDelete ? '' : 'disabled'}>Edit</button>
                 <button class="btn small btn-danger" onclick="deleteBooking('${bKey}')" ${canEditDelete ? '' : 'disabled'}>Delete</button>
               </div>
@@ -693,10 +777,10 @@ window.loadUserBookings = async function() {
     });
 
     if(tbody.innerHTML === '') {
-      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">کوئی پرانی بکنگ موجود نہیں ہے۔</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">کوئی پرانی بکنگ موجود نہیں ہے۔</td></tr>';
     }
   } catch(err) {
-    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:red;">Failed to load history.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; color:red;">Failed to load history.</td></tr>';
   }
 };
 
@@ -745,7 +829,7 @@ function populateFormWithBookingData(bKey, b) {
   document.getElementById('receiverAddress').value = b.receiverAddress;
   document.getElementById('itemType').value = b.itemType || "ELECTRIC FANS";
 
-  if(b.destCity === "Karachi" || b.destCity === "Peshawar" || b.destCity === "Rawalpindi") {
+  if(b.destCity === "Karachi" || b.destCity === "Peshawar" || b.destCity === "Rawalpindi" || b.destCity === "Multan" || b.destCity === "Hyderabad") {
     document.getElementById('destCity').value = b.destCity;
     document.getElementById('manualCity').style.display = 'none';
   } else {
@@ -861,81 +945,18 @@ window.showNewBookingForm = function() {
 };
 
 window.showHistoryView = function() {
-  document.getElementById('historyView').style.display = 'block';
-  document.getElementById('profileView').style.display = 'none';
   document.getElementById('bookingFormView').style.display = 'none';
-  if(currentUser) loadUserBookings();
+  document.getElementById('profileView').style.display = 'none';
+  document.getElementById('historyView').style.display = 'block';
+  loadUserBookings();
 };
 
 window.showProfileView = function() {
-  document.getElementById('historyView').style.display = 'none';
   document.getElementById('bookingFormView').style.display = 'none';
+  document.getElementById('historyView').style.display = 'none';
   document.getElementById('profileView').style.display = 'block';
   loadUserProfile();
 };
-
-window.cancelBooking = function() {
-  document.getElementById('biltyForm').reset();
-  showHistoryView();
-};
-</script>
-
-<script>
-const partners = {
-  "Karachi": { name: "GUJRAT HAZARA GOODS KARACHI", address: "QUAID E AZAM TRUCK STAND - KARACHI", contact: "0300-00000000" },
-  "Peshawar": { name: "GUJRAT MUSHTARKA GOODS", address: "PESHAWAR", contact: "0300-00000000" },
-  "Rawalpindi": { name: "AL SAAD GOODS FORWARDING AGENCY", address: "GUNJ MANDI - RAWALLPINDI", contact: "0300-00000000" }
-};
-
-function handleCityChange() {
-  const city = document.getElementById('destCity').value;
-  const manualInput = document.getElementById('manualCity');
-  const partnerDetails = document.getElementById('partnerDetails');
-
-  if (city === "Manual") {
-    manualInput.style.display = "block";
-    partnerDetails.innerText = "مینول ڈیسٹینیشن درج کی گئی ہے۔";
-  } else {
-    manualInput.style.display = "none";
-    if (partners[city]) {
-      partnerDetails.innerHTML = `<strong>${partners[city].name}</strong> | ${partners[city].address} | Tel: ${partners[city].contact}`;
-    } else {
-      partnerDetails.innerText = "لاجسٹک پارٹنر کی تفاصیل منتخب نہیں کی گئیں۔";
-    }
-  }
-}
-
-function addRow() {
-  const tbody = document.getElementById('tableBody');
-  const tr = document.createElement('tr');
-  tr.innerHTML = `
-    <td><input type="text" class="item-name" required></td>
-    <td><input type="number" class="item-qty" oninput="calculateTotal()" required placeholder="0"></td>
-    <td><input type="text" class="item-weight" placeholder="-"></td>
-    <td class="no-print"><button type="button" class="btn btn-danger" onclick="removeRow(this)" style="padding:2px 6px; font-size:0.75rem;">Delete</button></td>
-  `;
-  tbody.appendChild(tr);
-}
-
-function removeRow(btn) {
-  btn.parentNode.parentNode.remove();
-  calculateTotal();
-}
-
-function calculateTotal() {
-  let total = 0;
-  document.querySelectorAll('.item-qty').forEach(input => { total += Number(input.value) || 0; });
-  document.getElementById('totalQty').innerText = total;
-}
-
-function updateWatermark() {
-  const mode = document.getElementById('paymentMode').value;
-  const stamp = document.getElementById('watermarkStamp');
-  if(stamp) {
-    stamp.innerText = mode;
-    stamp.className = mode === "PAID" ? "watermark-stamp" : "watermark-stamp topay";
-  }
-}
 </script>
 
 </body>
