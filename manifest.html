@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ٹرک لوڈنگ مینی فیسٹ | گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی</title>
+<title>ٹرک لوڈنگ مینی فیسٹ ڈیش بورڈ | گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,7 +42,7 @@ body {
 }
 
 .container {
-  max-width: 1050px;
+  max-width: 1100px;
   margin: 0 auto;
   background: #fff;
   padding: 15px;
@@ -68,7 +68,28 @@ body {
   padding: 8px 12px;
   border-radius: 6px;
   margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
+
+/* KPI DASHBOARD CARDS */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 15px;
+}
+.kpi-card {
+  background: #F8FAFC;
+  border: 1px solid var(--border);
+  border-right: 5px solid var(--navy);
+  padding: 12px;
+  border-radius: 8px;
+}
+.kpi-card.gold-border { border-right-color: var(--gold); }
+.kpi-card.green-border { border-right-color: #10B981; }
+.kpi-title { font-size: 0.8rem; color: #64748B; font-weight: 600; margin-bottom: 4px; }
+.kpi-value { font-size: 1.35rem; font-weight: 800; color: var(--navy); }
 
 label { font-weight: 600; font-size: 0.82rem; color: #334155; display: block; margin-bottom: 3px; }
 input, select {
@@ -179,122 +200,205 @@ th { background: #F1F5F9; color: var(--navy); }
 
 <!-- MAIN MANIFEST CONTAINER (HIDDEN UNTIL LOGIN) -->
 <div id="manifestMainContainer" class="container no-print" style="display:none;">
+  
+  <!-- HEADER TITLE -->
   <div class="header-title">
     <h1>GUJRAT MUSHTARKA GOODS TRANSPORT CO.</h1>
-    <h2 class="urdu">گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی (ٹرک مینی فیسٹ ماڈیول)</h2>
+    <h2 class="urdu">گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی (ٹرک مینی فیسٹ ڈیش بورڈ)</h2>
   </div>
 
+  <!-- TOP NAVIGATION BAR -->
   <div class="top-bar">
-    <div><strong class="urdu" id="formMainTitle">🚛 نیا ٹرک مینی فیسٹ / لوڈنگ شیٹ بنائیں</strong></div>
-    <div style="display:flex; gap:8px;">
+    <div>
+      <strong class="urdu" style="font-size:1.05rem; color:var(--navy);">🚛 مینی فیسٹ کنٹرول پینل</strong>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+      <button class="btn btn-success" style="padding:7px 14px; font-size:0.88rem;" onclick="showCreateManifestForm()">➕ نیا مینی فیسٹ بنائیں (Create New)</button>
       <a href="admin.html" class="btn btn-navy">📋 ایڈمن پینل</a>
       <a href="index.html" class="btn btn-secondary">🏠 ہوم پیج</a>
       <button class="btn btn-danger" onclick="logoutManifestAdmin()">🚪 لاگ آؤٹ</button>
     </div>
   </div>
 
-  <!-- FORM TO CREATE / EDIT MANIFEST -->
-  <div class="card">
-    <h3 class="urdu" style="margin-top:0; color:var(--navy); border-bottom:2px solid var(--gold); padding-bottom:4px;" id="sectionHeader1">1. ٹرک، ڈرائیور اور کمیشن کی تفاصیل</h3>
+  <!-- ==================== VIEW 1: HOME DASHBOARD VIEW ==================== -->
+  <div id="dashboardView">
     
-    <input type="hidden" id="editManifestId" value="">
+    <!-- DASHBOARD INCOME & STATS SUMMARY CARDS -->
+    <div class="card" style="background:#F1F5F9; border-color:#CBD5E1;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+        <h3 class="urdu" style="margin:0; color:var(--navy);">📊 کاروباری حساب کتاب و انکم ڈیش بورڈ</h3>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <label class="urdu" style="margin:0; white-space:nowrap;">انکم فلٹر منتخب کریں:</label>
+          <select id="incomeFilter" style="width:auto; padding:4px 8px; font-weight:700;" onchange="calculateDashboardStats()">
+            <option value="today" selected>آج کی آمدنی (Today)</option>
+            <option value="month">اس مہینے کی آمدنی (This Month)</option>
+            <option value="all">تمام ریکارڈ (All Time)</option>
+          </select>
+        </div>
+      </div>
 
-    <div class="grid-3" style="margin-bottom:10px;">
-      <div>
-        <label class="urdu">گاڑی / ٹرک نمبر *</label>
-        <input type="text" id="truckNo" placeholder="مثلاً: LES-1234" required>
-      </div>
-      <div>
-        <label class="urdu">ڈرائیور کا نام *</label>
-        <input type="text" id="driverName" placeholder="مثلاً: احمد خان" required>
-      </div>
-      <div>
-        <label class="urdu">ڈرائیور کا موبائل نمبر *</label>
-        <input type="tel" id="driverPhone" placeholder="0300-1234567" required>
+      <div class="kpi-grid">
+        <div class="kpi-card gold-border">
+          <div class="kpi-title urdu">کل مینی فیسٹس (Total Manifests):</div>
+          <div class="kpi-value" id="kpiManifestCount">0</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-title urdu">گودام میں پینڈنگ بلٹیاں (Pending Bilties):</div>
+          <div class="kpi-value" style="color:#DC2626;" id="kpiPendingCount">0</div>
+        </div>
+
+        <div class="kpi-card green-border">
+          <div class="kpi-title urdu">کمپنی کی خالص آمدنی / کمائی (Net Earnings):</div>
+          <div class="kpi-value" style="color:#10B981;" id="kpiNetIncome">Rs. 0</div>
+          <small style="color:#64748B; font-size:0.7rem;">(کل بلٹی چارجز مائنس ڈرائیور کرایہ)</small>
+        </div>
       </div>
     </div>
 
-    <div class="grid-3" style="margin-bottom:12px;">
-      <div>
-        <label class="urdu">روٹ / روانی کی تاریخ *</label>
-        <input type="date" id="dispatchDate" required>
-      </div>
-      <div>
-        <label class="urdu">روٹ / ڈسٹینیشن</label>
-        <input type="text" id="routeCities" placeholder="گجرات تا کراچی براستہ ملتان" required>
-      </div>
-      <div>
-        <label class="urdu">کمیشن فیصد (%) ڈرائیور کرائے پر *</label>
-        <input type="number" id="commissionPercent" value="3" step="0.1" min="0" max="100" placeholder="3" oninput="calculateManifestSummary()">
-      </div>
-    </div>
-
-    <h3 class="urdu" style="color:var(--navy); border-bottom:2px solid var(--gold); padding-bottom:4px; margin-top:15px;" id="sectionHeader2">2. گاڑی میں لوڈ کرنے کے لیے گودام کی بلٹیاں منتخب کریں</h3>
-    
-    <div style="overflow-x:auto;">
-      <table>
-        <thead>
-          <tr>
-            <th style="width:30px;"><input type="checkbox" id="selectAllBookings" onchange="toggleSelectAll(this)"></th>
-            <th class="urdu">بلٹی نمبر</th>
-            <th class="urdu">تاریخ</th>
-            <th class="urdu">مال بھیجنے والا</th>
-            <th class="urdu">وصول کنندہ و شہر</th>
-            <th class="urdu">تعداد</th>
-            <th class="urdu">ڈرائیور کرایه</th>
-            <th class="urdu">اڈا چارجز</th>
-            <th class="urdu">رکشہ کرایه</th>
-            <th class="urdu">لیبر</th>
-          </tr>
-        </thead>
-        <tbody id="warehouseTableBody">
-          <tr><td colspan="10" style="text-align:center;">گودام کا ڈیٹا لوڈ ہو رہا ہے...</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- SUMMARY -->
-    <div class="summary-box urdu">
-      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:8px;">
-        <div>منتخب بلٹیاں: <span id="sumQty" style="color:var(--navy); font-weight:700;">0</span></div>
-        <div>کل ڈرائیور کرایه: Rs. <span id="sumFreight" style="color:green; font-weight:700;">0</span></div>
-        <div>اڈا چارجز: Rs. <span id="sumAdda" style="font-weight:700;">0</span></div>
-        <div>رکشہ کرایه: Rs. <span id="sumRickshaw" style="font-weight:700;">0</span></div>
-        <div>لیبر چارجز: Rs. <span id="sumLabour" style="font-weight:700;">0</span></div>
-        <div>کمیشن رقم: Rs. <span id="sumCommission" style="color:#D97706; font-weight:700;">0</span></div>
-      </div>
-      <div style="margin-top:10px; border-top:1px dashed #BFDBFE; padding-top:8px; display:flex; justify-content:space-between; font-size:1rem; font-weight:800; color:var(--navy);">
-        <span>کمپنی نے ڈرائیور سے کل کتنے پیسے لینے ہیں (Total Company Settlement):</span>
-        <span style="color:green; font-size:1.15rem;" id="sumTotalPayable">Rs. 0</span>
+    <!-- PENDING WAREHOUSE BOOKINGS LIST -->
+    <div class="card">
+      <h3 class="urdu" style="margin-top:0; color:#DC2626; border-bottom:2px solid #FCA5A5; padding-bottom:4px;">📦 گودام میں لوڈنگ کے لیے موجود پینڈنگ بلٹیاں (Pending Warehouse Bilties)</h3>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th class="urdu">بلٹی نمبر</th>
+              <th class="urdu">تاریخ</th>
+              <th class="urdu">مال بھیجنے والا</th>
+              <th class="urdu">وصول کنندہ و شہر</th>
+              <th class="urdu">تعداد</th>
+              <th class="urdu">ڈرائیور کرایه</th>
+              <th class="urdu">اڈا چارجز</th>
+              <th class="urdu">رکشہ کرایه</th>
+              <th class="urdu">لیبر</th>
+              <th class="urdu">اسٹیٹس</th>
+            </tr>
+          </thead>
+          <tbody id="dashboardPendingBody">
+            <tr><td colspan="10" style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے...</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
-      <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display:none;" onclick="cancelManifestEdit()">کنسل کریں</button>
-      <button type="button" class="btn btn-success" style="padding:8px 18px; font-size:0.9rem;" id="saveManifestBtn" onclick="saveAndDispatchManifest()">🚛 مینی فیسٹ محفوظ کریں اور گاڑی روانہ کریں</button>
+    <!-- SAVED MANIFESTS HISTORY LIST -->
+    <div class="card">
+      <h3 class="urdu" style="margin-top:0; color:var(--navy); border-bottom:2px solid var(--gold); padding-bottom:4px;">📜 پرانے تمام مینی فیسٹ / گاڑیوں کا ریکارڈ (Manifest History)</h3>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th class="urdu">تاریخ</th>
+              <th class="urdu">مینی فیسٹ #</th>
+              <th class="urdu">گاڑی نمبر</th>
+              <th class="urdu">ڈرائیور و موبائل</th>
+              <th class="urdu">بلٹیاں</th>
+              <th class="urdu">کل ڈرائیور کرایه</th>
+              <th class="urdu">کمپنی کی صاف کمائی</th>
+              <th class="urdu">ایکشن</th>
+            </tr>
+          </thead>
+          <tbody id="manifestHistoryBody">
+            <tr><td colspan="8" style="text-align:center;">ریکارڈ لوڈ ہو رہا ہے...</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+
   </div>
 
-  <!-- SAVED MANIFESTS HISTORY -->
-  <div class="card">
-    <h3 class="urdu" style="margin-top:0; color:var(--navy);">3. پچھلے تمام مینی فیسٹ / گاڑیوں کا ریکارڈ</h3>
-    <div style="overflow-x:auto;">
-      <table>
-        <thead>
-          <tr>
-            <th class="urdu">تاریخ</th>
-            <th class="urdu">مینی فیسٹ #</th>
-            <th class="urdu">گاڑی نمبر</th>
-            <th class="urdu">ڈرائیور و موبائل</th>
-            <th class="urdu">بلٹیاں</th>
-            <th class="urdu">کل ڈرائیور کرایه</th>
-            <th class="urdu">ایکشن</th>
-          </tr>
-        </thead>
-        <tbody id="manifestHistoryBody">
-          <tr><td colspan="7" style="text-align:center;">ریکارڈ لوڈ ہو رہا ہے...</td></tr>
-        </tbody>
-      </table>
+
+  <!-- ==================== VIEW 2: CREATE / EDIT MANIFEST FORM VIEW ==================== -->
+  <div id="createFormView" style="display:none;">
+    <div style="display:flex; justify-content:space-between; align-items:center; background:#EFF6FF; padding:10px; border-radius:6px; margin-bottom:12px;">
+      <h3 class="urdu" style="margin:0; color:var(--navy);" id="formMainTitle">🚛 نیا ٹرک مینی فیسٹ / لوڈنگ شیٹ بنائیں</h3>
+      <div style="display:flex; gap:6px;">
+        <button type="button" class="btn btn-secondary" onclick="showDashboardView()">🏠 ہوم ڈیش بورڈ</button>
+        <button type="button" class="btn btn-danger" onclick="cancelManifestEdit()">✖ کینسل کریں</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="urdu" style="margin-top:0; color:var(--navy); border-bottom:2px solid var(--gold); padding-bottom:4px;">1. ٹرک، ڈرائیور اور کمیشن کی تفاصیل</h3>
+      
+      <input type="hidden" id="editManifestId" value="">
+
+      <div class="grid-3" style="margin-bottom:10px;">
+        <div>
+          <label class="urdu">گاڑی / ٹرک نمبر *</label>
+          <input type="text" id="truckNo" placeholder="مثلاً: LES-1234" required>
+        </div>
+        <div>
+          <label class="urdu">ڈرائیور کا نام *</label>
+          <input type="text" id="driverName" placeholder="مثلاً: احمد خان" required>
+        </div>
+        <div>
+          <label class="urdu">ڈرائیور کا موبائل نمبر *</label>
+          <input type="tel" id="driverPhone" placeholder="0300-1234567" required>
+        </div>
+      </div>
+
+      <div class="grid-3" style="margin-bottom:12px;">
+        <div>
+          <label class="urdu">روٹ / روانی کی تاریخ *</label>
+          <input type="date" id="dispatchDate" required>
+        </div>
+        <div>
+          <label class="urdu">روٹ / ڈسٹینیشن</label>
+          <input type="text" id="routeCities" placeholder="گجرات تا کراچی براستہ ملتان" required>
+        </div>
+        <div>
+          <label class="urdu">کمیشن فیصد (%) ڈرائیور کرائے پر *</label>
+          <input type="number" id="commissionPercent" value="3" step="0.1" min="0" max="100" placeholder="3" oninput="calculateManifestSummary()">
+        </div>
+      </div>
+
+      <h3 class="urdu" style="color:var(--navy); border-bottom:2px solid var(--gold); padding-bottom:4px; margin-top:15px;">2. گاڑی میں لوڈ کرنے کے لیے گودام کی بلٹیاں منتخب کریں</h3>
+      
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:30px;"><input type="checkbox" id="selectAllBookings" onchange="toggleSelectAll(this)"></th>
+              <th class="urdu">بلٹی نمبر</th>
+              <th class="urdu">تاریخ</th>
+              <th class="urdu">مال بھیجنے والا</th>
+              <th class="urdu">وصول کنندہ و شہر</th>
+              <th class="urdu">تعداد</th>
+              <th class="urdu">ڈرائیور کرایه</th>
+              <th class="urdu">اڈا چارجز</th>
+              <th class="urdu">رکشہ کرایه</th>
+              <th class="urdu">لیبر</th>
+            </tr>
+          </thead>
+          <tbody id="warehouseTableBody">
+            <tr><td colspan="10" style="text-align:center;">گودام کا ڈیٹا لوڈ ہو رہا ہے...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- FORM SUMMARY BOX -->
+      <div class="summary-box urdu">
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:8px;">
+          <div>منتخب بلٹیاں: <span id="sumQty" style="color:var(--navy); font-weight:700;">0</span></div>
+          <div>کل ڈرائیور کرایه: Rs. <span id="sumFreight" style="color:green; font-weight:700;">0</span></div>
+          <div>اڈا چارجز: Rs. <span id="sumAdda" style="font-weight:700;">0</span></div>
+          <div>رکشہ کرایه: Rs. <span id="sumRickshaw" style="font-weight:700;">0</span></div>
+          <div>لیبر چارجز: Rs. <span id="sumLabour" style="font-weight:700;">0</span></div>
+          <div>کمیشن رقم: Rs. <span id="sumCommission" style="color:#D97706; font-weight:700;">0</span></div>
+        </div>
+        <div style="margin-top:10px; border-top:1px dashed #BFDBFE; padding-top:8px; display:flex; justify-content:space-between; font-size:1rem; font-weight:800; color:var(--navy);">
+          <span>کمپنی نے ڈرائیور سے کل کتنے پیسے لینے ہیں (Total Company Settlement):</span>
+          <span style="color:green; font-size:1.15rem;" id="sumTotalPayable">Rs. 0</span>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:15px;">
+        <button type="button" class="btn btn-secondary" onclick="showDashboardView()">🏠 ہوم ڈیش بورڈ</button>
+        <button type="button" class="btn btn-danger" id="cancelEditBtn" onclick="cancelManifestEdit()">✖ کینسل کریں</button>
+        <button type="button" class="btn btn-success" style="padding:8px 20px; font-size:0.92rem;" id="saveManifestBtn" onclick="saveAndDispatchManifest()">💾 مینی فیسٹ محفوظ کریں اور گاڑی روانہ کریں</button>
+      </div>
     </div>
   </div>
 
@@ -334,6 +438,7 @@ const db = getDatabase(app);
 
 window.availableBookings = {};
 window.allManifests = {};
+window.allBookingsList = {};
 
 // AUTHENTICATION LOGIC FOR MANIFEST
 window.loginManifestAdmin = function() {
@@ -341,8 +446,7 @@ window.loginManifestAdmin = function() {
   if(pass === "gujrat2001") {
     document.getElementById('manifestAuthBox').style.display = 'none';
     document.getElementById('manifestMainContainer').style.display = 'block';
-    loadWarehouseBookings();
-    loadManifestHistory();
+    loadAllDataAndInit();
   } else {
     alert("پاس کوڈ غلط ہے! براہ کرم درست پاسورڈ درج کریں۔");
   }
@@ -352,6 +456,20 @@ window.logoutManifestAdmin = function() {
   document.getElementById('manifestAuthBox').style.display = 'block';
   document.getElementById('manifestMainContainer').style.display = 'none';
   document.getElementById('manifestPassInput').value = '';
+};
+
+window.showCreateManifestForm = function() {
+  document.getElementById('dashboardView').style.display = 'none';
+  document.getElementById('createFormView').style.display = 'block';
+  cancelManifestEdit();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+window.showDashboardView = function() {
+  document.getElementById('createFormView').style.display = 'none';
+  document.getElementById('dashboardView').style.display = 'block';
+  loadAllDataAndInit();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 const partnerDetailsMap = {
@@ -364,24 +482,37 @@ const partnerDetailsMap = {
 
 document.getElementById('dispatchDate').valueAsDate = new Date();
 
+async function loadAllDataAndInit() {
+  await loadWarehouseBookings();
+  await loadManifestHistory();
+  calculateDashboardStats();
+}
+
 async function loadWarehouseBookings(selectedIdsToCheck = []) {
   const tbody = document.getElementById('warehouseTableBody');
+  const dashPendingBody = document.getElementById('dashboardPendingBody');
+  
   tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">گودام کا ڈیٹا لوڈ ہو رہا ہے...</td></tr>';
+  dashPendingBody.innerHTML = '<tr><td colspan="10" style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے...</td></tr>';
 
   try {
     const snap = await get(ref(db, 'bookings'));
     if(!snap.exists()) {
       tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">کوئی بکنگ موجود نہیں ہے۔</td></tr>';
+      dashPendingBody.innerHTML = '<tr><td colspan="10" style="text-align:center;">گودام میں کوئی پینڈنگ بلٹی موجود نہیں ہے۔</td></tr>';
       return;
     }
 
     tbody.innerHTML = '';
+    dashPendingBody.innerHTML = '';
     window.availableBookings = {};
+    window.allBookingsList = {};
     let count = 0;
 
     snap.forEach(child => {
       const bId = child.key;
       const b = child.val();
+      window.allBookingsList[bId] = b;
       
       const isSelectedForEdit = selectedIdsToCheck.includes(bId);
 
@@ -391,6 +522,7 @@ async function loadWarehouseBookings(selectedIdsToCheck = []) {
 
         const isChecked = isSelectedForEdit ? 'checked' : '';
 
+        // Form Table Row
         tbody.innerHTML += `
           <tr>
             <td><input type="checkbox" class="manifest-check" value="${bId}" ${isChecked} onchange="calculateManifestSummary()"></td>
@@ -405,11 +537,28 @@ async function loadWarehouseBookings(selectedIdsToCheck = []) {
             <td>Rs. ${b.labourCharges || 0}</td>
           </tr>
         `;
+
+        // Dashboard Pending Table Row
+        dashPendingBody.innerHTML += `
+          <tr>
+            <td><strong>${b.biltyNo}</strong></td>
+            <td>${b.date}</td>
+            <td>${b.senderName}</td>
+            <td><strong>${b.receiverName}</strong> (${b.destCity})</td>
+            <td>${b.totalQty || 0}</td>
+            <td style="color:green; font-weight:700;">Rs. ${b.freightCharges || 0}</td>
+            <td>Rs. ${b.addaCharges || 0}</td>
+            <td>Rs. ${b.rickshawFare || 0}</td>
+            <td>Rs. ${b.labourCharges || 0}</td>
+            <td><span style="background:#FEF3C7; color:#B45309; padding:2px 6px; border-radius:4px; font-weight:700;">${b.status || 'In Warehouse'}</span></td>
+          </tr>
+        `;
       }
     });
 
     if(count === 0) {
       tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">ویئر ہاؤس میں لوڈنگ کے لیے کوئی بکنگ موجود نہیں ہے۔</td></tr>';
+      dashPendingBody.innerHTML = '<tr><td colspan="10" style="text-align:center;">گودام میں کوئی پینڈنگ بلٹی موجود نہیں ہے۔</td></tr>';
     } else {
       calculateManifestSummary();
     }
@@ -456,6 +605,37 @@ window.calculateManifestSummary = function() {
   document.getElementById('sumLabour').innerText = totalLabour;
   document.getElementById('sumCommission').innerText = commissionAmount;
   document.getElementById('sumTotalPayable').innerText = "Rs. " + totalPayable;
+};
+
+// CALCULATE DASHBOARD INCOME & KPI STATS
+window.calculateDashboardStats = function() {
+  const filter = document.getElementById('incomeFilter').value;
+  const todayStr = new Date().toISOString().split('T')[0];
+  const currentMonthStr = todayStr.substring(0, 7); // YYYY-MM
+
+  let manifestMatchCount = 0;
+  let netCompanyIncome = 0;
+
+  Object.keys(window.allManifests).forEach(mId => {
+    const m = window.allManifests[mId];
+    const mDate = m.dispatchDate || "";
+
+    let isMatch = false;
+    if(filter === 'today' && mDate === todayStr) isMatch = true;
+    else if(filter === 'month' && mDate.startsWith(currentMonthStr)) isMatch = true;
+    else if(filter === 'all') isMatch = true;
+
+    if(isMatch) {
+      manifestMatchCount++;
+      netCompanyIncome += Number(m.totalPayable) || 0;
+    }
+  });
+
+  const pendingCount = Object.keys(window.availableBookings).length;
+
+  document.getElementById('kpiManifestCount').innerText = manifestMatchCount;
+  document.getElementById('kpiPendingCount').innerText = pendingCount;
+  document.getElementById('kpiNetIncome').innerText = "Rs. " + netCompanyIncome;
 };
 
 window.saveAndDispatchManifest = async function() {
@@ -589,7 +769,7 @@ window.saveAndDispatchManifest = async function() {
       alert("نیا مینی فیسٹ کامیابی سے محفوظ ہو گیا!");
     }
 
-    location.reload();
+    showDashboardView();
 
   } catch(e) {
     alert("Error: " + e.message);
@@ -602,6 +782,9 @@ window.editManifest = function(mId) {
   const m = window.allManifests[mId];
   if(!m) return;
 
+  document.getElementById('dashboardView').style.display = 'none';
+  document.getElementById('createFormView').style.display = 'block';
+
   document.getElementById('editManifestId').value = mId;
   document.getElementById('truckNo').value = m.truckNo || "";
   document.getElementById('driverName').value = m.driverName || "";
@@ -612,7 +795,6 @@ window.editManifest = function(mId) {
 
   document.getElementById('formMainTitle').innerText = "📝 مینی فیسٹ میں تبدیلی کریں (Manifest #" + m.manifestNo + ")";
   document.getElementById('saveManifestBtn').innerText = "💾 اپ ڈیٹ کریں (Update Manifest)";
-  document.getElementById('cancelEditBtn').style.display = "inline-flex";
 
   loadWarehouseBookings(m.bookingIds || []);
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -627,8 +809,7 @@ window.cancelManifestEdit = function() {
   document.getElementById('commissionPercent').value = "3";
   
   document.getElementById('formMainTitle').innerText = "🚛 نیا ٹرک مینی فیسٹ / لوڈنگ شیٹ بنائیں";
-  document.getElementById('saveManifestBtn').innerText = "🚛 مینی فیسٹ محفوظ کریں اور گاڑی روانہ کریں";
-  document.getElementById('cancelEditBtn').style.display = "none";
+  document.getElementById('saveManifestBtn').innerText = "💾 مینی فیسٹ محفوظ کریں اور گاڑی روانہ کریں";
 
   loadWarehouseBookings();
 };
@@ -638,7 +819,7 @@ async function loadManifestHistory() {
   try {
     const snap = await get(ref(db, 'manifests'));
     if(!snap.exists()) {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">کوئی پرانا ریکارڈ موجود نہیں ہے۔</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">کوئی پرانا ریکارڈ موجود نہیں ہے۔</td></tr>';
       return;
     }
 
@@ -658,6 +839,7 @@ async function loadManifestHistory() {
           <td>${m.driverName} (${m.driverPhone})</td>
           <td>${m.bookingIds ? m.bookingIds.length : 0}</td>
           <td><strong style="color:green;">Rs. ${m.totalFreight || 0}</strong></td>
+          <td><strong style="color:#10B981;">Rs. ${m.totalPayable || 0}</strong></td>
           <td>
             <div style="display:flex; gap:4px; flex-wrap:wrap;">
               <button class="btn btn-info" onclick="viewManifestModal('${mId}')">👁️ ویو</button>
@@ -668,8 +850,11 @@ async function loadManifestHistory() {
         </tr>
       `;
     });
+
+    calculateDashboardStats();
+
   } catch(e) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">لوڈ کرنے میں مسئلہ آیا۔</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:red;">لوڈ کرنے میں مسئلہ آیا۔</td></tr>';
   }
 }
 
