@@ -15,6 +15,7 @@
   --gold: #F2B705;
   --light-bg: #F8FAFC;
   --border: #CBD5E1;
+  --dark-text: #1E293B;
 }
 
 body {
@@ -22,7 +23,7 @@ body {
   background-color: var(--light-bg);
   margin: 0;
   padding: 0;
-  color: #1E293B;
+  color: var(--dark-text);
   direction: rtl;
   text-align: right;
   overflow-x: hidden;
@@ -30,26 +31,67 @@ body {
 
 .urdu { font-family: 'Noto Nastaliq Urdu', serif; line-height: 1.8 !important; }
 
-/* HERO SECTION WITH PAKISTAN ROUTE WATERMARK MAP */
+/* TOP NAVBAR */
+.navbar {
+  background: var(--navy);
+  color: #fff;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar .brand {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 5px;
+  transition: all 0.2s;
+}
+
+.nav-links a:hover {
+  background: rgba(255,255,255,0.15);
+  color: var(--gold);
+}
+
+/* HERO SECTION WITH PAKISTAN ROUTE WATERMARK */
 .hero-section {
   position: relative;
   background: linear-gradient(135deg, #0B2545 0%, #133B6C 100%);
   color: #fff;
-  padding: 60px 20px;
+  padding: 70px 20px;
   text-align: center;
   overflow: hidden;
 }
 
-/* WATERMARK MAP & ANIMATED ROUTES */
 .map-watermark {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 100%;
-  max-width: 700px;
+  max-width: 750px;
   height: 100%;
-  opacity: 0.12;
+  opacity: 0.15;
   pointer-events: none;
   z-index: 1;
 }
@@ -57,57 +99,29 @@ body {
 .hero-content {
   position: relative;
   z-index: 2;
-  max-width: 900px;
+  max-width: 950px;
   margin: 0 auto;
 }
 
 .hero-content h1 {
-  font-size: 2.2rem;
+  font-size: 2.3rem;
   font-weight: 800;
   margin: 0 0 10px 0;
+  color: var(--gold);
   font-family: 'Plus Jakarta Sans', sans-serif;
-  color: #F2B705;
 }
 
 .hero-content h2 {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   margin: 0 0 15px 0;
   font-weight: 700;
 }
 
 .hero-content p {
-  font-size: 1rem;
+  font-size: 1.05rem;
   margin: 0 auto 25px auto;
-  max-width: 700px;
+  max-width: 750px;
   color: #E2E8F0;
-}
-
-.container {
-  max-width: 1000px;
-  margin: -30px auto 40px auto;
-  position: relative;
-  z-index: 3;
-  padding: 0 20px;
-}
-
-.card {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  padding: 30px;
-  margin-bottom: 25px;
-  border-top: 5px solid var(--gold);
-}
-
-.grid-2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-@media (max-width: 768px) {
-  .grid-2 { grid-template-columns: 1fr; }
-  .hero-content h1 { font-size: 1.6rem; }
 }
 
 .btn {
@@ -116,30 +130,91 @@ body {
   font-weight: 700;
   cursor: pointer;
   border: none;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   display: inline-flex;
   align-items: center;
   gap: 8px;
   text-decoration: none;
   transition: all 0.2s;
 }
-.btn-primary { background: var(--gold); color: var(--navy); }
-.btn-primary:hover { background: #dca304; }
+.btn-gold { background: var(--gold); color: var(--navy); }
+.btn-gold:hover { background: #dca304; }
 .btn-navy { background: var(--navy); color: #fff; }
-.btn-navy:hover { background: #06182e; }
+.btn-secondary { background: #64748B; color: #fff; }
 
-input, select {
+.container {
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+@media (max-width: 768px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .hero-content h1 { font-size: 1.6rem; }
+  .navbar { flex-direction: column; gap: 10px; text-align: center; }
+}
+
+.card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+  padding: 25px;
+  margin-bottom: 25px;
+  border-top: 4px solid var(--navy);
+}
+
+.section-title {
+  color: var(--navy);
+  margin-top: 0;
+  border-bottom: 2px solid var(--gold);
+  padding-bottom: 8px;
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+}
+
+input, select, textarea {
   width: 100%;
   padding: 10px;
   border: 1px solid var(--border);
   border-radius: 6px;
   font: inherit;
   box-sizing: border-box;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
   font-size: 0.9rem;
 }
 
-label { font-weight: 600; font-size: 0.88px; color: #334155; display: block; margin-bottom: 5px; }
+label { font-weight: 600; font-size: 0.85rem; color: #334155; display: block; margin-bottom: 4px; }
+
+/* SERVICES & GALLERY */
+.service-icon {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.gallery-item {
+  background: #E2E8F0;
+  border-radius: 8px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #475569;
+  border: 2px dashed #CBD5E1;
+  background-size: cover;
+  background-position: center;
+}
 
 .tracking-result {
   background: #EFF6FF;
@@ -150,59 +225,69 @@ label { font-weight: 600; font-size: 0.88px; color: #334155; display: block; mar
   display: none;
 }
 
-/* ANIMATED TRUCK & PULSE CSS */
+/* PULSE ANIMATION FOR GUJRAT HQ */
 @keyframes pulse {
   0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
   70% { transform: scale(1); box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
   100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
 }
+.gujrat-pin { animation: pulse 2s infinite; }
 
-.gujrat-pin {
-  animation: pulse 2s infinite;
+footer {
+  background: var(--navy);
+  color: #94A3B8;
+  padding: 30px 20px;
+  text-align: center;
+  margin-top: 50px;
+  font-size: 0.88rem;
 }
+footer a { color: var(--gold); text-decoration: none; }
 </style>
 </head>
 <body>
 
+<!-- NAVBAR -->
+<div class="navbar">
+  <a href="index.html" class="brand">GUJRAT MUSHTARKA GOODS</a>
+  <div class="nav-links urdu">
+    <a href="#tracking">🔍 لائیو ٹریکنگ</a>
+    <a href="#services">🚛 ہماری خدمات</a>
+    <a href="#about">🏢 کمپنی تاریخ</a>
+    <a href="#quote">📝 کرایہ کوٹیشن</a>
+    <a href="#contact">📞 رابطہ کریں</a>
+    <a href="portal.html" style="background:var(--gold); color:var(--navy);">👤 کسٹمر پورٹل</a>
+    <a href="manifest.html">🚚 مینی فیسٹ</a>
+    <a href="admin.html">🔐 ایڈمن</a>
+  </div>
+</div>
+
 <!-- HERO BANNER WITH PAKISTAN WATERMARK & ROUTES -->
 <div class="hero-section">
   
-  <!-- SVG PAKISTAN MAP WATERMARK WITH GUJRAT FOCUS & ROUTES -->
+  <!-- SVG PAKISTAN MAP WATERMARK -->
   <div class="map-watermark">
     <svg viewBox="0 0 600 600" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Pakistan Stylized Outline Watermark -->
       <path d="M250,80 Q320,60 380,100 T450,220 Q480,300 420,380 T300,500 Q200,520 180,440 T150,300 Q140,200 200,140 Z" fill="#ffffff" stroke="#ffffff" stroke-width="3" opacity="0.4"/>
       
-      <!-- Route Lines from Gujrat (Center-North) to Cities -->
       <g stroke="#F2B705" stroke-width="2.5" stroke-dasharray="6,6" opacity="0.8">
-        <!-- Gujrat to Karachi (South) -->
         <path d="M280,180 Q350,320 380,480" />
-        <!-- Gujrat to Peshawar (North-West) -->
         <path d="M280,180 Q220,130 180,110" />
-        <!-- Gujrat to Rawalpindi (North) -->
         <path d="M280,180 Q270,140 260,120" />
-        <!-- Gujrat to Multan / Hyderabad -->
         <path d="M280,180 Q300,260 320,360" />
       </g>
 
-      <!-- City Markers -->
-      <!-- Gujrat (Main HQ) -->
       <circle cx="280" cy="180" r="10" fill="#EF4444" class="gujrat-pin"/>
       <text x="295" y="185" fill="#ffffff" font-size="14" font-weight="bold">گجرات (HQ)</text>
 
-      <!-- Karachi -->
       <circle cx="380" cy="480" r="6" fill="#F2B705"/>
       <text x="395" y="485" fill="#ffffff" font-size="11">کراچی</text>
 
-      <!-- Peshawar -->
       <circle cx="180" cy="110" r="6" fill="#F2B705"/>
       <text x="115" y="115" fill="#ffffff" font-size="11">پشاور</text>
 
-      <!-- Rawalpindi -->
       <circle cx="260" cy="120" r="6" fill="#F2B705"/>
       <text x="210" y="135" fill="#ffffff" font-size="11">راولپنڈی</text>
 
-      <!-- Moving Truck Icons / Indicators along routes -->
       <text x="330" y="320" font-size="16">🚛</text>
       <text x="215" y="140" font-size="16">🚚</text>
     </svg>
@@ -211,58 +296,175 @@ label { font-weight: 600; font-size: 0.88px; color: #334155; display: block; mar
   <div class="hero-content">
     <h1>GUJRAT MUSHTARKA GOODS TRANSPORT CO.</h1>
     <h2 class="urdu">گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی (رجسٹرڈ)</h2>
-    <p class="urdu">گجرات سے کراچی، پشاور، راولپنڈی اور ملک بھر کے تمام بڑے شہروں کے لیے روزانہ براہِ راست تیز رفتار اور محفوظ ترین کارگو سروس۔</p>
+    <p class="urdu">گجرات سے کراچی، پشاور، راولپنڈی، ملتان اور ملک بھر کے تمام شہروں کے لیے روزانہ تیز رفتار، کمپیوٹرائزڈ اور محفوظ ترین کارگو ٹرانسپورٹ سروس۔</p>
     
-    <div style="display:flex; justify-content:center; gap:12px; margin-top:20px;">
-      <a href="portal.html" class="btn btn-primary urdu">👤 کسٹمر پورٹل (لاگ ان / بکنگ)</a>
-      <a href="manifest.html" class="btn btn-navy urdu">🚛 ٹرک مینی فیسٹ</a>
+    <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; flex-wrap:wrap;">
+      <a href="portal.html" class="btn btn-gold urdu">👤 کسٹمر پورٹل (آن لائن بکنگ)</a>
+      <a href="#tracking" class="btn btn-navy urdu" style="border:1px solid var(--gold);">🔍 بلٹی ٹریکنگ</a>
     </div>
   </div>
 </div>
 
 <div class="container">
   
-  <!-- QUICK TRACKING & SERVICES -->
-  <div class="grid-2">
+  <!-- TRACKING & QUICK CALCULATION SECTION -->
+  <div class="grid-2" id="tracking">
     
     <!-- TRACKING CARD -->
     <div class="card">
-      <h3 class="urdu" style="color:var(--navy); margin-top:0; border-bottom:2px solid var(--gold); padding-bottom:8px;">🔍 اپنی بلٹی ٹریک کریں (Live Tracking)</h3>
-      <p class="urdu" style="font-size:0.85rem; color:#64748B;">اپنا بلٹی نمبر یا فون نمبر درج کر کے سامان کی تازہ ترین لوکیشن معلوم کریں:</p>
+      <h3 class="urdu section-title">🔍 آن لائن بلٹی ٹریکنگ (Live Status)</h3>
+      <p class="urdu" style="font-size:0.85rem; color:#64748B;">اپنا بلٹی نمبر یا موبائل نمبر درج کر کے اپنے سامان کی تازہ ترین صورتحال دیکھیں:</p>
       
-      <label class="urdu">بلٹی نمبر یا موبائل نمبر درج کریں:</label>
+      <label class="urdu">بلٹی نمبر یا موبائل نمبر:</label>
       <input type="text" id="trackQueryInput" placeholder="مثلاً: GMGT-1001 یا 03001234567">
       
-      <button type="button" class="btn btn-navy" style="width:100%; justify-content:center;" onclick="trackBilty()">بلٹی تلاش کریں</button>
+      <button type="button" class="btn btn-navy" style="width:100%; justify-content:center;" onclick="trackBilty()">تلاش کریں</button>
       
-      <div id="trackingResultBox" class="tracking-result urdu">
-        <!-- Result will show here -->
-      </div>
+      <div id="trackingResultBox" class="tracking-result urdu"></div>
     </div>
 
-    <!-- COMPANY INFO & QUICK LINKS -->
+    <!-- QUICK INFORMATION & RATES -->
     <div class="card">
-      <h3 class="urdu" style="color:var(--navy); margin-top:0; border-bottom:2px solid var(--gold); padding-bottom:8px;">🏢 کمپنی کی خصوصیات</h3>
-      <ul class="urdu" style="padding-right:20px; font-size:0.9rem; line-height:1.8; color:#334155;">
-        <li><b>روزانہ ڈسپیچ:</b> گجرات سے کراچی اور پشاور کے لیے روزانہ ٹرک روانہ ہوتے ہیں۔</li>
-        <li><b>محفوظ ہینڈلنگ:</b> قیمتی اور نازک سامان کی مکمل حفاظت کی ضمانت۔</li>
-        <li><b>آن لائن پورٹل:</b> کسٹمرز گھر بیٹھے اپنی بلٹیاں بنا سکتے ہیں اور بل پرنٹ کر سکتے ہیں۔</li>
-        <li><b>شفاف حساب کتاب:</b> کمپیوٹرائزڈ مینی فیسٹ اور ڈرائیور سیٹلمنٹ سسٹم۔</li>
+      <h3 class="urdu section-title">🚛 روزانہ روٹس اور منزلیں</h3>
+      <ul class="urdu" style="padding-right:20px; font-size:0.9rem; line-height:1.9; color:#334155;">
+        <li><b>گجرات تا کراچی:</b> روزانہ نائٹ ڈسپیچ (براستہ ملتان، حیدرآباد)۔</li>
+        <li><b>گجرات تا پشاور:</b> روزانہ کارگو سروس (براستہ راولپنڈی، حسن ابدال)۔</li>
+        <li><b>سیف ہینڈلنگ:</b> انشورڈ اور کمپیوٹرائزڈ بلٹی سسٹم۔</li>
+        <li><b>ہوم ڈلیوری و اڈہ ڈلیوری:</b> تمام شہروں میں ہمارے رجسٹرڈ لاجسٹک پارٹنرز موجود ہیں۔</li>
       </ul>
-
-      <div style="text-align:center; margin-top:20px;">
-        <a href="admin.html" class="btn btn-navy urdu" style="background:#475569;">🔐 ایڈمن کنٹرول پینل</a>
-      </div>
     </div>
 
   </div>
 
+  <!-- ABOUT COMPANY / HISTORY SECTION -->
+  <div class="card" id="about">
+    <h3 class="urdu section-title">🏢 گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی کا تعارف</h3>
+    <div class="grid-2" style="align-items:center;">
+      <div class="urdu" style="font-size:0.92rem; line-height:1.9; color:#334155;">
+        <p>گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی گزشتہ کئی دہائیوں سے پاکستان بھر کے تاجروں اور انڈسٹریز کو بھروسے مند اور معیاری ٹرانسپورٹ خدمات فراہم کر رہی ہے۔ ہمارا بنیادی مقصد گجرات اور ملحقہ صنعتی علاقوں کی الیکٹرانکس، فین، برتن، فرنیچر اور دیگر مصنوعات کو محفوظ طریقے سے ملک کے کونے کونے تک پہنچانا ہے۔</p>
+        <p>ہماری تمام گاڑیاں اور اڈے جدید کمپیوٹرائزڈ ٹریکنگ، مینی فیسٹ اور کسٹمر پورٹل سے لیس ہیں تاکہ آپ کو اپنے سامان کا لمحہ بہ لمحہ پتہ رہے۔</p>
+      </div>
+      <div>
+        <div class="gallery-item" style="background:#0B2545; color:#F2B705; font-size:1.1rem; flex-direction:column; text-align:center;">
+          <span style="font-size:2.5rem;">🚛</span>
+          <span>اعتماد اور رفتار کی ضامن</span>
+          <span style="font-size:0.8rem; color:#fff; font-weight:normal;">گجرات پاکستان</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SERVICES SECTION -->
+  <div class="card" id="services">
+    <h3 class="urdu section-title">🛠️ ہماری اہم خدمات</h3>
+    <div class="grid-3">
+      <div style="background:#F8FAFC; padding:15px; border-radius:8px; border:1px solid #CBD5E1; text-align:center;">
+        <span class="service-icon">📦</span>
+        <h4 class="urdu" style="margin:5px 0; color:var(--navy);">فل اینڈ پارٹ ٹرک لوڈ</h4>
+        <p class="urdu" style="font-size:0.82rem; color:#64748B; margin:0;">چھوٹے پارسل سے لے کر پورے ٹرک کی بکنگ کی سہولت۔</p>
+      </div>
+
+      <div style="background:#F8FAFC; padding:15px; border-radius:8px; border:1px solid #CBD5E1; text-align:center;">
+        <span class="service-icon">💻</span>
+        <h4 class="urdu" style="margin:5px 0; color:var(--navy);">آن لائن کسٹمر پورٹل</h4>
+        <p class="urdu" style="font-size:0.82rem; color:#64748B; margin:0;">خود آن لائن بلٹی بنائیں اور پرنٹ کریں۔</p>
+      </div>
+
+      <div style="background:#F8FAFC; padding:15px; border-radius:8px; border:1px solid #CBD5E1; text-align:center;">
+        <span class="service-icon">🏢</span>
+        <h4 class="urdu" style="margin:5px 0; color:var(--navy);">وڈیر ہاؤسنگ و اسٹوریج</h4>
+        <p class="urdu" style="font-size:0.82rem; color:#64748B; margin:0;">گجرات اور تمام بڑے شہروں میں محفوظ گودام۔</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- GET A QUOTATION FORM -->
+  <div class="card" id="quote">
+    <h3 class="urdu section-title">📝 کرایہ کی معلومات / کوٹیشن حاصل کریں</h3>
+    <form id="quoteForm" onsubmit="event.preventDefault(); submitQuotation();">
+      <div class="grid-3">
+        <div>
+          <label class="urdu">آپ کا نام *</label>
+          <input type="text" id="qName" placeholder="مثلاً: محمد علی" required>
+        </div>
+        <div>
+          <label class="urdu">موبائل نمبر *</label>
+          <input type="tel" id="qPhone" placeholder="0300-1234567" required>
+        </div>
+        <div>
+          <label class="urdu">منزل کا شہر *</label>
+          <select id="qCity" required>
+            <option value="">شہر منتخب کریں</option>
+            <option value="Karachi">کراچی</option>
+            <option value="Peshawar">پشاور</option>
+            <option value="Rawalpindi">راولپنڈی</option>
+            <option value="Multan">ملتان</option>
+            <option value="Hyderabad">حیدرآباد</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <label class="urdu">سامان کی تفصیل (وزن / تعداد / آئٹم)</label>
+          <input type="text" id="qDetails" placeholder="مثلاً: 10 کاٹن الیکٹرونکس برتن" required>
+        </div>
+        <div>
+          <label class="urdu">اضافی پیغام / نوٹ</label>
+          <input type="text" id="qNotes" placeholder="اگر کوئی خاص تفصیل ہو">
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-navy urdu" style="width:100%; justify-content:center; padding:12px;">📩 کوٹیشن کی درخواست بھیجیں</button>
+    </form>
+  </div>
+
+  <!-- GALLERY / PHOTOS SECTION -->
+  <div class="card">
+    <h3 class="urdu section-title">🖼️ فوٹو گیلری (ہمارا نیٹ ورک اور گاڑیاں)</h3>
+    <div class="gallery-grid">
+      <div class="gallery-item">🚛 شاہین ٹرک گجرات اڈہ</div>
+      <div class="gallery-item">🏭 گودام لوڈنگ سیکشن</div>
+      <div class="gallery-item">🏢 کراچی ہیڈ آفس اڈہ</div>
+      <div class="gallery-item">📦 کارگو پیکنگ گیلری</div>
+    </div>
+  </div>
+
+  <!-- CONTACT & LOCATION SECTION -->
+  <div class="card" id="contact">
+    <h3 class="urdu section-title">📞 رابطہ کریں و ہیڈ آفس لوکیشن</h3>
+    <div class="grid-2">
+      <div class="urdu" style="font-size:0.9rem; line-height:2; color:#334155;">
+        <div><b>مرکزی دفتر:</b> جی ٹی روڈ، نزد بائی پاس روڈ اڈہ، گجرات، پاکستان۔</div>
+        <div><b>فون نمبر:</b> 0300-1234567 | 0321-7654321</div>
+        <div><b>ای میل:</b> info@gujratmushtarka.com</div>
+        <div><b>اوقاتِ کار:</b> صبح 8:00 بجے تا رات 10:00 بجے (ہفتہ وار 7 دن)</div>
+      </div>
+      
+      <div style="background:#F1F5F9; border:1px solid #CBD5E1; border-radius:8px; padding:15px; text-align:center;">
+        <h4 class="urdu" style="margin-top:0; color:var(--navy);">📍 آن لائن لوکیشن میپ</h4>
+        <p class="urdu" style="font-size:0.82rem; color:#64748B;">گجرات جی ٹی روڈ مرکزی ٹرانسپورٹ اڈہ</p>
+        <a href="https://maps.google.com" target="_blank" class="btn btn-secondary urdu" style="font-size:0.82rem;">🗺️ گوگل میپ پر دیکھیں</a>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<!-- Firebase Realtime Database SDKs for Live Tracking -->
+<!-- FOOTER -->
+<footer class="urdu">
+  <div>© 2026 گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی (رجسٹرڈ) - جملہ حقوق محفوظ ہیں۔</div>
+  <div style="margin-top:8px; font-size:0.8rem;">
+    <a href="portal.html">کسٹمر پورٹل</a> | 
+    <a href="manifest.html">ٹرک مینی فیسٹ</a> | 
+    <a href="admin.html">ایڈمن پینل</a>
+  </div>
+</footer>
+
+<!-- Firebase Realtime Database SDKs for Tracking & Quotations -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import { getDatabase, ref, get, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDsHjE5-6yoKjZG7mU7vKenvJtilvvXthg",
@@ -319,6 +521,31 @@ window.trackBilty = async function() {
 
   } catch(e) {
     resBox.innerHTML = 'خرابی پیش آئی: ' + e.message;
+  }
+};
+
+window.submitQuotation = async function() {
+  const name = document.getElementById('qName').value;
+  const phone = document.getElementById('qPhone').value;
+  const city = document.getElementById('qCity').value;
+  const details = document.getElementById('qDetails').value;
+  const notes = document.getElementById('qNotes').value;
+
+  try {
+    const qRef = push(ref(db, 'quotations'));
+    await set(qRef, {
+      name: name,
+      phone: phone,
+      city: city,
+      details: details,
+      notes: notes,
+      createdAt: new Date().toISOString()
+    });
+
+    alert("شکریہ! آپ کی کوٹیشن کی درخواست موصول ہو گئی ہے۔ ہمارا نمائندہ جلد آپ سے رابطہ کرے گا۔");
+    document.getElementById('quoteForm').reset();
+  } catch(e) {
+    alert("خرابی: " + e.message);
   }
 };
 </script>
