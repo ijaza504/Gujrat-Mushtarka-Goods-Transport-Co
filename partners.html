@@ -1,1 +1,1061 @@
 
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ٹرک لوڈنگ مینی فیسٹ ڈیش بورڈ | گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --navy: #0B2545;
+  --gold: #F2B705;
+  --light-bg: #F8FAFC;
+  --border: #CBD5E1;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', 'Noto Nastaliq Urdu', serif;
+  background-color: var(--light-bg);
+  margin: 0;
+  padding: 12px;
+  color: #1E293B;
+  direction: rtl;
+  text-align: right;
+}
+
+.urdu { font-family: 'Noto Nastaliq Urdu', serif; line-height: 1.5 !important; }
+
+.auth-box {
+  max-width: 400px;
+  margin: 50px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  border-top: 5px solid var(--gold);
+  text-align: center;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+  border-top: 5px solid var(--navy);
+}
+
+.header-title {
+  text-align: center;
+  border-bottom: 2px solid var(--navy);
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+}
+.header-title h1 { color: var(--navy); margin: 0; font-size: 1.5rem; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; }
+.header-title h2 { color: #DC2626; margin: 2px 0 0; font-size: 1.1rem; font-weight: 700; }
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #EFF6FF;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 15px;
+}
+.kpi-card {
+  background: #F8FAFC;
+  border: 1px solid var(--border);
+  border-right: 5px solid var(--navy);
+  padding: 12px;
+  border-radius: 8px;
+}
+.kpi-card.gold-border { border-right-color: var(--gold); }
+.kpi-card.green-border { border-right-color: #10B981; }
+.kpi-title { font-size: 0.8rem; color: #64748B; font-weight: 600; margin-bottom: 4px; }
+.kpi-value { font-size: 1.35rem; font-weight: 800; color: var(--navy); }
+
+label { font-weight: 600; font-size: 0.82rem; color: #334155; display: block; margin-bottom: 3px; }
+input, select {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  font: inherit;
+  box-sizing: border-box;
+  font-size: 0.85rem;
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+.btn {
+  padding: 6px 12px;
+  border-radius: 5px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  font-size: 0.82rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+}
+.btn-primary { background: var(--gold); color: var(--navy); }
+.btn-navy { background: var(--navy); color: #fff; }
+.btn-secondary { background: #64748B; color: #fff; }
+.btn-success { background: #10B981; color: #fff; }
+.btn-danger { background: #EF4444; color: #fff; }
+.btn-warning { background: #F59E0B; color: #fff; }
+.btn-info { background: #0284C7; color: #fff; }
+
+table { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 0.82rem; }
+th, td { border: 1px solid var(--border); padding: 5px 8px; text-align: right; }
+th { background: #F1F5F9; color: var(--navy); }
+
+.card {
+  background: #fff;
+  border: 1px solid var(--border);
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+.summary-box {
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-top: 12px;
+  font-size: 0.88rem;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+#printArea { display: none; }
+
+@media print {
+  body * { visibility: hidden; }
+  #printArea, #printArea * { visibility: visible; }
+  #printArea {
+    display: block !important;
+    position: absolute;
+    left: 0; top: 0; width: 100%; margin: 0; padding: 0;
+  }
+  @page { size: A4; margin: 6mm 6mm; }
+  table { page-break-inside: auto; }
+  tr { page-break-inside: avoid; page-break-after: auto; }
+  thead { display: table-header-group; }
+  tfoot { display: table-footer-group; }
+}
+</style>
+</head>
+<body>
+
+<!-- MANIFEST AUTH LOGIN SECTION -->
+<div id="manifestAuthBox" class="auth-box">
+  <h2 style="color:var(--navy); margin-top:0;" class="urdu">مینی فیسٹ لاگ ان</h2>
+  <p style="color:#64748B; font-size:0.85rem;" class="urdu">گجرات مشترکہ گڈز ٹرانسپورٹ - کنٹرول پینل</p>
+  
+  <div style="margin-bottom:15px; text-align:right;">
+    <label class="urdu">ایڈمن پاس کوڈ (Passcode):</label>
+    <input type="password" id="manifestPassInput" placeholder="پاس کوڈ درج کریں" onkeypress="if(event.key==='Enter') loginManifestAdmin()">
+  </div>
+  <button type="button" class="btn btn-primary" style="width:100%; justify-content:center;" onclick="loginManifestAdmin()">سائن ان کریں (Login)</button>
+</div>
+
+<!-- MAIN MANIFEST CONTAINER -->
+<div id="manifestMainContainer" class="container no-print" style="display:none;">
+  
+  <div class="header-title">
+    <h1>GUJRAT MUSHTARKA GOODS TRANSPORT CO.</h1>
+    <h2 class="urdu">گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی (ٹرک مینی فیسٹ ڈیش بورڈ)</h2>
+  </div>
+
+  <div class="top-bar">
+    <div>
+      <strong class="urdu" style="font-size:1.05rem; color:var(--navy);">🚛 مینی فیسٹ کنٹرول پینل</strong>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+      <button class="btn btn-success" style="padding:7px 14px; font-size:0.88rem;" onclick="showCreateManifestForm()">➕ نیا مینی فیسٹ بنائیں (Create New)</button>
+      <button class="btn btn-navy" onclick="loadAllDataAndInit()">🔄 ریفرش (Refresh)</button>
+      <a href="admin.html" class="btn btn-navy">📋 ایڈمن پینل</a>
+      <a href="index.html" class="btn btn-secondary">🏠 ہوم پیج</a>
+      <button class="btn btn-danger" onclick="logoutManifestAdmin()">🚪 لاگ آؤٹ</button>
+    </div>
+  </div>
+
+  <!-- DASHBOARD VIEW -->
+  <div id="dashboardView">
+    
+    <div class="card" style="background:#F1F5F9; border-color:#CBD5E1;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+        <h3 class="urdu" style="margin:0; color:var(--navy);">📊 کاروباری حساب کتاب و انکم ڈیش بورڈ</h3>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <label class="urdu" style="margin:0; white-space:nowrap;">انکم فلٹر منتخب کریں:</label>
+          <select id="incomeFilter" style="width:auto; padding:4px 8px; font-weight:700;" onchange="calculateDashboardStats()">
+            <option value="today" selected>آج کی آمدنی (Today)</option>
+            <option value="month">اس مہینے کی آمدنی (This Month)</option>
+            <option value="all">تمام ریکارڈ (All Time)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card gold-border">
+          <div class="kpi-title urdu">کل مینی فیسٹس (Total Manifests):</div>
+          <div class="kpi-value" id="kpiManifestCount">0</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-title urdu">گودام میں پینڈنگ بلٹیاں (Pending Bilties):</div>
+          <div class="kpi-value" style="color:#DC2626;" id="kpiPendingCount">0</div>
+        </div>
+
+        <div class="kpi-card green-border">
+          <div class="kpi-title urdu">کمپنی کی خالص آمدنی / کمائی (Net Earnings):</div>
+          <div class="kpi-value" style="color:#10B981;" id="kpiNetIncome">Rs. 0</div>
+          <small style="color:#64748B; font-size:0.7rem;">(کل بلٹی چارجز مائنس ڈرائیور کرایہ)</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- PENDING WAREHOUSE BOOKINGS LIST -->
+    <div class="card">
+      <h3 class="urdu" style="margin-top:0; color:#DC2626; border-bottom:2px solid #FCA5A5; padding-bottom:4px;">📦 گودام میں لوڈنگ کے لیے موجود پینڈنگ بلٹیاں (Pending Warehouse Bilties)</h3>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th class="urdu">بلٹی نمبر</th>
+              <th class="urdu">تاریخ</th>
+              <th class="urdu">مال بھیجنے والا</th>
+              <th class="urdu">وصول کنندہ و شہر</th>
+              <th class="urdu">تعداد</th>
+              <th class="urdu">ڈرائیور کرایه</th>
+              <th class="urdu">اڈا چارجز</th>
+              <th class="urdu">رکشہ کرایه</th>
+              <th class="urdu">لیبر</th>
+              <th class="urdu">اسٹیٹس</th>
+            </tr>
+          </thead>
+          <tbody id="dashboardPendingBody">
+            <tr><td colspan="10" style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- MANIFEST HISTORY -->
+    <div class="card">
+      <h3 class="urdu" style="margin-top:0; color:var(--navy); border-bottom:2px solid var(--gold); padding-bottom:4px;">📜 پرانے تمام مینی فیسٹ / گاڑیوں کا ریکارڈ (Manifest History)</h3>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th class="urdu">تاریخ</th>
+              <th class="urdu">مینی فیسٹ #</th>
+              <th class="urdu">گاڑی نمبر</th>
+              <th class="urdu">ڈرائیور و موبائل</th>
+              <th class="urdu">بلٹیاں</th>
+              <th class="urdu">کل ڈرائیور کرایه</th>
+              <th class="urdu">کمپنی کی صاف کمائی</th>
+              <th class="urdu">ایکشن</th>
+            </tr>
+          </thead>
+          <tbody id="manifestHistoryBody">
+            <tr><td colspan="8" style="text-align:center;">ریکارڈ لوڈ ہو رہا ہے...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CREATE / EDIT MANIFEST FORM -->
+  <div id="createFormView" style="display:none;">
+    <div style="display:flex; justify-content:space-between; align-items:center; background:#EFF6FF; padding:10px; border-radius:6px; margin-bottom:12px;">
+      <h3 class="urdu" style="margin:0; color:var(--navy);" id="formMainTitle">🚛 نیا ٹرک مینی فیسٹ / لوڈنگ شیٹ بنائیں</h3>
+      <div style="display:flex; gap:6px;">
+        <button type="button" class="btn btn-secondary" onclick="showDashboardView()">🏠 ہوم ڈیش بورڈ</button>
+        <button type="button" class="btn btn-danger" onclick="cancelManifestEdit()">✖ کینسل کریں</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="urdu" style="margin-top:0; color:var(--navy); border-bottom:2px solid var(--gold); padding-bottom:4px;">1. ٹرک، ڈرائیور اور کمیشن کی تفاصیل</h3>
+      
+      <input type="hidden" id="editManifestId" value="">
+
+      <div class="grid-3" style="margin-bottom:10px;">
+        <div>
+          <label class="urdu">گاڑی / ٹرک نمبر *</label>
+          <input type="text" id="truckNo" placeholder="مثلاً: LES-1234" required>
+        </div>
+        <div>
+          <label class="urdu">ڈرائیور کا نام *</label>
+          <input type="text" id="driverName" placeholder="مثلاً: احمد خان" required>
+        </div>
+        <div>
+          <label class="urdu">ڈرائیور کا موبائل نمبر *</label>
+          <input type="tel" id="driverPhone" placeholder="0300-1234567" required>
+        </div>
+      </div>
+
+      <div class="grid-3" style="margin-bottom:12px;">
+        <div>
+          <label class="urdu">روٹ / روانی کی تاریخ *</label>
+          <input type="date" id="dispatchDate" required>
+        </div>
+        <div>
+          <label class="urdu">روٹ / ڈسٹینیشن</label>
+          <input type="text" id="routeCities" placeholder="گجرات تا کراچی براستہ ملتان" required>
+        </div>
+        <div>
+          <label class="urdu">کمیشن فیصد (%) ڈرائیور کرائے پر *</label>
+          <input type="number" id="commissionPercent" value="3" step="0.1" min="0" max="100" placeholder="3" oninput="calculateManifestSummary()">
+        </div>
+      </div>
+
+      <h3 class="urdu" style="color:var(--navy); border-bottom:2px solid var(--gold); padding-bottom:4px; margin-top:15px;">2. گاڑی میں لوڈ کرنے کے لیے گودام کی بلٹیاں منتخب کریں</h3>
+      
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:30px;"><input type="checkbox" id="selectAllBookings" onchange="toggleSelectAll(this)"></th>
+              <th class="urdu">بلٹی نمبر</th>
+              <th class="urdu">تاریخ</th>
+              <th class="urdu">مال بھیجنے والا</th>
+              <th class="urdu">وصول کنندہ و شہر</th>
+              <th class="urdu">تعداد</th>
+              <th class="urdu">ڈرائیور کرایه</th>
+              <th class="urdu">اڈا چارجز</th>
+              <th class="urdu">رکشہ کرایه</th>
+              <th class="urdu">لیبر</th>
+            </tr>
+          </thead>
+          <tbody id="warehouseTableBody">
+            <tr><td colspan="10" style="text-align:center;">گودام کا ڈیٹا لوڈ ہو رہا ہے...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="summary-box urdu">
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:8px;">
+          <div>منتخب بلٹیاں: <span id="sumQty" style="color:var(--navy); font-weight:700;">0</span></div>
+          <div>کل ڈرائیور کرایه: Rs. <span id="sumFreight" style="color:green; font-weight:700;">0</span></div>
+          <div>اڈا چارجز: Rs. <span id="sumAdda" style="font-weight:700;">0</span></div>
+          <div>رکشہ کرایه: Rs. <span id="sumRickshaw" style="font-weight:700;">0</span></div>
+          <div>لیبر چارجز: Rs. <span id="sumLabour" style="font-weight:700;">0</span></div>
+          <div>کمیشن رقم: Rs. <span id="sumCommission" style="color:#D97706; font-weight:700;">0</span></div>
+        </div>
+        <div style="margin-top:10px; border-top:1px dashed #BFDBFE; padding-top:8px; display:flex; justify-content:space-between; font-size:1rem; font-weight:800; color:var(--navy);">
+          <span>کمپنی نے ڈرائیور سے کل کتنے پیسے لینے ہیں (Total Company Settlement):</span>
+          <span style="color:green; font-size:1.15rem;" id="sumTotalPayable">Rs. 0</span>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:15px;">
+        <button type="button" class="btn btn-secondary" onclick="showDashboardView()">🏠 ہوم ڈیش بورڈ</button>
+        <button type="button" class="btn btn-danger" id="cancelEditBtn" onclick="cancelManifestEdit()">✖ کینسل کریں</button>
+        <button type="button" class="btn btn-success" style="padding:8px 20px; font-size:0.92rem;" id="saveManifestBtn" onclick="saveAndDispatchManifest()">💾 مینی فیسٹ محفوظ کریں اور گاڑی روانہ کریں</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- VIEW MANIFEST MODAL -->
+<div id="viewManifestModal" class="modal-overlay">
+  <div class="modal-box">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--navy); padding-bottom:8px; margin-bottom:12px;">
+      <h3 style="margin:0; color:var(--navy);" class="urdu">مینی فیسٹ تفصیلات (View Manifest)</h3>
+      <button type="button" class="btn btn-secondary" onclick="closeViewModal()">بند کریں ✖</button>
+    </div>
+    <div id="modalManifestContent"></div>
+  </div>
+</div>
+
+<div id="printArea"></div>
+
+<!-- Firebase Realtime Database SDKs -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getDatabase, ref, get, set, push, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDsHjE5-6yoKjZG7mU7vKenvJtilvvXthg",
+  authDomain: "gujrat-mushtarka-transport.firebaseapp.com",
+  databaseURL: "https://gujrat-mushtarka-transport-default-rtdb.firebaseio.com",
+  projectId: "gujrat-mushtarka-transport",
+  storageBucket: "gujrat-mushtarka-transport.firebasestorage.app",
+  messagingSenderId: "244664894427",
+  appId: "1:244664894427:web:b54baa08d078d5ef499dfe"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+window.availableBookings = {};
+window.allManifests = {};
+window.allBookingsList = {};
+window.dynamicPartnersMap = {};
+
+// FETCH PARTNERS DYNAMICALLY
+async function fetchPartners() {
+  window.dynamicPartnersMap = {};
+  try {
+    const snap = await get(ref(db, 'partners'));
+    if(snap.exists()) {
+      snap.forEach(child => {
+        const p = child.val();
+        if(p.city) {
+          window.dynamicPartnersMap[p.city] = {
+            name: p.companyName || (p.city + ' Goods'),
+            address: p.address || (p.city + ' Adda'),
+            phone: p.phone || 'N/A'
+          };
+        }
+      });
+    }
+  } catch(e) {}
+}
+
+window.loginManifestAdmin = function() {
+  const pass = document.getElementById('manifestPassInput').value;
+  if(pass === "gujrat2001") {
+    document.getElementById('manifestAuthBox').style.display = 'none';
+    document.getElementById('manifestMainContainer').style.display = 'block';
+    loadAllDataAndInit();
+  } else {
+    alert("پاس کوڈ غلط ہے! براہ کرم درست پاسورڈ درج کریں۔");
+  }
+};
+
+window.logoutManifestAdmin = function() {
+  document.getElementById('manifestAuthBox').style.display = 'block';
+  document.getElementById('manifestMainContainer').style.display = 'none';
+  document.getElementById('manifestPassInput').value = '';
+};
+
+window.showCreateManifestForm = function() {
+  document.getElementById('dashboardView').style.display = 'none';
+  document.getElementById('createFormView').style.display = 'block';
+  cancelManifestEdit();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+window.showDashboardView = function() {
+  document.getElementById('createFormView').style.display = 'none';
+  document.getElementById('dashboardView').style.display = 'block';
+  loadAllDataAndInit();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+document.getElementById('dispatchDate').valueAsDate = new Date();
+
+window.loadAllDataAndInit = async function() {
+  await fetchPartners();
+  await loadWarehouseBookings();
+  await loadManifestHistory();
+  calculateDashboardStats();
+};
+
+async function loadWarehouseBookings(selectedIdsToCheck = []) {
+  const tbody = document.getElementById('warehouseTableBody');
+  const dashPendingBody = document.getElementById('dashboardPendingBody');
+  
+  tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">گودام کا ڈیٹا لوڈ ہو رہا ہے...</td></tr>';
+  dashPendingBody.innerHTML = '<tr><td colspan="10" style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے...</td></tr>';
+
+  try {
+    const snap = await get(ref(db, 'bookings'));
+    if(!snap.exists()) {
+      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">کوئی بکنگ موجود نہیں ہے۔</td></tr>';
+      dashPendingBody.innerHTML = '<tr><td colspan="10" style="text-align:center;">گودام میں کوئی پینڈنگ بلٹی موجود نہیں ہے۔</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = '';
+    dashPendingBody.innerHTML = '';
+    window.availableBookings = {};
+    window.allBookingsList = {};
+    let count = 0;
+
+    snap.forEach(child => {
+      const bId = child.key;
+      const b = child.val();
+      window.allBookingsList[bId] = b;
+      
+      const isSelectedForEdit = selectedIdsToCheck.includes(bId);
+
+      if(b.status === "Goods received" || b.status === "In warehouse" || b.status === "Booking Received" || isSelectedForEdit) {
+        window.availableBookings[bId] = b;
+        count++;
+
+        const isChecked = isSelectedForEdit ? 'checked' : '';
+
+        tbody.innerHTML += `
+          <tr>
+            <td><input type="checkbox" class="manifest-check" value="${bId}" ${isChecked} onchange="calculateManifestSummary()"></td>
+            <td><strong>${b.biltyNo}</strong></td>
+            <td>${b.date}</td>
+            <td>${b.senderName}</td>
+            <td><strong>${b.receiverName}</strong> (${b.destCity})</td>
+            <td>${b.totalQty || 0}</td>
+            <td style="color:green; font-weight:700;">Rs. ${b.freightCharges || 0}</td>
+            <td>Rs. ${b.addaCharges || 0}</td>
+            <td>Rs. ${b.rickshawFare || 0}</td>
+            <td>Rs. ${b.labourCharges || 0}</td>
+          </tr>
+        `;
+
+        dashPendingBody.innerHTML += `
+          <tr>
+            <td><strong>${b.biltyNo}</strong></td>
+            <td>${b.date}</td>
+            <td>${b.senderName}</td>
+            <td><strong>${b.receiverName}</strong> (${b.destCity})</td>
+            <td>${b.totalQty || 0}</td>
+            <td style="color:green; font-weight:700;">Rs. ${b.freightCharges || 0}</td>
+            <td>Rs. ${b.addaCharges || 0}</td>
+            <td>Rs. ${b.rickshawFare || 0}</td>
+            <td>Rs. ${b.labourCharges || 0}</td>
+            <td><span style="background:#FEF3C7; color:#B45309; padding:2px 6px; border-radius:4px; font-weight:700;">${b.status || 'In Warehouse'}</span></td>
+          </tr>
+        `;
+      }
+    });
+
+    if(count === 0) {
+      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">ویئر ہاؤس میں لوڈنگ کے لیے کوئی بکنگ موجود نہیں ہے۔</td></tr>';
+      dashPendingBody.innerHTML = '<tr><td colspan="10" style="text-align:center;">گودام میں کوئی پینڈنگ بلٹی موجود نہیں ہے۔</td></tr>';
+    } else {
+      calculateManifestSummary();
+    }
+
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; color:red;">لوڈ کرنے میں ناکامی: ' + e.message + '</td></tr>';
+  }
+}
+
+window.toggleSelectAll = function(masterCheck) {
+  document.querySelectorAll('.manifest-check').forEach(chk => {
+    chk.checked = masterCheck.checked;
+  });
+  calculateManifestSummary();
+};
+
+window.calculateManifestSummary = function() {
+  const selected = document.querySelectorAll('.manifest-check:checked');
+  let totalFreight = 0;
+  let totalAdda = 0;
+  let totalRickshaw = 0;
+  let totalLabour = 0;
+
+  selected.forEach(chk => {
+    const bId = chk.value;
+    const b = window.availableBookings[bId];
+    if(b) {
+      totalFreight += Number(b.freightCharges) || 0;
+      totalAdda += Number(b.addaCharges) || 0;
+      totalRickshaw += Number(b.rickshawFare) || 0;
+      totalLabour += Number(b.labourCharges) || 0;
+    }
+  });
+
+  const commPercent = Number(document.getElementById('commissionPercent').value) || 0;
+  const commissionAmount = Math.round((totalFreight * commPercent) / 100);
+
+  const totalPayable = totalAdda + totalRickshaw + totalLabour + commissionAmount;
+
+  document.getElementById('sumQty').innerText = selected.length;
+  document.getElementById('sumFreight').innerText = totalFreight;
+  document.getElementById('sumAdda').innerText = totalAdda;
+  document.getElementById('sumRickshaw').innerText = totalRickshaw;
+  document.getElementById('sumLabour').innerText = totalLabour;
+  document.getElementById('sumCommission').innerText = commissionAmount;
+  document.getElementById('sumTotalPayable').innerText = "Rs. " + totalPayable;
+};
+
+window.calculateDashboardStats = function() {
+  const filter = document.getElementById('incomeFilter').value;
+  const todayStr = new Date().toISOString().split('T')[0];
+  const currentMonthStr = todayStr.substring(0, 7);
+
+  let manifestMatchCount = 0;
+  let netCompanyIncome = 0;
+
+  Object.keys(window.allManifests).forEach(mId => {
+    const m = window.allManifests[mId];
+    const mDate = m.dispatchDate || "";
+
+    let isMatch = false;
+    if(filter === 'today' && mDate === todayStr) isMatch = true;
+    else if(filter === 'month' && mDate.startsWith(currentMonthStr)) isMatch = true;
+    else if(filter === 'all') isMatch = true;
+
+    if(isMatch) {
+      manifestMatchCount++;
+      netCompanyIncome += Number(m.totalPayable) || 0;
+    }
+  });
+
+  const pendingCount = Object.keys(window.availableBookings).length;
+
+  document.getElementById('kpiManifestCount').innerText = manifestMatchCount;
+  document.getElementById('kpiPendingCount').innerText = pendingCount;
+  document.getElementById('kpiNetIncome').innerText = "Rs. " + netCompanyIncome;
+};
+
+window.saveAndDispatchManifest = async function() {
+  const editId = document.getElementById('editManifestId').value;
+  const truckNo = document.getElementById('truckNo').value;
+  const driverName = document.getElementById('driverName').value;
+  const driverPhone = document.getElementById('driverPhone').value;
+  const routeCities = document.getElementById('routeCities').value;
+  const dispatchDate = document.getElementById('dispatchDate').value;
+  const commissionPercent = Number(document.getElementById('commissionPercent').value) || 0;
+
+  const selectedCheckboxes = document.querySelectorAll('.manifest-check:checked');
+
+  if(!truckNo || !driverName || !driverPhone) {
+    alert("براہ کرم ٹرک کا نمبر، ڈرائیور کا نام اور موبائل نمبر درج کریں!");
+    return;
+  }
+
+  if(selectedCheckboxes.length === 0) {
+    alert("براہ کرم اس ٹرک میں لوڈ کرنے کے لیے کم از کم ایک بکنگ منتخب کریں!");
+    return;
+  }
+
+  const selectedBookingIds = [];
+  let totalFreight = 0, totalAdda = 0, totalRickshaw = 0, totalLabour = 0;
+
+  selectedCheckboxes.forEach(chk => {
+    const bId = chk.value;
+    const b = window.availableBookings[bId];
+    if(b) {
+      selectedBookingIds.push(bId);
+      totalFreight += Number(b.freightCharges) || 0;
+      totalAdda += Number(b.addaCharges) || 0;
+      totalRickshaw += Number(b.rickshawFare) || 0;
+      totalLabour += Number(b.labourCharges) || 0;
+    }
+  });
+
+  const commissionAmount = Math.round((totalFreight * commissionPercent) / 100);
+  const totalPayable = totalAdda + totalRickshaw + totalLabour + commissionAmount;
+
+  const saveBtn = document.getElementById('saveManifestBtn');
+  saveBtn.disabled = true;
+
+  try {
+    if(editId) {
+      const oldManifest = window.allManifests[editId];
+      if(oldManifest && oldManifest.bookingIds) {
+        for(let oldBId of oldManifest.bookingIds) {
+          if(!selectedBookingIds.includes(oldBId)) {
+            await update(ref(db, 'bookings/' + oldBId), {
+              status: "In warehouse",
+              truckNo: null,
+              driverName: null,
+              driverPhone: null,
+              manifestNo: null,
+              dispatchDate: null
+            });
+          }
+        }
+      }
+
+      const manifestNo = oldManifest?.manifestNo || ("MAN-" + Math.floor(100000 + Math.random() * 900000));
+      
+      const manifestData = {
+        manifestNo: manifestNo,
+        truckNo: truckNo,
+        driverName: driverName,
+        driverPhone: driverPhone,
+        routeCities: routeCities,
+        dispatchDate: dispatchDate,
+        totalFreight: totalFreight,
+        totalAdda: totalAdda,
+        totalRickshaw: totalRickshaw,
+        totalLabour: totalLabour,
+        commissionPercent: commissionPercent,
+        commissionAmount: commissionAmount,
+        totalPayable: totalPayable,
+        bookingIds: selectedBookingIds,
+        updatedAt: new Date().toISOString()
+      };
+
+      await update(ref(db, 'manifests/' + editId), manifestData);
+
+      for(let bId of selectedBookingIds) {
+        await update(ref(db, 'bookings/' + bId), {
+          status: "On the way",
+          truckNo: truckNo,
+          driverName: driverName,
+          driverPhone: driverPhone,
+          manifestNo: manifestNo,
+          dispatchDate: dispatchDate
+        });
+      }
+
+      alert("مینی فیسٹ کامیابی سے اپ ڈیٹ ہو گیا ہے!");
+
+    } else {
+      const manifestNo = "MAN-" + Math.floor(100000 + Math.random() * 900000);
+
+      const manifestData = {
+        manifestNo: manifestNo,
+        truckNo: truckNo,
+        driverName: driverName,
+        driverPhone: driverPhone,
+        routeCities: routeCities,
+        dispatchDate: dispatchDate,
+        totalFreight: totalFreight,
+        totalAdda: totalAdda,
+        totalRickshaw: totalRickshaw,
+        totalLabour: totalLabour,
+        commissionPercent: commissionPercent,
+        commissionAmount: commissionAmount,
+        totalPayable: totalPayable,
+        bookingIds: selectedBookingIds,
+        createdAt: new Date().toISOString()
+      };
+
+      const newManifestRef = push(ref(db, 'manifests'));
+      await set(newManifestRef, manifestData);
+
+      for(let bId of selectedBookingIds) {
+        await update(ref(db, 'bookings/' + bId), {
+          status: "On the way",
+          truckNo: truckNo,
+          driverName: driverName,
+          driverPhone: driverPhone,
+          manifestNo: manifestNo,
+          dispatchDate: dispatchDate
+        });
+      }
+
+      alert("نیا مینی فیسٹ کامیابی سے محفوظ ہو گیا!");
+    }
+
+    showDashboardView();
+
+  } catch(e) {
+    alert("Error: " + e.message);
+  } finally {
+    saveBtn.disabled = false;
+  }
+};
+
+window.editManifest = function(mId) {
+  const m = window.allManifests[mId];
+  if(!m) return;
+
+  document.getElementById('dashboardView').style.display = 'none';
+  document.getElementById('createFormView').style.display = 'block';
+
+  document.getElementById('editManifestId').value = mId;
+  document.getElementById('truckNo').value = m.truckNo || "";
+  document.getElementById('driverName').value = m.driverName || "";
+  document.getElementById('driverPhone').value = m.driverPhone || "";
+  document.getElementById('routeCities').value = m.routeCities || "";
+  document.getElementById('dispatchDate').value = m.dispatchDate || "";
+  document.getElementById('commissionPercent').value = m.commissionPercent || "3";
+
+  document.getElementById('formMainTitle').innerText = "📝 مینی فیسٹ میں تبدیلی کریں (Manifest #" + m.manifestNo + ")";
+  document.getElementById('saveManifestBtn').innerText = "💾 اپ ڈیٹ کریں (Update Manifest)";
+
+  loadWarehouseBookings(m.bookingIds || []);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+window.cancelManifestEdit = function() {
+  document.getElementById('editManifestId').value = "";
+  document.getElementById('truckNo').value = "";
+  document.getElementById('driverName').value = "";
+  document.getElementById('driverPhone').value = "";
+  document.getElementById('routeCities').value = "";
+  document.getElementById('commissionPercent').value = "3";
+  
+  document.getElementById('formMainTitle').innerText = "🚛 نیا ٹرک مینی فیسٹ / لوڈنگ شیٹ بنائیں";
+  document.getElementById('saveManifestBtn').innerText = "💾 مینی فیسٹ محفوظ کریں اور گاڑی روانہ کریں";
+
+  loadWarehouseBookings();
+};
+
+async function loadManifestHistory() {
+  const tbody = document.getElementById('manifestHistoryBody');
+  try {
+    const snap = await get(ref(db, 'manifests'));
+    if(!snap.exists()) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">کوئی پرانا ریکارڈ موجود نہیں ہے۔</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = '';
+    window.allManifests = {};
+
+    snap.forEach(child => {
+      const mId = child.key;
+      const m = child.val();
+      window.allManifests[mId] = m;
+
+      tbody.innerHTML += `
+        <tr>
+          <td>${m.dispatchDate}</td>
+          <td><strong>${m.manifestNo}</strong></td>
+          <td><strong style="color:navy;">${m.truckNo}</strong></td>
+          <td>${m.driverName} (${m.driverPhone})</td>
+          <td>${m.bookingIds ? m.bookingIds.length : 0}</td>
+          <td><strong style="color:green;">Rs. ${m.totalFreight || 0}</strong></td>
+          <td><strong style="color:#10B981;">Rs. ${m.totalPayable || 0}</strong></td>
+          <td>
+            <div style="display:flex; gap:4px; flex-wrap:wrap;">
+              <button class="btn btn-info" onclick="viewManifestModal('${mId}')">👁️ ویو</button>
+              <button class="btn btn-warning" onclick="editManifest('${mId}')">📝 تعدیل</button>
+              <button class="btn btn-primary" onclick="printManifestSheet('${mId}')">🖨️ پرنٹ</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    });
+
+    calculateDashboardStats();
+
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:red;">لوڈ کرنے میں مسئلہ آیا۔</td></tr>';
+  }
+}
+
+window.viewManifestModal = async function(mId) {
+  const m = window.allManifests[mId];
+  if(!m) return;
+
+  const content = await generateManifestHTMLContent(m);
+  document.getElementById('modalManifestContent').innerHTML = content;
+  document.getElementById('viewManifestModal').style.display = 'flex';
+};
+
+window.closeViewModal = function() {
+  document.getElementById('viewManifestModal').style.display = 'none';
+};
+
+async function generateManifestHTMLContent(m) {
+  const cityGroupedBookings = {};
+
+  if(m.bookingIds) {
+    for(let bId of m.bookingIds) {
+      const snap = await get(ref(db, 'bookings/' + bId));
+      if(snap.exists()) {
+        const b = snap.val();
+        const city = b.destCity || "دیگر شہر";
+        if(!cityGroupedBookings[city]) cityGroupedBookings[city] = [];
+        cityGroupedBookings[city].push(b);
+      }
+    }
+  }
+
+  let htmlContent = '';
+  let grandTotalFreight = 0;
+  let grandTotalAdda = 0;
+  let grandTotalRickshaw = 0;
+  let grandTotalLabour = 0;
+  let overallTotalQty = 0;
+
+  Object.keys(cityGroupedBookings).forEach(city => {
+    const bookings = cityGroupedBookings[city];
+    const partner = window.dynamicPartnersMap[city] || { name: `لاجسٹک پارٹنر (${city})`, address: `${city} اڈہ`, phone: "N/A" };
+
+    let cityRows = '';
+    let cityFreightSum = 0;
+    let cityQtySum = 0;
+    let count = 1;
+
+    bookings.forEach(b => {
+      const fAmount = Number(b.freightCharges) || 0;
+      const aAmount = Number(b.addaCharges) || 0;
+      const rAmount = Number(b.rickshawFare) || 0;
+      const lAmount = Number(b.labourCharges) || 0;
+      const qNum = Number(b.totalQty) || 0;
+
+      cityFreightSum += fAmount;
+      cityQtySum += qNum;
+      grandTotalAdda += aAmount;
+      grandTotalRickshaw += rAmount;
+      grandTotalLabour += lAmount;
+      overallTotalQty += qNum;
+
+      cityRows += `
+        <tr>
+          <td style="border:1px solid #94A3B8; padding:3px 4px; text-align:center; white-space:nowrap;">${count++}</td>
+          <td style="border:1px solid #94A3B8; padding:3px 4px; white-space:nowrap; font-weight:700;">${b.biltyNo}</td>
+          <td style="border:1px solid #94A3B8; padding:3px 4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:130px;">${b.senderName}</td>
+          <td style="border:1px solid #94A3B8; padding:3px 4px; white-space:nowrap; font-weight:700; overflow:hidden; text-overflow:ellipsis; max-width:130px;">${b.receiverName}</td>
+          <td style="border:1px solid #94A3B8; padding:3px 4px; white-space:nowrap; text-align:center; font-family:'Plus Jakarta Sans', sans-serif; direction:ltr;">${b.receiverPhone || 'N/A'}</td>
+          <td style="border:1px solid #94A3B8; padding:3px 4px; white-space:nowrap; text-align:center; font-weight:700;">${b.totalQty || 0}</td>
+          <td style="border:1px solid #94A3B8; padding:3px 4px; white-space:nowrap; text-align:right; font-weight:700; color:#065F46;">Rs. ${fAmount}</td>
+        </tr>
+      `;
+    });
+
+    grandTotalFreight += cityFreightSum;
+
+    htmlContent += `
+      <div style="border:1.5px solid #0B2545; border-radius:4px; padding:4px; margin-bottom:6px; background:#fff; page-break-inside: avoid;">
+        <div style="background:#EFF6FF; border-bottom:1.5px solid #0B2545; padding:3px 6px; margin-bottom:3px; font-size:0.78rem; display:flex; justify-content:space-between; align-items:center; white-space:nowrap;">
+          <div><strong>منزل / شہر: <span style="color:#DC2626; font-size:0.85rem;">${city}</span></strong> | <b>پارٹنر:</b> ${partner.name} (${partner.phone})</div>
+          <div><b>پتہ:</b> ${partner.address}</div>
+        </div>
+
+        <table style="width:100%; border-collapse:collapse; font-size:0.75rem; table-layout:auto;">
+          <thead>
+            <tr style="background:#F1F5F9; color:#0B2545; white-space:nowrap;">
+              <th style="border:1px solid #94A3B8; padding:3px; width:25px; text-align:center;">#</th>
+              <th style="border:1px solid #94A3B8; padding:3px; width:110px; text-align:right;">بلٹی #</th>
+              <th style="border:1px solid #94A3B8; padding:3px; text-align:right;">مال بھیجنے والا</th>
+              <th style="border:1px solid #94A3B8; padding:3px; text-align:right;">مال وصول کنندہ</th>
+              <th style="border:1px solid #94A3B8; padding:3px; width:105px; text-align:center;">فون نمبر</th>
+              <th style="border:1px solid #94A3B8; padding:3px; width:45px; text-align:center;">تعداد</th>
+              <th style="border:1px solid #94A3B8; padding:3px; width:95px; text-align:right;">کرایه (Freight)</th>
+            </tr>
+          </thead>
+          <tbody>${cityRows}</tbody>
+          <tfoot>
+            <tr style="background:#FEF3C7; font-weight:800; color:#92400E; font-size:0.75rem; white-space:nowrap;">
+              <td colspan="5" style="border:1px solid #94A3B8; padding:3px 6px; text-align:left;" class="urdu">اس شہر کی کل بلٹیاں (${bookings.length}) اور ڈرائیور وصولی کرایه:</td>
+              <td style="border:1px solid #94A3B8; padding:3px; text-align:center;">${cityQtySum}</td>
+              <td style="border:1px solid #94A3B8; padding:3px 6px; text-align:right; color:#065F46;">Rs. ${cityFreightSum}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    `;
+  });
+
+  const commAmt = m.commissionAmount || 0;
+  const totPayable = m.totalPayable || (grandTotalAdda + grandTotalRickshaw + grandTotalLabour + commAmt);
+  const totalBiltiesCount = m.bookingIds ? m.bookingIds.length : 0;
+
+  return `
+    <div style="font-family:'Plus Jakarta Sans', 'Noto Nastaliq Urdu', sans-serif; direction:rtl; text-align:right; font-size:0.75rem; color:#1E293B; background:#fff; padding:2px;">
+      
+      <div style="text-align:center; border-bottom:2px solid #0B2545; padding-bottom:3px; margin-bottom:6px;">
+        <h2 style="color:#0B2545; margin:0; font-size:1.1rem; font-weight:800;">گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی (رجسٹرڈ)</h2>
+        <p style="margin:1px 0 0; color:#475569; font-size:0.7rem; font-weight:600;">مین آفس جی ٹی روڈ، نزد پرانی فروٹ منڈی، گجرات | فون: 053-3729517</p>
+        <h3 style="color:#DC2626; margin:2px 0 0; font-size:0.9rem; font-weight:700;">🚛 ٹرک لوڈنگ مینی فیسٹ و ڈرائیور روٹ شیٹ (Truck Loading Manifest)</h3>
+      </div>
+
+      <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:4px 8px; background:#F8FAFC; padding:5px 8px; border:1px solid #94A3B8; border-radius:4px; margin-bottom:6px; font-size:0.75rem; white-space:nowrap;">
+        <div><b>مینی فیسٹ #:</b> ${m.manifestNo}</div>
+        <div><b>تاریخ:</b> ${m.dispatchDate}</div>
+        <div><b>گاڑی / ٹرک #:</b> <span style="color:#0B2545; font-weight:800;">${m.truckNo}</span></div>
+        <div><b>کل بلٹیاں:</b> ${totalBiltiesCount} (تعداد: ${overallTotalQty})</div>
+        <div><b>ڈرائیور کا نام:</b> ${m.driverName}</div>
+        <div><b>ڈرائیور موبائل:</b> ${m.driverPhone}</div>
+        <div style="grid-column: span 2;"><b>روٹ / ڈسٹینیشن:</b> ${m.routeCities || 'N/A'}</div>
+      </div>
+
+      ${htmlContent}
+
+      <div style="border:1.5px solid #0B2545; border-radius:4px; padding:6px; margin-top:6px; background:#F8FAFC; page-break-inside: avoid;">
+        <div style="font-weight:800; color:#0B2545; border-bottom:1px solid #94A3B8; padding-bottom:2px; margin-bottom:4px; font-size:0.8rem;" class="urdu">
+          📊 فنانشل سمری اور ڈرائیور سیٹلمنٹ (Excel Calculation Table)
+        </div>
+        
+        <table style="width:100%; border-collapse:collapse; font-size:0.75rem; margin-bottom:4px;">
+          <tr style="background:#E2E8F0; white-space:nowrap;">
+            <th style="border:1px solid #94A3B8; padding:2px 4px; text-align:right;">تفصیل (Description)</th>
+            <th style="border:1px solid #94A3B8; padding:2px 4px; text-align:center; width:110px;">رقم (Amount)</th>
+            <th style="border:1px solid #94A3B8; padding:2px 4px; text-align:right;">وضاحت / ریمارکس</th>
+          </tr>
+          <tr>
+            <td style="border:1px solid #94A3B8; padding:2px 4px; white-space:nowrap;">کل ڈرائیور کرایہ (Total Driver Freight Collection)</td>
+            <td style="border:1px solid #94A3B8; padding:2px 4px; text-align:center; font-weight:700; color:#065F46; white-space:nowrap;">Rs. ${grandTotalFreight}</td>
+            <td style="border:1px solid #94A3B8; padding:2px 4px; color:#64748B;">ڈرائیور نے یہ رقم راستے میں یا منزل پر وصول کرنی ہے۔</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid #94A3B8; padding:2px 4px; white-space:nowrap;">کل اڈہ چارجز (Total Adda Charges)</td>
+            <td style="border:1px solid #94A3B8; padding:2px 4px; text-align:center; font-weight:700; white-space:nowrap;">Rs. ${grandTotalAdda}</td>
+            <td style="border:1px solid #94A3B8; padding:2px 4px; color:#64748B;">کمپنی کا اڈہ حصہ جو ڈرائیور وصول کرے گا۔</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid #94A3B8; padding:2px 4px; white-space:nowrap;">کل رکشہ کرایہ / لوکل پک اپ (Total Rickshaw Fare)</td>
+            <td style="border:1px solid #94A3B8; padding:2px 4px; text-align:center; font-weight:700; white-space:nowrap;">Rs. ${grandTotalRickshaw}</td>
+            <td style="border:1px solid #94A3B8; padding:2px 4px; color:#64748B;">فیکٹری سے اڈے تک کا رکشہ بھیڑا۔</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid #94A3B8; padding:2px 4px; white-space:nowrap;">کل لیبر چارجز (Total Labour Charges)</td>
+            <td style="border:1px solid #94A3B8; padding:2px 4px; text-align:center; font-weight:700; white-space:nowrap;">Rs. ${grandTotalLabour}</td>
+            <td style="border:1px solid #94A3B8; padding:2px 4px; color:#64748B;">لوڈنگ / ان لوڈنگ مزدوری۔</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid #94A3B8; padding:2px 4px; white-space:nowrap;">کمپنی کمیشن (${m.commissionPercent || 0}% ڈرائیور کرائے پر)</td>
+            <td style="border:1px solid #94A3B8; padding:2px 4px; text-align:center; font-weight:700; color:#D97706; white-space:nowrap;">Rs. ${commAmt}</td>
+            <td style="border:1px solid #94A3B8; padding:2px 4px; color:#64748B;">کمپنی سروس کمیشن۔</td>
+          </tr>
+        </table>
+
+        <div style="background:#0B2545; color:#fff; padding:5px 8px; border-radius:4px; display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; white-space:nowrap;">
+          <div><strong>کمپنی نے ڈرائیور سے کل کتنے پیسے لینے ہیں (Total Payable by Driver to Company):</strong></div>
+          <div style="font-size:1rem; color:#F2B705; font-weight:900;">Rs. ${totPayable}</div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; margin-top:20px; padding-top:8px; border-top:1px dashed #94A3B8; font-size:0.72rem; white-space:nowrap;">
+        <div>مینیجر کے دستخط: _____________________</div>
+        <div>ڈرائیور کے دستخط / انگوٹھا: _____________________</div>
+      </div>
+
+    </div>
+  `;
+}
+
+window.printManifestSheet = async function(mId) {
+  const m = window.allManifests[mId];
+  if(!m) return;
+  const content = await generateManifestHTMLContent(m);
+  
+  const printArea = document.getElementById('printArea');
+  printArea.innerHTML = `<div style="padding:0;">${content}</div>`;
+  window.print();
+};
+</script>
+
+</body>
+</html>
