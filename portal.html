@@ -27,7 +27,6 @@ body {
 
 .urdu { font-family: 'Noto Nastaliq Urdu', serif; line-height: 1.8 !important; }
 
-/* Expanded Width for Customer Portal Dashboard */
 .container {
   max-width: 1300px;
   margin: 0 auto;
@@ -120,7 +119,6 @@ table { width: 100%; border-collapse: collapse; margin: 12px 0; }
 th, td { border: 1px solid var(--border); padding: 8px; text-align: left; font-size: 0.8rem; }
 th { background: #F1F5F9; color: var(--navy); }
 
-/* STRICT SINGLE LINE WRAPPING FOR DATE & BILTY NO */
 .single-line {
   white-space: nowrap !important;
 }
@@ -253,7 +251,7 @@ th { background: #F1F5F9; color: var(--navy); }
   <div class="company-header">
     <h1>GUJRAT MUSHTARKA GOODS TRANSPORT CO.</h1>
     <h2 class="urdu">گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی (رجسٹرڈ)</h2>
-    <p>Head Office: Gujrat | Daily Direct Service to Karachi, Peshawar, Rawalpindi</p>
+    <p>Head Office: Gujrat | Daily Direct Service Across Pakistan</p>
   </div>
 
   <!-- USER TOP NAV BAR -->
@@ -272,7 +270,7 @@ th { background: #F1F5F9; color: var(--navy); }
   <!-- BOOKING HISTORY LIST (DASHBOARD VIEW) -->
   <div id="historyView" class="no-print">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-      <h3 class="urdu" style="margin:0;">آپ کی پچھلی تمام بکنگز (Booking History & Live Tracking)</h3>
+      <h3 class="urdu" style="margin:0;">آپ کی تمام بکنگز (Booking History & Live Tracking - Newest First)</h3>
       <button class="btn btn-secondary" onclick="loadUserBookings()">🔄 Refresh</button>
     </div>
     
@@ -403,12 +401,6 @@ th { background: #F1F5F9; color: var(--navy); }
           <label>Destination City *</label>
           <select id="destCity" onchange="handleCityChange()" required>
             <option value="">شہر منتخب کریں</option>
-            <option value="Karachi">Karachi (کراچی)</option>
-            <option value="Peshawar">Peshawar (پشاور)</option>
-            <option value="Rawalpindi">Rawalpindi (راولپنڈی)</option>
-            <option value="Multan">Multan (ملتان)</option>
-            <option value="Hyderabad">Hyderabad (حیدرآباد)</option>
-            <option value="Manual">دیگر (مینول لکھیں)</option>
           </select>
           <input type="text" id="manualCity" placeholder="شہر کا نام لکھیں" style="display:none; margin-top:4px;">
         </div>
@@ -436,18 +428,13 @@ th { background: #F1F5F9; color: var(--navy); }
         <thead>
           <tr>
             <th>ITEM NAME *</th>
-            <th style="width: 100px;">QTY *</th>
-            <th style="width: 120px;">WEIGHT</th>
+            <th style="width: 120px;">QTY (تعداد) *</th>
+            <th style="width: 160px;">TYPE (قسم) *</th>
             <th class="no-print" style="width: 60px;">Action</th>
           </tr>
         </thead>
         <tbody id="tableBody">
-          <tr>
-            <td><input type="text" class="item-name" placeholder="Item-1" required></td>
-            <td><input type="number" class="item-qty" oninput="calculateTotal()" required placeholder="0"></td>
-            <td><input type="text" class="item-weight" placeholder="-"></td>
-            <td class="no-print"><button type="button" class="btn btn-danger" onclick="removeRow(this)" style="padding:2px 6px; font-size:0.75rem;">Delete</button></td>
-          </tr>
+          <!-- Item rows inserted dynamically -->
         </tbody>
         <tfoot>
           <tr style="font-weight:700; background:#F8FAFC;">
@@ -510,16 +497,36 @@ const db = getDatabase(app);
 let currentUser = null;
 let userProfilePhone = "";
 window.allUserBookings = {};
+window.dynamicPartnersMap = {};
 
-const partnerDetailsMap = {
-  "Karachi": { name: "گجرات ہزادہ گڈز کراچی", address: "قائد اعظم ٹرک اسٹینڈ، کراچی", phone: "0300-1234567" },
-  "Peshawar": { name: "گجرات مشترکہ گڈز پشاور", address: "مین جی ٹی روڈ اڈہ، پشاور", phone: "0300-7654321" },
-  "Rawalpindi": { name: "الساعد گڈز فارورڈنگ ایجنسی", address: "گنج منڈی، راولپنڈی", phone: "0300-9876543" },
-  "Multan": { name: "ملتان ترانسپورٹ اڈہ", address: "شاہ شمس روڈ، ملتان", phone: "0300-5555555" },
-  "Hyderabad": { name: "حیدرآباد گڈز ایجنسی", address: "حیدرآباد بائی پاس اڈہ", phone: "0300-4444444" }
-};
+// FETCH DYNAMIC PARTNERS FROM FIREBASE
+async function fetchDynamicPartners() {
+  const destSelect = document.getElementById('destCity');
+  destSelect.innerHTML = '<option value="">شہر منتخب کریں</option>';
+  window.dynamicPartnersMap = {};
 
-onAuthStateChanged(auth, (user) => {
+  try {
+    const snap = await get(ref(db, 'partners'));
+    if(snap.exists()) {
+      snap.forEach(child => {
+        const p = child.val();
+        if(p.city) {
+          window.dynamicPartnersMap[p.city] = {
+            name: p.companyName || p.city + ' Goods',
+            address: p.address || p.city + ' Adda',
+            phone: p.phone || 'N/A'
+          };
+          destSelect.innerHTML += `<option value="${p.city}">${p.city}</option>`;
+        }
+      });
+    }
+  } catch(e) {}
+  
+  destSelect.innerHTML += '<option value="Manual">دیگر (مینول لکھیں)</option>';
+}
+
+onAuthStateChanged(auth, async (user) => {
+  await fetchDynamicPartners();
   if (user) {
     currentUser = user;
     document.getElementById('userNameDisplay').innerText = user.displayName || user.email;
@@ -618,7 +625,7 @@ window.handleCityChange = function() {
     box.innerHTML = 'دیگر شہر کے لیے لاجسٹک پارٹنر مینول ڈیسائیڈ کیا جائے گا۔';
   } else {
     man.style.display = 'none';
-    const p = partnerDetailsMap[sel];
+    const p = window.dynamicPartnersMap[sel];
     if(p) {
       box.innerHTML = `<strong>${p.name}</strong> | پتہ: ${p.address} | فون: <b>${p.phone}</b>`;
     } else {
@@ -638,16 +645,41 @@ window.updateWatermark = function() {
   }
 };
 
-window.addRow = function() {
+// ADD ROW WITH TAB FOCUS AUTOMATION
+window.addRow = function(initialName = '', initialQty = '', initialType = 'نگ (NAG)') {
   const tbody = document.getElementById('tableBody');
   const tr = document.createElement('tr');
   tr.innerHTML = `
-    <td><input type="text" class="item-name" placeholder="Item Name" required></td>
-    <td><input type="number" class="item-qty" oninput="calculateTotal()" required placeholder="0"></td>
-    <td><input type="text" class="item-weight" placeholder="-"></td>
+    <td><input type="text" class="item-name" value="${initialName}" placeholder="Item Name" required></td>
+    <td><input type="number" class="item-qty" value="${initialQty}" oninput="calculateTotal()" required placeholder="0"></td>
+    <td>
+      <select class="item-unit-type" style="font-weight:700; padding:6px;" onkeydown="handleTypeKeyDown(event, this)">
+        <option value="نگ (NAG)" ${initialType === 'نگ (NAG)' ? 'selected' : ''}>نگ (NAG)</option>
+        <option value="کارٹن (CARTON)" ${initialType === 'کارٹن (CARTON)' ? 'selected' : ''}>کارٹن (CARTON)</option>
+        <option value="بنڈل (BUNDLE)" ${initialType === 'بنڈل (BUNDLE)' ? 'selected' : ''}>بنڈل (BUNDLE)</option>
+        <option value="دیگر (OTHER)" ${initialType === 'دیگر (OTHER)' ? 'selected' : ''}>دیگر (OTHER)</option>
+      </select>
+    </td>
     <td class="no-print"><button type="button" class="btn btn-danger" onclick="removeRow(this)" style="padding:2px 6px; font-size:0.75rem;">Delete</button></td>
   `;
   tbody.appendChild(tr);
+  return tr;
+};
+
+// TAB KEY HANDLER ON SELECT DROPDOWN TO AUTOMATICALLY CREATE NEW ROW
+window.handleTypeKeyDown = function(event, selectElem) {
+  if (event.key === 'Tab' && !event.shiftKey) {
+    const currentRow = selectElem.closest('tr');
+    const allRows = document.querySelectorAll('#tableBody tr');
+    
+    // Check if this select element is in the last row
+    if (currentRow === allRows[allRows.length - 1]) {
+      event.preventDefault(); // Prevent standard tab behavior
+      const newTr = addRow();
+      const firstInput = newTr.querySelector('.item-name');
+      if (firstInput) firstInput.focus();
+    }
+  }
 };
 
 window.removeRow = function(btn) {
@@ -679,8 +711,8 @@ document.getElementById('biltyForm').addEventListener('submit', async (e) => {
   document.querySelectorAll('#tableBody tr').forEach(row => {
     const name = row.querySelector('.item-name').value;
     const qty = row.querySelector('.item-qty').value;
-    const weight = row.querySelector('.item-weight').value;
-    if(name && qty) itemsList.push({ name, qty, weight });
+    const unitType = row.querySelector('.item-unit-type').value;
+    if(name && qty) itemsList.push({ name, qty, unitType });
   });
 
   const destVal = document.getElementById('destCity').value === "Manual" ? document.getElementById('manualCity').value : document.getElementById('destCity').value;
@@ -726,6 +758,7 @@ document.getElementById('biltyForm').addEventListener('submit', async (e) => {
   }
 });
 
+// LOAD BOOKINGS SORTED NEWEST FIRST
 window.loadUserBookings = async function() {
   const tbody = document.getElementById('historyTableBody');
   tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;">Loading data...</td></tr>';
@@ -742,48 +775,59 @@ window.loadUserBookings = async function() {
     tbody.innerHTML = '';
     window.allUserBookings = {};
 
+    const userBookingsArray = [];
+
     snapshot.forEach(childSnap => {
       const bKey = childSnap.key;
       const b = childSnap.val();
       if(b.userId === currentUser.uid) {
         window.allUserBookings[bKey] = b;
-
-        const currentStatus = b.status || "Booking Received";
-        const canEditDelete = (currentStatus === "Booking Received");
-        const totalBill = b.netTotal ? `Rs. ${b.netTotal}` : 'Pending';
-
-        const dispatchDateVal = b.dispatchDate ? `<span class="single-line" style="font-weight:700; color:#0B2545;">${b.dispatchDate}</span>` : '<span style="color:#94A3B8;">-</span>';
-
-        let driverInfo = '<span style="color:#94A3B8;">Not Dispatched yet</span>';
-        if(b.truckNo) {
-          driverInfo = `<strong style="color:#0B2545;">🚛 ${b.truckNo}</strong><br><small>👤 ${b.driverName || 'N/A'} (${b.driverPhone || ''})</small><br><small>M#: ${b.manifestNo || 'N/A'}</small>`;
-        }
-
-        const partner = partnerDetailsMap[b.destCity] || { name: 'Gujrat Mushtarka Godown', phone: '053-3729517' };
-        const partnerInfo = `<strong>${partner.name}</strong><br><small>📞 ${partner.phone}</small>`;
-
-        tbody.innerHTML += `
-          <tr>
-            <td class="single-line"><strong>${b.date}</strong></td>
-            <td class="single-line"><strong>${b.biltyNo}</strong></td>
-            <td><strong>${b.receiverName}</strong><br><small style="color:#64748B;">📞 ${b.receiverPhone || 'N/A'}</small></td>
-            <td>${b.destCity}</td>
-            <td><strong style="color:green;">${totalBill}</strong></td>
-            <td><strong style="color:${b.paymentMode === 'PAID' ? 'green' : 'blue'};">${b.paymentMode}</strong></td>
-            <td><span class="status-badge">${currentStatus}</span></td>
-            <td>${dispatchDateVal}</td>
-            <td>${driverInfo}</td>
-            <td>${partnerInfo}</td>
-            <td>
-              <div style="display:flex; gap:4px; flex-wrap:wrap;">
-                <button class="btn small btn-primary" onclick="printBookingReceipt('${bKey}')">Print</button>
-                <button class="btn small btn-warning" onclick="editBooking('${bKey}')" ${canEditDelete ? '' : 'disabled'}>Edit</button>
-                <button class="btn small btn-danger" onclick="deleteBooking('${bKey}')" ${canEditDelete ? '' : 'disabled'}>Delete</button>
-              </div>
-            </td>
-          </tr>
-        `;
+        userBookingsArray.push({ key: bKey, data: b });
       }
+    });
+
+    // REVERSE ARRAY SO NEWEST BOOKINGS APPEAR ON TOP
+    userBookingsArray.reverse();
+
+    userBookingsArray.forEach(item => {
+      const bKey = item.key;
+      const b = item.data;
+
+      const currentStatus = b.status || "Booking Received";
+      const canEditDelete = (currentStatus === "Booking Received");
+      const totalBill = b.netTotal ? `Rs. ${b.netTotal}` : 'Pending';
+
+      const dispatchDateVal = b.dispatchDate ? `<span class="single-line" style="font-weight:700; color:#0B2545;">${b.dispatchDate}</span>` : '<span style="color:#94A3B8;">-</span>';
+
+      let driverInfo = '<span style="color:#94A3B8;">Not Dispatched yet</span>';
+      if(b.truckNo) {
+        driverInfo = `<strong style="color:#0B2545;">🚛 ${b.truckNo}</strong><br><small>👤 ${b.driverName || 'N/A'} (${b.driverPhone || ''})</small><br><small>M#: ${b.manifestNo || 'N/A'}</small>`;
+      }
+
+      const partner = window.dynamicPartnersMap[b.destCity] || { name: 'Gujrat Mushtarka Godown', phone: '053-3729517' };
+      const partnerInfo = `<strong>${partner.name}</strong><br><small>📞 ${partner.phone}</small>`;
+
+      tbody.innerHTML += `
+        <tr>
+          <td class="single-line"><strong>${b.date}</strong></td>
+          <td class="single-line"><strong>${b.biltyNo}</strong></td>
+          <td><strong>${b.receiverName}</strong><br><small style="color:#64748B;">📞 ${b.receiverPhone || 'N/A'}</small></td>
+          <td>${b.destCity}</td>
+          <td><strong style="color:green;">${totalBill}</strong></td>
+          <td><strong style="color:${b.paymentMode === 'PAID' ? 'green' : 'blue'};">${b.paymentMode}</strong></td>
+          <td><span class="status-badge">${currentStatus}</span></td>
+          <td>${dispatchDateVal}</td>
+          <td>${driverInfo}</td>
+          <td>${partnerInfo}</td>
+          <td>
+            <div style="display:flex; gap:4px; flex-wrap:wrap;">
+              <button class="btn small btn-primary" onclick="printBookingReceipt('${bKey}')">Print</button>
+              <button class="btn small btn-warning" onclick="editBooking('${bKey}')" ${canEditDelete ? '' : 'disabled'}>Edit</button>
+              <button class="btn small btn-danger" onclick="deleteBooking('${bKey}')" ${canEditDelete ? '' : 'disabled'}>Delete</button>
+            </div>
+          </td>
+        </tr>
+      `;
     });
 
     if(tbody.innerHTML === '') {
@@ -839,7 +883,7 @@ function populateFormWithBookingData(bKey, b) {
   document.getElementById('receiverAddress').value = b.receiverAddress;
   document.getElementById('itemType').value = b.itemType || "ELECTRIC FANS";
 
-  if(b.destCity === "Karachi" || b.destCity === "Peshawar" || b.destCity === "Rawalpindi" || b.destCity === "Multan" || b.destCity === "Hyderabad") {
+  if(window.dynamicPartnersMap[b.destCity]) {
     document.getElementById('destCity').value = b.destCity;
     document.getElementById('manualCity').style.display = 'none';
   } else {
@@ -872,24 +916,10 @@ function populateFormWithBookingData(bKey, b) {
 
   if(itemsArr.length > 0) {
     itemsArr.forEach(it => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td><input type="text" class="item-name" value="${it.name || ''}" required></td>
-        <td><input type="number" class="item-qty" value="${it.qty || 0}" oninput="calculateTotal()" required></td>
-        <td><input type="text" class="item-weight" value="${it.weight || '-'}"></td>
-        <td class="no-print"><button type="button" class="btn btn-danger" onclick="removeRow(this)" style="padding:2px 6px; font-size:0.75rem;">Delete</button></td>
-      `;
-      tbody.appendChild(tr);
+      addRow(it.name || '', it.qty || 0, it.unitType || 'نگ (NAG)');
     });
   } else {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td><input type="text" class="item-name" value="${b.itemType || 'Goods'}" required></td>
-      <td><input type="number" class="item-qty" value="${b.totalQty || '1'}" oninput="calculateTotal()" required></td>
-      <td><input type="text" class="item-weight" value="-"></td>
-      <td class="no-print"><button type="button" class="btn btn-danger" onclick="removeRow(this)" style="padding:2px 6px; font-size:0.75rem;">Delete</button></td>
-    `;
-    tbody.appendChild(tr);
+    addRow(b.itemType || 'Goods', b.totalQty || '1', 'نگ (NAG)');
   }
   calculateTotal();
 }
@@ -942,14 +972,8 @@ window.showNewBookingForm = function() {
   document.getElementById('biltyNo').value = "GMGT-" + Math.floor(100000 + Math.random() * 900000);
   
   const tbody = document.getElementById('tableBody');
-  tbody.innerHTML = `
-    <tr>
-      <td><input type="text" class="item-name" placeholder="Item-1" required></td>
-      <td><input type="number" class="item-qty" oninput="calculateTotal()" required placeholder="0"></td>
-      <td><input type="text" class="item-weight" placeholder="-"></td>
-      <td class="no-print"><button type="button" class="btn btn-danger" onclick="removeRow(this)" style="padding:2px 6px; font-size:0.75rem;">Delete</button></td>
-    </tr>
-  `;
+  tbody.innerHTML = '';
+  addRow(); // Initial row
   calculateTotal();
   updateWatermark();
 };
