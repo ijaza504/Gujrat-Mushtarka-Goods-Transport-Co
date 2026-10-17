@@ -164,15 +164,15 @@ th { background: #F1F5F9; color: var(--navy); }
     <button type="submit" class="btn btn-navy" style="width:100%;">ایڈمن لاگ ان کریں</button>
   </form>
 
-  <!-- PARTNER LOGIN FORM -->
+  <!-- PARTNER LOGIN FORM (MOBILE BASED) -->
   <form id="partnerLoginForm" style="display:none;">
     <div style="margin-bottom:12px;">
-      <label class="urdu">ای میل / یوزر آئی ڈی:</label>
-      <input type="email" id="partnerEmailInput" placeholder="partner@example.com" required>
+      <label class="urdu">موبائل نمبر / واٹس ایپ (Login Mobile) *</label>
+      <input type="tel" id="partnerPhoneInput" placeholder="03001234567" required>
     </div>
     <div style="margin-bottom:20px;">
-      <label class="urdu">پاسورڈ (Password):</label>
-      <input type="password" id="partnerPassInput" required>
+      <label class="urdu">پاسورڈ (Password) *</label>
+      <input type="password" id="partnerPassInput" placeholder="پاسورڈ درج کریں" required>
     </div>
     <button type="submit" class="btn btn-primary" style="width:100%;">پارٹنر پورٹل سائن ان</button>
   </form>
@@ -213,9 +213,9 @@ th { background: #F1F5F9; color: var(--navy); }
               <th class="urdu">کمپنی / اڈے کا نام</th>
               <th class="urdu">مالک / مینیجر</th>
               <th class="urdu">شہر</th>
-              <th class="urdu">فون / واٹس ایپ</th>
+              <th class="urdu">لاگ ان / واٹس ایپ نمبر</th>
               <th class="urdu">گودام کا پتہ</th>
-              <th class="urdu">پورٹل ای میل</th>
+              <th class="urdu">ای میل (اختیاری)</th>
               <th class="urdu">اسٹیٹس</th>
               <th class="urdu">ایکشن / اکاؤنٹس</th>
             </tr>
@@ -288,8 +288,8 @@ th { background: #F1F5F9; color: var(--navy); }
           <input type="text" id="pCity" placeholder="مثلاً: Karachi" required>
         </div>
         <div>
-          <label class="urdu">موبائل / واٹس ایپ نمبر *</label>
-          <input type="tel" id="pPhone" placeholder="0300-1234567" required>
+          <label class="urdu">موبائل / واٹس ایپ نمبر (لاگ ان نمبر) *</label>
+          <input type="tel" id="pPhone" placeholder="03001234567" required>
         </div>
       </div>
 
@@ -300,8 +300,8 @@ th { background: #F1F5F9; color: var(--navy); }
 
       <div class="grid-2" style="margin-bottom:12px; background:#F8FAFC; padding:10px; border-radius:6px; border:1px solid var(--border);">
         <div>
-          <label class="urdu">پورٹل ای میل (Login Email) *</label>
-          <input type="email" id="pEmail" placeholder="karachi@gujratgoods.com" required>
+          <label class="urdu">ای میل آئی ڈی (اختیاری - Optional)</label>
+          <input type="email" id="pEmail" placeholder="karachi@gujratgoods.com">
         </div>
         <div>
           <label class="urdu">پورٹل پاسورڈ (Login Password) *</label>
@@ -321,7 +321,7 @@ th { background: #F1F5F9; color: var(--navy); }
 <div id="ledgerModal" class="modal-overlay">
   <div class="modal-box" style="max-width:800px;">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--navy); padding-bottom:8px; margin-bottom:12px;">
-      <h3 class="urdu" style="margin:0; color:var(--navy);" id="ledgerModalTitle">📖 مالی لیجر / کھاتہ</h3>
+      <h3 class="urdu" style="margin:0; color:var(--navy);" id="ledgerModalTitle">📖 مالی کھاتہ / لیجر</h3>
       <button class="btn btn-secondary" onclick="closeLedgerModal()">✖ بند کریں</button>
     </div>
 
@@ -394,6 +394,54 @@ window.currentPartnerData = null;
 
 document.getElementById('lDate').valueAsDate = new Date();
 
+// PRE-POPULATE INITIAL LOGISTICS PARTNERS IF DATABASE IS EMPTY
+async function seedInitialPartners() {
+  try {
+    const snap = await get(ref(db, 'partners'));
+    if(!snap.exists()) {
+      const initialPartners = [
+        {
+          companyName: "گجرات کراچی گڈز (Karachi Adda)",
+          ownerName: "حاجی محمد رفیق",
+          city: "Karachi",
+          phone: "03001234567",
+          address: "شاپ # 12، قائد اعظم ٹرک اسٹینڈ، موری پور روڈ، کراچی",
+          email: "karachi@gujratgoods.com",
+          password: "karachi123",
+          createdAt: new Date().toISOString()
+        },
+        {
+          companyName: "گجرات ملتان گڈز (Multan Adda)",
+          ownerName: "مہر طارق محمود",
+          city: "Multan",
+          phone: "03007654321",
+          address: "شاپ # 5، نیو غلہ منڈی ٹرک اسٹینڈ، ملتان",
+          email: "multan@gujratgoods.com",
+          password: "multan123",
+          createdAt: new Date().toISOString()
+        },
+        {
+          companyName: "گجرات پشاور گڈز (Peshawar Adda)",
+          ownerName: "خان بہادر پٹھان",
+          city: "Peshawar",
+          phone: "03009876543",
+          address: "رنگ روڈ ٹرک اسٹینڈ، پشاور",
+          email: "peshawar@gujratgoods.com",
+          password: "peshawar123",
+          createdAt: new Date().toISOString()
+        }
+      ];
+
+      for(let p of initialPartners) {
+        const newRef = push(ref(db, 'partners'));
+        await set(newRef, p);
+      }
+    }
+  } catch(e) {
+    console.log("Seeding initial partners info:", e);
+  }
+}
+
 window.switchLoginTab = function(type) {
   if(type === 'admin') {
     document.getElementById('adminLoginForm').style.display = 'block';
@@ -408,7 +456,8 @@ window.switchLoginTab = function(type) {
   }
 };
 
-document.getElementById('adminLoginForm').addEventListener('submit', (e) => {
+// ADMIN LOGIN
+document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const pass = document.getElementById('adminPassInput').value;
   if(pass === "gujrat2001") {
@@ -418,25 +467,29 @@ document.getElementById('adminLoginForm').addEventListener('submit', (e) => {
     document.getElementById('adminView').style.display = 'block';
     document.getElementById('partnerPortalView').style.display = 'none';
     document.getElementById('userRoleDisplay').innerText = "👨‍💼 ایڈمن موڈ - لاجسٹک پارٹنرز مینجمنٹ";
+    await seedInitialPartners();
     loadAdminPartnersList();
   } else {
     alert("پاس کوڈ غلط ہے!");
   }
 });
 
+// PARTNER MOBILE-BASED LOGIN
 document.getElementById('partnerLoginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const email = document.getElementById('partnerEmailInput').value.trim();
+  const phone = document.getElementById('partnerPhoneInput').value.trim().replace(/[- ]/g, '');
   const pass = document.getElementById('partnerPassInput').value.trim();
 
   try {
+    await seedInitialPartners();
     const snap = await get(ref(db, 'partners'));
     let foundPartner = null;
 
     if(snap.exists()) {
       snap.forEach(child => {
         const p = child.val();
-        if(p.email === email && p.password === pass) {
+        const storedPhone = (p.phone || '').trim().replace(/[- ]/g, '');
+        if(storedPhone === phone && p.password === pass) {
           foundPartner = p;
           foundPartner.id = child.key;
         }
@@ -459,7 +512,7 @@ document.getElementById('partnerLoginForm').addEventListener('submit', async (e)
       
       loadPartnerShipments(foundPartner.city);
     } else {
-      alert("غلط ای میل یا پاسورڈ! براہ کرم درست کریڈنشلز درج کریں۔");
+      alert("غلط موبائل نمبر یا پاسورڈ! براہ کرم درست کریڈنشلز درج کریں۔");
     }
 
   } catch(err) {
@@ -471,7 +524,7 @@ window.logoutUser = function() {
   document.getElementById('authSection').style.display = 'block';
   document.getElementById('mainDashboard').style.display = 'none';
   document.getElementById('adminPassInput').value = '';
-  document.getElementById('partnerEmailInput').value = '';
+  document.getElementById('partnerPhoneInput').value = '';
   document.getElementById('partnerPassInput').value = '';
 };
 
@@ -507,9 +560,9 @@ async function loadAdminPartnersList() {
           <td><strong>${p.companyName}</strong></td>
           <td>${p.ownerName}</td>
           <td><strong style="color:var(--navy);">${p.city}</strong></td>
-          <td>📞 ${p.phone}</td>
+          <td><strong>📞 ${p.phone}</strong></td>
           <td>${p.address}</td>
-          <td><small style="color:#2563EB;">${p.email}</small></td>
+          <td><small style="color:#2563EB;">${p.email || 'N/A'}</small></td>
           <td><span style="background:#D1FAE5; color:#065F46; padding:2px 8px; border-radius:50px; font-weight:700;">Active</span></td>
           <td>
             <div style="display:flex; gap:4px; flex-wrap:wrap;">
@@ -539,7 +592,7 @@ document.getElementById('partnerForm').addEventListener('submit', async (e) => {
     city: document.getElementById('pCity').value,
     phone: document.getElementById('pPhone').value,
     address: document.getElementById('pAddress').value,
-    email: document.getElementById('pEmail').value,
+    email: document.getElementById('pEmail').value || "",
     password: document.getElementById('pPassword').value,
     updatedAt: new Date().toISOString()
   };
