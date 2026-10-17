@@ -30,7 +30,7 @@ body {
 .urdu { font-family: 'Noto Nastaliq Urdu', serif; line-height: 1.6 !important; }
 
 .container {
-  max-width: 1300px;
+  max-width: 1350px;
   margin: 0 auto;
   background: #fff;
   padding: 20px;
@@ -100,7 +100,7 @@ input, select, textarea {
   gap: 4px;
   text-decoration: none;
   justify-content: center;
-  white-space: nowrap;
+  white-space: nowrap !important;
 }
 .btn-primary { background: var(--gold); color: var(--navy); }
 .btn-navy { background: var(--navy); color: #fff; }
@@ -110,8 +110,9 @@ input, select, textarea {
 .btn-warning { background: #F59E0B; color: #fff; }
 .btn-info { background: #0284C7; color: #fff; }
 
-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-th, td { border: 1px solid var(--border); padding: 8px; text-align: right; font-size: 0.82rem; }
+/* STRICT NO WRAPPING FOR TABLES */
+table { width: 100%; border-collapse: collapse; margin-top: 5px; white-space: nowrap !important; }
+th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: right; font-size: 0.82rem; white-space: nowrap !important; }
 th { background: #F1F5F9; color: var(--navy); }
 
 .card {
@@ -120,6 +121,33 @@ th { background: #F1F5F9; color: var(--navy); }
   padding: 15px;
   border-radius: 8px;
   margin-bottom: 15px;
+}
+
+.vehicle-block {
+  border: 2px solid var(--navy);
+  border-radius: 8px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.vehicle-header {
+  background: #1E3A8A;
+  color: #fff;
+  padding: 10px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.vehicle-title-info {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  font-size: 0.9rem;
+  white-space: nowrap;
 }
 
 .modal-overlay {
@@ -143,8 +171,8 @@ th { background: #F1F5F9; color: var(--navy); }
 
 @media print {
   body * { visibility: hidden; }
-  #biltyPrintModal, #biltyPrintModal * { visibility: visible; }
-  #biltyPrintModal {
+  #biltyModalContent, #biltyModalContent * { visibility: visible; }
+  #biltyModalContent {
     display: block !important;
     position: absolute;
     left: 0; top: 0; width: 100%; margin: 0; padding: 0;
@@ -202,7 +230,8 @@ th { background: #F1F5F9; color: var(--navy); }
     <div>
       <span class="urdu" style="font-size:1.05rem; font-weight:700; color:var(--navy);" id="userRoleDisplay">خوش آمدید!</span>
     </div>
-    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+    <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+      <button id="viewPartnerLedgerBtn" class="btn btn-primary" style="display:none;" onclick="openReadOnlyPartnerLedger()">📖 اپنا کھاتہ / لیجر دیکھیں</button>
       <a href="admin.html" id="adminLinkBtn" class="btn btn-navy">📋 ایڈمن پینل</a>
       <a href="manifest.html" id="manifestLinkBtn" class="btn btn-success">🚛 مینی فیسٹ</a>
       <button class="btn btn-secondary" onclick="refreshCurrentView()">🔄 ریفرش</button>
@@ -242,40 +271,20 @@ th { background: #F1F5F9; color: var(--navy); }
 
   <!-- ==================== VIEW 2: PARTNER PORTAL VIEW ==================== -->
   <div id="partnerPortalView" style="display:none;">
-    <div class="card" style="background:#EFF6FF; border-color:#BFDBFE;">
-      <h3 class="urdu" style="margin-top:0; color:var(--navy);" id="partnerCityTitle">📦 آپ کے شہر کا موصولہ سامان (Shipments)</h3>
-      <p style="margin:0; font-size:0.85rem; color:#475569;" class="urdu">یہاں سے آپ موصولہ گاڑیوں، ڈرائیور، بلٹی چارجز اور لائیو اسٹیٹس کی تفاصیل دیکھ سکتے ہیں۔</p>
+    <div class="card" style="background:#EFF6FF; border-color:#BFDBFE; margin-bottom:15px;">
+      <h3 class="urdu" style="margin-top:0; color:var(--navy);" id="partnerCityTitle">📦 آپ کے شہر کی موصولہ گاڑیاں اور سامان (Shipments)</h3>
+      <p style="margin:0; font-size:0.85rem; color:#475569;" class="urdu">آپ پوری گاڑی کا اسٹیٹس ایک ساتھ اپ ڈیٹ کر سکتے ہیں یا ہر بلٹی کا الگ الگ اسٹیٹس بدل سکتے ہیں۔</p>
     </div>
 
-    <div class="card">
-      <div style="overflow-x:auto;">
-        <table>
-          <thead>
-            <tr>
-              <th class="urdu">روانی تاریخ</th>
-              <th class="urdu">بلٹی نمبر</th>
-              <th class="urdu">ڈرائیور، گاڑی و فون</th>
-              <th class="urdu">مال بھیجنے والا</th>
-              <th class="urdu">وصول کنندہ و فون</th>
-              <th class="urdu">تعداد</th>
-              <th class="urdu">ڈرائیور کرایہ</th>
-              <th class="urdu">ٹوٹل بلٹی اماؤنٹ</th>
-              <th class="urdu">بلٹی دیکھیں</th>
-              <th class="urdu">موجودہ اسٹیٹس</th>
-              <th class="urdu">اسٹیٹس اپ ڈیٹ کریں</th>
-            </tr>
-          </thead>
-          <tbody id="partnerShipmentsBody">
-            <tr><td colspan="11" style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے...</td></tr>
-          </tbody>
-        </table>
-      </div>
+    <!-- VEHICLES & BILTY GROUPS CONTAINER -->
+    <div id="partnerVehiclesContainer">
+      <div style="text-align:center; padding:20px;">ڈیٹا لوڈ ہو رہا ہے...</div>
     </div>
   </div>
 
 </div>
 
-<!-- ADD / EDIT PARTNER MODAL -->
+<!-- ADD / EDIT PARTNER MODAL (ADMIN ONLY) -->
 <div id="partnerModal" class="modal-overlay">
   <div class="modal-box">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--navy); padding-bottom:8px; margin-bottom:12px;">
@@ -334,12 +343,13 @@ th { background: #F1F5F9; color: var(--navy); }
 
 <!-- PARTNER LEDGER / ACCOUNTS MODAL -->
 <div id="ledgerModal" class="modal-overlay">
-  <div class="modal-box" style="max-width:800px;">
+  <div class="modal-box" style="max-width:850px;">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--navy); padding-bottom:8px; margin-bottom:12px;">
       <h3 class="urdu" style="margin:0; color:var(--navy);" id="ledgerModalTitle">📖 مالی کھاتہ / لیجر</h3>
       <button class="btn btn-secondary" onclick="closeLedgerModal()">✖ بند کریں</button>
     </div>
 
+    <!-- FORM ONLY SHOWN TO ADMIN -->
     <form id="ledgerEntryForm" style="background:#F8FAFC; padding:10px; border-radius:6px; border:1px solid var(--border); margin-bottom:15px;">
       <input type="hidden" id="ledgerPartnerId" value="">
       <div class="grid-3" style="margin-bottom:8px;">
@@ -492,6 +502,7 @@ document.getElementById('adminLoginForm').addEventListener('submit', async (e) =
     document.getElementById('mainDashboard').style.display = 'block';
     document.getElementById('adminView').style.display = 'block';
     document.getElementById('partnerPortalView').style.display = 'none';
+    document.getElementById('viewPartnerLedgerBtn').style.display = 'none';
     document.getElementById('userRoleDisplay').innerText = "👨‍💼 ایڈمن موڈ - لاجسٹک پارٹنرز مینجمنٹ";
     await seedInitialPartners();
     loadAdminPartnersList();
@@ -531,9 +542,10 @@ document.getElementById('partnerLoginForm').addEventListener('submit', async (e)
       
       document.getElementById('adminLinkBtn').style.display = 'none';
       document.getElementById('manifestLinkBtn').style.display = 'none';
+      document.getElementById('viewPartnerLedgerBtn').style.display = 'inline-flex';
       
       document.getElementById('userRoleDisplay').innerText = `🏢 پورٹل: ${foundPartner.companyName} (${foundPartner.city})`;
-      document.getElementById('partnerCityTitle').innerText = `📦 ${foundPartner.city} اڈے کا موصولہ سامان (Shipments)`;
+      document.getElementById('partnerCityTitle').innerText = `📦 ${foundPartner.city} اڈے کی موصولہ گاڑیاں اور سامان (Shipments)`;
       
       loadPartnerShipments(foundPartner.city);
     } else {
@@ -682,20 +694,20 @@ window.deletePartner = async function(pId) {
   }
 };
 
+// LOAD PARTNER SHIPMENTS GROUPED BY VEHICLES / MANIFEST
 async function loadPartnerShipments(city) {
-  const tbody = document.getElementById('partnerShipmentsBody');
-  tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے...</td></tr>';
+  const container = document.getElementById('partnerVehiclesContainer');
+  container.innerHTML = '<div style="text-align:center; padding:20px;">ڈیٹا لوڈ ہو رہا ہے...</div>';
 
   try {
     const snap = await get(ref(db, 'bookings'));
     if(!snap.exists()) {
-      tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;">کوئی شپمنٹ موجود نہیں ہے۔</td></tr>';
+      container.innerHTML = `<div class="card" style="text-align:center; color:#64748B;">${city} شہر کے لیے فی الحال کوئی گاڑی یا سامان موجود نہیں ہے۔</div>`;
       return;
     }
 
-    tbody.innerHTML = '';
     window.allBookingsMap = {};
-    let count = 0;
+    const vehicleGroups = {};
 
     snap.forEach(child => {
       const bId = child.key;
@@ -703,25 +715,48 @@ async function loadPartnerShipments(city) {
       window.allBookingsMap[bId] = b;
 
       if(b.destCity === city) {
-        count++;
+        const truckKey = b.truckNo ? `${b.truckNo}_${b.dispatchDate || b.date}` : "Pending_Dispatch";
+        if(!vehicleGroups[truckKey]) {
+          vehicleGroups[truckKey] = {
+            truckNo: b.truckNo || "ٹرک نمبر غیر دستیاب (Pending)",
+            driverName: b.driverName || "N/A",
+            driverPhone: b.driverPhone || "N/A",
+            dispatchDate: b.dispatchDate || b.date,
+            bookings: []
+          };
+        }
+        vehicleGroups[truckKey].bookings.push({ id: bId, data: b });
+      }
+    });
+
+    const groupKeys = Object.keys(vehicleGroups);
+    if(groupKeys.length === 0) {
+      container.innerHTML = `<div class="card" style="text-align:center; color:#64748B;">${city} شہر کے لیے فی الحال کوئی گاڑی یا سامان موجود نہیں ہے۔</div>`;
+      return;
+    }
+
+    container.innerHTML = '';
+
+    groupKeys.forEach(gKey => {
+      const group = vehicleGroups[gKey];
+      
+      let rowsHTML = '';
+      const bookingIdsInGroup = [];
+
+      group.bookings.forEach(item => {
+        const b = item.data;
+        const bId = item.id;
+        bookingIdsInGroup.push(bId);
+
         const status = b.status || "Booking Received";
-
-        const driverDetails = b.truckNo ? `
-          <strong style="color:var(--navy);">🚛 ${b.truckNo}</strong><br>
-          <small>👤 ${b.driverName || 'N/A'}</small><br>
-          <small>📞 ${b.driverPhone || 'N/A'}</small>
-        ` : '<span style="color:#94A3B8;">راستے میں ہے / پینڈنگ</span>';
-
         const driverFreight = b.freightCharges ? `Rs. ${b.freightCharges}` : 'Pending';
         const netTotalBill = b.netTotal ? `Rs. ${b.netTotal}` : 'Pending';
 
-        tbody.innerHTML += `
+        rowsHTML += `
           <tr>
-            <td>${b.dispatchDate || b.date}</td>
             <td><strong>${b.biltyNo}</strong></td>
-            <td>${driverDetails}</td>
             <td>${b.senderName}</td>
-            <td><strong>${b.receiverName}</strong><br><small>📞 ${b.receiverPhone}</small></td>
+            <td><strong>${b.receiverName}</strong><br><small>📞 ${b.receiverPhone || 'N/A'}</small></td>
             <td>${b.totalQty || 0}</td>
             <td style="color:green; font-weight:700;">${driverFreight}</td>
             <td style="color:navy; font-weight:800;">${netTotalBill}</td>
@@ -738,17 +773,84 @@ async function loadPartnerShipments(city) {
             </td>
           </tr>
         `;
-      }
+      });
+
+      const jsonBIds = JSON.stringify(bookingIdsInGroup).replace(/"/g, '&quot;');
+
+      container.innerHTML += `
+        <div class="vehicle-block">
+          <div class="vehicle-header">
+            <div class="vehicle-title-info">
+              <span style="font-size:1.1rem; font-weight:800;">🚛 گاڑی نمبر: <span style="color:var(--gold);">${group.truckNo}</span></span>
+              <span>👤 ڈرائیور: <b>${group.driverName}</b></span>
+              <span>📞 موبائل: <b>${group.driverPhone}</b></span>
+              <span>📅 روانی: <b>${group.dispatchDate}</b></span>
+              <span>📦 کل بلٹیاں: <b>${group.bookings.length}</b></span>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:0.82rem; font-weight:700;">پوری گاڑی کا اسٹیٹس بدلو:</span>
+              <select onchange="bulkUpdateVehicleStatus(${jsonBIds}, this.value)" style="padding:5px; font-weight:800; border-radius:5px; background:#fff; color:var(--navy);">
+                <option value="">اسٹیٹس منتخب کریں...</option>
+                <option value="Logistics partner warehouse">Logistics partner warehouse (پورے مال کی گودام آمد)</option>
+                <option value="Delivered">Delivered (تمام مال کسٹمرز کو ڈیلیور)</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="overflow-x:auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th class="urdu">بلٹی نمبر</th>
+                  <th class="urdu">مال بھیجنے والا</th>
+                  <th class="urdu">وصول کنندہ و فون</th>
+                  <th class="urdu">تعداد</th>
+                  <th class="urdu">ڈرائیور کرایہ</th>
+                  <th class="urdu">ٹوٹل بلٹی اماؤنٹ</th>
+                  <th class="urdu">بلٹی دیکھیں</th>
+                  <th class="urdu">موجودہ اسٹیٹس</th>
+                  <th class="urdu">اسٹیٹس اپ ڈیٹ کریں</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rowsHTML}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
     });
 
-    if(count === 0) {
-      tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;">${city} شہر کے لیے فی الحال کوئی شپمنٹ موجود نہیں ہے۔</td></tr>`;
-    }
-
   } catch(err) {
-    tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; color:red;">ڈیٹا لوڈ میں مسئلہ: ' + err.message + '</td></tr>';
+    container.innerHTML = '<div class="card" style="text-align:center; color:red;">ڈیٹا لوڈ میں مسئلہ: ' + err.message + '</div>';
   }
 }
+
+// BULK UPDATE VEHICLE STATUS FOR ALL BILTIES IN A VEHICLE
+window.bulkUpdateVehicleStatus = async function(bIdsList, newStatus) {
+  if(!newStatus) return;
+  if(confirm(`کیا آپ واقعی اس گاڑی کی تمام (${bIdsList.length}) بلٹیوں کا اسٹیٹس "${newStatus}" کرنا چاہتے ہیں؟`)) {
+    try {
+      for(let bId of bIdsList) {
+        await update(ref(db, 'bookings/' + bId), { status: newStatus });
+      }
+      alert("گاڑی کی تمام بلٹیوں کا اسٹیٹس کامیابی سے اپ ڈیٹ ہو گیا ہے!");
+      refreshCurrentView();
+    } catch(err) {
+      alert("Error: " + err.message);
+    }
+  }
+};
+
+window.updateShipmentStatus = async function(bId, newStatus) {
+  try {
+    await update(ref(db, 'bookings/' + bId), { status: newStatus });
+    alert("اسٹیٹس کامیابی سے اپ ڈیٹ ہو گیا ہے!");
+    refreshCurrentView();
+  } catch(err) {
+    alert("Error: " + err.message);
+  }
+};
 
 window.viewFullBiltyModal = function(bId) {
   const b = window.allBookingsMap[bId];
@@ -856,21 +958,26 @@ window.closeBiltyModal = function() {
   document.getElementById('biltyModal').style.display = 'none';
 };
 
-window.updateShipmentStatus = async function(bId, newStatus) {
-  try {
-    await update(ref(db, 'bookings/' + bId), { status: newStatus });
-    alert("اسٹیٹس کامیابی سے اپ ڈیٹ ہو گیا ہے!");
-  } catch(err) {
-    alert("Error: " + err.message);
-  }
+// READ ONLY LEDGER FOR LOGISTIC PARTNER
+window.openReadOnlyPartnerLedger = function() {
+  if(!window.currentPartnerData) return;
+  const p = window.currentPartnerData;
+
+  document.getElementById('ledgerPartnerId').value = p.id;
+  document.getElementById('ledgerModalTitle').innerText = `📖 مالی کھاتہ / لیجر - ${p.companyName} (${p.city})`;
+  document.getElementById('ledgerEntryForm').style.display = 'none'; // HIDDEN FOR PARTNER
+  document.getElementById('ledgerModal').style.display = 'flex';
+  loadLedgerEntries(p.id);
 };
 
+// FULL ADMIN LEDGER WITH EDIT/ADD FORM
 window.openLedgerModal = function(pId) {
   const p = window.allPartners[pId];
   if(!p) return;
 
   document.getElementById('ledgerPartnerId').value = pId;
   document.getElementById('ledgerModalTitle').innerText = `📖 مالی کھاتہ / لیجر - ${p.companyName} (${p.city})`;
+  document.getElementById('ledgerEntryForm').style.display = 'block'; // SHOWN FOR ADMIN
   document.getElementById('ledgerModal').style.display = 'flex';
   loadLedgerEntries(pId);
 };
