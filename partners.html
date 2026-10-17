@@ -30,7 +30,7 @@ body {
 .urdu { font-family: 'Noto Nastaliq Urdu', serif; line-height: 1.6 !important; }
 
 .container {
-  max-width: 1250px;
+  max-width: 1300px;
   margin: 0 auto;
   background: #fff;
   padding: 20px;
@@ -89,17 +89,18 @@ input, select, textarea {
 .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
 
 .btn {
-  padding: 7px 12px;
+  padding: 6px 10px;
   border-radius: 6px;
   font-weight: 700;
   cursor: pointer;
   border: none;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   text-decoration: none;
   justify-content: center;
+  white-space: nowrap;
 }
 .btn-primary { background: var(--gold); color: var(--navy); }
 .btn-navy { background: var(--navy); color: #fff; }
@@ -135,9 +136,20 @@ th { background: #F1F5F9; color: var(--navy); }
   padding: 20px;
   border-radius: 10px;
   width: 90%;
-  max-width: 650px;
+  max-width: 750px;
   max-height: 90vh;
   overflow-y: auto;
+}
+
+@media print {
+  body * { visibility: hidden; }
+  #biltyPrintModal, #biltyPrintModal * { visibility: visible; }
+  #biltyPrintModal {
+    display: block !important;
+    position: absolute;
+    left: 0; top: 0; width: 100%; margin: 0; padding: 0;
+  }
+  .no-print { display: none !important; }
 }
 </style>
 </head>
@@ -232,7 +244,7 @@ th { background: #F1F5F9; color: var(--navy); }
   <div id="partnerPortalView" style="display:none;">
     <div class="card" style="background:#EFF6FF; border-color:#BFDBFE;">
       <h3 class="urdu" style="margin-top:0; color:var(--navy);" id="partnerCityTitle">📦 آپ کے شہر کا موصولہ سامان (Shipments)</h3>
-      <p style="margin:0; font-size:0.85rem; color:#475569;" class="urdu">یہاں سے آپ اپنے شہر میں موصول ہونے والے سامان کا اسٹیٹس بدل سکتے ہیں۔</p>
+      <p style="margin:0; font-size:0.85rem; color:#475569;" class="urdu">یہاں سے آپ موصولہ گاڑیوں، ڈرائیور، بلٹی چارجز اور لائیو اسٹیٹس کی تفاصیل دیکھ سکتے ہیں۔</p>
     </div>
 
     <div class="card">
@@ -242,16 +254,19 @@ th { background: #F1F5F9; color: var(--navy); }
             <tr>
               <th class="urdu">روانی تاریخ</th>
               <th class="urdu">بلٹی نمبر</th>
-              <th class="urdu">گاڑی / ٹرک نمبر</th>
+              <th class="urdu">ڈرائیور، گاڑی و فون</th>
               <th class="urdu">مال بھیجنے والا</th>
               <th class="urdu">وصول کنندہ و فون</th>
               <th class="urdu">تعداد</th>
+              <th class="urdu">ڈرائیور کرایہ</th>
+              <th class="urdu">ٹوٹل بلٹی اماؤنٹ</th>
+              <th class="urdu">بلٹی دیکھیں</th>
               <th class="urdu">موجودہ اسٹیٹس</th>
               <th class="urdu">اسٹیٹس اپ ڈیٹ کریں</th>
             </tr>
           </thead>
           <tbody id="partnerShipmentsBody">
-            <tr><td colspan="8" style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے...</td></tr>
+            <tr><td colspan="11" style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے...</td></tr>
           </tbody>
         </table>
       </div>
@@ -370,6 +385,20 @@ th { background: #F1F5F9; color: var(--navy); }
   </div>
 </div>
 
+<!-- VIEW BILTY DETAIL MODAL -->
+<div id="biltyModal" class="modal-overlay">
+  <div class="modal-box" style="max-width:800px;">
+    <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--navy); padding-bottom:8px; margin-bottom:12px;">
+      <h3 class="urdu" style="margin:0; color:var(--navy);">👁️ بلٹی تفاصیل و پرنٹ کاپی</h3>
+      <div style="display:flex; gap:8px;">
+        <button class="btn btn-primary" onclick="window.print()">🖨️ پرنٹ / PDF سیو کریں</button>
+        <button class="btn btn-secondary" onclick="closeBiltyModal()">✖ بند کریں</button>
+      </div>
+    </div>
+    <div id="biltyModalContent"></div>
+  </div>
+</div>
+
 <!-- Firebase Realtime Database SDKs -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -389,12 +418,12 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 window.allPartners = {};
+window.allBookingsMap = {};
 window.currentRole = "";
 window.currentPartnerData = null;
 
 document.getElementById('lDate').valueAsDate = new Date();
 
-// PRE-POPULATE INITIAL LOGISTICS PARTNERS IF DATABASE IS EMPTY
 async function seedInitialPartners() {
   try {
     const snap = await get(ref(db, 'partners'));
@@ -437,9 +466,7 @@ async function seedInitialPartners() {
         await set(newRef, p);
       }
     }
-  } catch(e) {
-    console.log("Seeding initial partners info:", e);
-  }
+  } catch(e){}
 }
 
 window.switchLoginTab = function(type) {
@@ -456,7 +483,6 @@ window.switchLoginTab = function(type) {
   }
 };
 
-// ADMIN LOGIN
 document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const pass = document.getElementById('adminPassInput').value;
@@ -474,7 +500,6 @@ document.getElementById('adminLoginForm').addEventListener('submit', async (e) =
   }
 });
 
-// PARTNER MOBILE-BASED LOGIN
 document.getElementById('partnerLoginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const phone = document.getElementById('partnerPhoneInput').value.trim().replace(/[- ]/g, '');
@@ -659,34 +684,50 @@ window.deletePartner = async function(pId) {
 
 async function loadPartnerShipments(city) {
   const tbody = document.getElementById('partnerShipmentsBody');
-  tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے...</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے...</td></tr>';
 
   try {
     const snap = await get(ref(db, 'bookings'));
     if(!snap.exists()) {
-      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">کوئی شپمنٹ موجود نہیں ہے۔</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;">کوئی شپمنٹ موجود نہیں ہے۔</td></tr>';
       return;
     }
 
     tbody.innerHTML = '';
+    window.allBookingsMap = {};
     let count = 0;
 
     snap.forEach(child => {
       const bId = child.key;
       const b = child.val();
+      window.allBookingsMap[bId] = b;
 
       if(b.destCity === city) {
         count++;
         const status = b.status || "Booking Received";
 
+        const driverDetails = b.truckNo ? `
+          <strong style="color:var(--navy);">🚛 ${b.truckNo}</strong><br>
+          <small>👤 ${b.driverName || 'N/A'}</small><br>
+          <small>📞 ${b.driverPhone || 'N/A'}</small>
+        ` : '<span style="color:#94A3B8;">راستے میں ہے / پینڈنگ</span>';
+
+        const driverFreight = b.freightCharges ? `Rs. ${b.freightCharges}` : 'Pending';
+        const netTotalBill = b.netTotal ? `Rs. ${b.netTotal}` : 'Pending';
+
         tbody.innerHTML += `
           <tr>
             <td>${b.dispatchDate || b.date}</td>
             <td><strong>${b.biltyNo}</strong></td>
-            <td><strong style="color:var(--navy);">${b.truckNo || 'N/A'}</strong></td>
+            <td>${driverDetails}</td>
             <td>${b.senderName}</td>
             <td><strong>${b.receiverName}</strong><br><small>📞 ${b.receiverPhone}</small></td>
             <td>${b.totalQty || 0}</td>
+            <td style="color:green; font-weight:700;">${driverFreight}</td>
+            <td style="color:navy; font-weight:800;">${netTotalBill}</td>
+            <td>
+              <button class="btn btn-info" onclick="viewFullBiltyModal('${bId}')">👁️ View Bilty</button>
+            </td>
             <td><span style="background:#FEF3C7; color:#B45309; padding:2px 6px; border-radius:4px; font-weight:700;">${status}</span></td>
             <td>
               <select onchange="updateShipmentStatus('${bId}', this.value)" style="padding:4px; font-weight:700;">
@@ -701,13 +742,119 @@ async function loadPartnerShipments(city) {
     });
 
     if(count === 0) {
-      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;">${city} شہر کے لیے فی الحال کوئی شپمنٹ موجود نہیں ہے۔</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;">${city} شہر کے لیے فی الحال کوئی شپمنٹ موجود نہیں ہے۔</td></tr>`;
     }
 
   } catch(err) {
-    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:red;">ڈیٹا لوڈ میں مسئلہ: ' + err.message + '</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; color:red;">ڈیٹا لوڈ میں مسئلہ: ' + err.message + '</td></tr>';
   }
 }
+
+window.viewFullBiltyModal = function(bId) {
+  const b = window.allBookingsMap[bId];
+  if(!b) return;
+
+  let itemsRows = '';
+  let itemsArr = [];
+  if (b.items && Array.isArray(b.items)) itemsArr = b.items;
+  else if (b.items && typeof b.items === 'object') itemsArr = Object.values(b.items);
+
+  if(itemsArr.length > 0) {
+    itemsArr.forEach((it, idx) => {
+      itemsRows += `
+        <tr>
+          <td style="text-align:center;">${idx + 1}</td>
+          <td>${it.name || ''}</td>
+          <td style="text-align:center; font-weight:700;">${it.qty || 0}</td>
+          <td style="text-align:center;">${it.weight || '-'}</td>
+        </tr>
+      `;
+    });
+  } else {
+    itemsRows = `
+      <tr>
+        <td style="text-align:center;">1</td>
+        <td>${b.itemType || 'Goods'}</td>
+        <td style="text-align:center; font-weight:700;">${b.totalQty || 1}</td>
+        <td style="text-align:center;">-</td>
+      </tr>
+    `;
+  }
+
+  const html = `
+    <div style="border:2px solid var(--navy); padding:15px; border-radius:8px; background:#fff; direction:rtl; text-align:right;">
+      <div style="text-align:center; border-bottom:2px solid var(--navy); padding-bottom:8px; margin-bottom:10px;">
+        <h2 style="color:var(--navy); margin:0;" class="urdu">گجرات مشترکہ گڈز ترانسپورٹ کمپنی (رجسٹرڈ)</h2>
+        <p style="margin:2px 0 0; color:#475569; font-size:0.8rem;">مین آفس جی ٹی روڈ، نزد پرانی فروٹ منڈی، گجرات | فون: 053-3729517</p>
+        <h3 style="color:#DC2626; margin:4px 0 0;" class="urdu">آن لائن گڈز بلٹی و رسید</h3>
+      </div>
+
+      <div class="grid-3" style="background:#F8FAFC; padding:8px; border:1px solid var(--border); border-radius:6px; margin-bottom:10px; font-size:0.85rem;">
+        <div><b>تاریخ:</b> ${b.dispatchDate || b.date}</div>
+        <div><b>بلٹی نمبر:</b> <strong style="color:var(--navy);">${b.biltyNo}</strong></div>
+        <div><b>ادائیگی کی قسم:</b> <strong style="color:${b.paymentMode === 'PAID' ? 'green' : 'blue'};">${b.paymentMode || 'TO PAY'}</strong></div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:10px; font-size:0.85rem;">
+        <div style="border:1px solid var(--border); padding:8px; border-radius:6px;">
+          <strong style="color:var(--navy);">مال بھیجنے والا (Sender):</strong><br>
+          ${b.senderName}
+        </div>
+        <div style="border:1px solid var(--border); padding:8px; border-radius:6px;">
+          <strong style="color:var(--navy);">مال وصول کنندہ (Receiver):</strong><br>
+          <b>${b.receiverName}</b><br>
+          📞 ${b.receiverPhone || 'N/A'}<br>
+          پتہ: ${b.receiverAddress || 'N/A'}
+        </div>
+      </div>
+
+      <div class="grid-3" style="margin-bottom:10px; font-size:0.85rem; background:#EFF6FF; padding:8px; border-radius:6px;">
+        <div><b>روانی شہر:</b> Gujrat</div>
+        <div><b>منزل شہر:</b> <strong>${b.destCity}</strong></div>
+        <div><b>ٹرک / ڈرائیور:</b> ${b.truckNo ? b.truckNo + ' (' + b.driverName + ')' : 'N/A'}</div>
+      </div>
+
+      <h4 class="urdu" style="margin:10px 0 5px 0;">تفصیل سامان (Goods Description):</h4>
+      <table style="width:100%; border-collapse:collapse; margin-bottom:10px;">
+        <thead>
+          <tr style="background:#F1F5F9;">
+            <th style="width:30px; text-align:center;">#</th>
+            <th>سامان کی تفصیل</th>
+            <th style="width:80px; text-align:center;">تعداد</th>
+            <th style="width:90px; text-align:center;">وزن</th>
+          </tr>
+        </thead>
+        <tbody>${itemsRows}</tbody>
+        <tfoot>
+          <tr style="font-weight:800; background:#FEF3C7;">
+            <td colspan="2" style="text-align:left;">کل تعداد:</td>
+            <td style="text-align:center;">${b.totalQty || 0}</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <div style="background:#F8FAFC; border:1px solid var(--border); padding:10px; border-radius:6px; margin-top:10px;">
+        <h4 class="urdu" style="margin:0 0 6px 0; color:var(--navy);">کرایہ تفصیلات (Billing Breakdown):</h4>
+        <div class="grid-3" style="font-size:0.82rem;">
+          <div>ڈرائیور کرایہ: <b>Rs. ${b.freightCharges || 0}</b></div>
+          <div>لوکل پک اپ / رکشہ: <b>Rs. ${b.rickshawFare || 0}</b></div>
+          <div>لیبر چارجز: <b>Rs. ${b.labourCharges || 0}</b></div>
+          <div>اڈا چارجز: <b>Rs. ${b.addaCharges || 0}</b></div>
+          <div>دیگر چارجز: <b>Rs. ${b.otherCharges || 0}</b></div>
+          <div><strong>ٹوٹل صاف بل: <span style="color:green; font-size:0.95rem;">Rs. ${b.netTotal || 0}</span></strong></div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('biltyModalContent').innerHTML = html;
+  document.getElementById('biltyModal').style.display = 'flex';
+};
+
+window.closeBiltyModal = function() {
+  document.getElementById('biltyModal').style.display = 'none';
+};
 
 window.updateShipmentStatus = async function(bId, newStatus) {
   try {
