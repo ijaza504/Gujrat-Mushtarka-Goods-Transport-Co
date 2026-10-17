@@ -174,9 +174,9 @@ th { background: #F1F5F9; color: var(--navy); }
   color: #fff;
   border: none;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  font-size: 1.1rem;
+  width: 30px;
+  height: 30px;
+  font-size: 1rem;
   font-weight: 800;
   cursor: pointer;
   display: flex;
@@ -189,7 +189,7 @@ th { background: #F1F5F9; color: var(--navy); }
   background: #FEE2E2;
   color: #991B1B;
   border: 1px solid #FCA5A5;
-  padding: 2px 8px;
+  padding: 2px 6px;
   border-radius: 4px;
   font-size: 0.75rem;
   font-weight: 700;
@@ -335,12 +335,12 @@ th { background: #F1F5F9; color: var(--navy); }
 
   </div>
 
-  <!-- CREATE / EDIT MANIFEST FORM -->
+  <!-- CREATE / EDIT MANIFEST FORM VIEW -->
   <div id="createFormView" style="display:none;">
     <div style="display:flex; justify-content:space-between; align-items:center; background:#EFF6FF; padding:10px; border-radius:6px; margin-bottom:12px;">
       <h3 class="urdu" style="margin:0; color:var(--navy);" id="formMainTitle">🚛 نیا ٹرک مینی فیسٹ / لوڈنگ شیٹ بنائیں</h3>
-      <!-- TOP RIGHT CLOSE CROSS BUTTON -->
-      <button type="button" class="close-cross-btn" onclick="showDashboardView()">✖</button>
+      <!-- TOP RIGHT CLOSE CROSS (✖) BUTTON -->
+      <button type="button" class="close-cross-btn" onclick="showDashboardView()" title="Close Form">✖</button>
     </div>
 
     <div class="card">
@@ -417,9 +417,9 @@ th { background: #F1F5F9; color: var(--navy); }
         </div>
       </div>
 
-      <!-- SINGLE BOTTOM CANCEL AND SAVE BUTTONS -->
+      <!-- BOTTOM SINGLE CANCEL AND SAVE BUTTONS -->
       <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:15px;">
-        <button type="button" class="btn btn-danger" id="cancelEditBtn" onclick="cancelManifestEdit()">Cancel</button>
+        <button type="button" class="btn btn-danger" id="cancelEditBtn" onclick="showDashboardView()">Cancel</button>
         <button type="button" class="btn btn-success" style="padding:8px 20px; font-size:0.92rem;" id="saveManifestBtn" onclick="saveAndDispatchManifest()">Save & Dispatch Manifest</button>
       </div>
     </div>
@@ -503,7 +503,7 @@ window.logoutManifestAdmin = function() {
 window.showCreateManifestForm = function() {
   document.getElementById('dashboardView').style.display = 'none';
   document.getElementById('createFormView').style.display = 'block';
-  cancelManifestEdit();
+  resetManifestForm();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
@@ -828,13 +828,13 @@ window.editManifest = function(mId) {
   document.getElementById('commissionPercent').value = m.commissionPercent || "3";
 
   document.getElementById('formMainTitle').innerText = "📝 مینی فیسٹ میں تبدیلی کریں (Manifest #" + m.manifestNo + ")";
-  document.getElementById('saveManifestBtn').innerText = "Update Manifest";
+  document.getElementById('saveManifestBtn').innerText = "Save & Dispatch Manifest";
 
   loadWarehouseBookings(m.bookingIds || []);
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-// DELETE MANIFEST AND REVERT BOOKINGS
+// DELETE MANIFEST AND REVERT BOOKINGS BACK TO PENDING
 window.deleteManifest = async function(mId) {
   const m = window.allManifests[mId];
   if(!m) return;
@@ -864,19 +864,20 @@ window.deleteManifest = async function(mId) {
   }
 };
 
-window.cancelManifestEdit = function() {
+function resetManifestForm() {
   document.getElementById('editManifestId').value = "";
   document.getElementById('truckNo').value = "";
   document.getElementById('driverName').value = "";
   document.getElementById('driverPhone').value = "";
   document.getElementById('routeCities').value = "";
+  document.getElementById('dispatchDate').valueAsDate = new Date();
   document.getElementById('commissionPercent').value = "3";
   
   document.getElementById('formMainTitle').innerText = "🚛 نیا ٹرک مینی فیسٹ / لوڈنگ شیٹ بنائیں";
   document.getElementById('saveManifestBtn').innerText = "Save & Dispatch Manifest";
 
-  showDashboardView();
-};
+  loadWarehouseBookings();
+}
 
 async function loadManifestHistory() {
   const tbody = document.getElementById('manifestHistoryBody');
