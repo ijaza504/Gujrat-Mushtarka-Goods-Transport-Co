@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>مینی فیسٹ ڈیش بورڈ | گجرات مشترکہ گڈز ترانسپورٹ کو</title>
+<title>مینی فیسٹ ڈیش بورڈ و مالیاتی کنٹرول | گجرات مشترکہ گڈز ترانسپورٹ کو</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,7 +30,7 @@ body {
 .urdu { font-family: 'Noto Nastaliq Urdu', serif; line-height: 1.6 !important; }
 
 .container {
-  max-width: 1350px;
+  max-width: 1380px;
   margin: 0 auto;
   background: #fff;
   padding: 20px;
@@ -84,9 +84,20 @@ input, select, textarea {
 
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
+.grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
 
-/* ENGLISH BUTTONS STYLING */
+/* FINANCIAL DASHBOARD CARDS */
+.stat-card {
+  background: #F8FAFC;
+  border: 1px solid var(--border);
+  padding: 12px 15px;
+  border-radius: 8px;
+  border-right: 4px solid var(--navy);
+}
+.stat-card h4 { margin: 0 0 4px 0; color: #64748B; font-size: 0.8rem; }
+.stat-card .amount { font-size: 1.3rem; font-weight: 800; color: var(--navy); }
+
+/* ALL BUTTONS IN ENGLISH */
 .btn {
   padding: 7px 12px;
   border-radius: 6px;
@@ -137,7 +148,7 @@ th { background: #F1F5F9; color: var(--navy); }
   padding: 20px;
   border-radius: 10px;
   width: 95%;
-  max-width: 950px;
+  max-width: 1000px;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
@@ -188,7 +199,7 @@ th { background: #F1F5F9; color: var(--navy); }
 <div id="authSection" class="auth-box">
   <div class="header-title" style="border:none; padding:0; margin-bottom:15px;">
     <h2 class="urdu" style="margin:0;">گجرات مشترکہ گڈز ترانسپورٹ کو</h2>
-    <p class="urdu" style="margin:4px 0 0; color:#64748B;">مینی فیسٹ پینل لاگ ان</p>
+    <p class="urdu" style="margin:4px 0 0; color:#64748B;">مینی فیسٹ و مالیاتی ڈیش بورڈ لاگ ان</p>
   </div>
 
   <form id="loginForm">
@@ -205,39 +216,101 @@ th { background: #F1F5F9; color: var(--navy); }
   
   <div class="header-title">
     <h1>GUJRAT MUSHTARKA GOODS TRANSPORT CO.</h1>
-    <h2 class="urdu">🚛 ٹرک روزنامچہ و مینی فیسٹ (Manifest Dashboard)</h2>
+    <h2 class="urdu">📊 مالیاتی ڈیش بورڈ، پینڈنگ بلٹیاں و مینی فیسٹ مینجمنٹ</h2>
   </div>
 
   <div class="top-bar">
     <div>
-      <span class="urdu" style="font-size:1.05rem; font-weight:700; color:var(--navy);">خوش آمدید! مینی فیسٹ پینل</span>
+      <span class="urdu" style="font-size:1.05rem; font-weight:700; color:var(--navy);">مینی فیسٹ کنٹرول پینل</span>
     </div>
     <div style="display:flex; gap:8px; flex-wrap:wrap;">
       <a href="admin.html" class="btn btn-navy">Admin Panel</a>
       <a href="partners.html" class="btn btn-warning">Partner Portal</a>
       <button class="btn btn-primary" onclick="openNewManifestModal()">+ Create New Manifest</button>
-      <button class="btn btn-secondary" onclick="loadManifestHistory()">Refresh</button>
+      <button class="btn btn-secondary" onclick="refreshAllData()">Refresh</button>
       <button class="btn btn-danger" onclick="logoutUser()">Logout</button>
     </div>
   </div>
 
-  <!-- MANIFEST HISTORY DASHBOARD -->
-  <div class="card">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-      <h3 class="urdu" style="margin:0; color:var(--navy);">📦 تمام مینی فیسٹ کی ہسٹری (Recent Manifests)</h3>
+  <!-- ==================== 1. FINANCIAL DASHBOARD & FILTERS ==================== -->
+  <div class="card" style="border-top:4px solid var(--gold);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
+      <h3 class="urdu" style="margin:0; color:var(--navy);">💰 مالیاتی رپورٹ و درآمد (Financial Dashboard)</h3>
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+        <span class="urdu" style="font-weight:700; font-size:0.85rem;">تاریخ فلٹر:</span>
+        <input type="date" id="filterFromDate" style="width:130px; padding:4px;">
+        <span class="urdu">تا</span>
+        <input type="date" id="filterToDate" style="width:130px; padding:4px;">
+        <button class="btn btn-info" onclick="applyFinancialFilter()">Filter Report</button>
+        <button class="btn btn-secondary" onclick="resetFinancialFilter()">Reset Filter</button>
+      </div>
+    </div>
+
+    <div class="grid-4">
+      <div class="stat-card" style="border-right-color:#10B981;">
+        <h4 class="urdu">آج کی آمدن (Today's Revenue)</h4>
+        <div class="amount" id="statTodayIncome">Rs. 0</div>
+      </div>
+      <div class="stat-card" style="border-right-color:#0284C7;">
+        <h4 class="urdu">اس ہفتے کی آمدن (Weekly Revenue)</h4>
+        <div class="amount" id="statWeeklyIncome">Rs. 0</div>
+      </div>
+      <div class="stat-card" style="border-right-color:#F59E0B;">
+        <h4 class="urdu">اس ماہ کی کل آمدن (Monthly Revenue)</h4>
+        <div class="amount" id="statMonthlyIncome">Rs. 0</div>
+      </div>
+      <div class="stat-card" style="border-right-color:var(--navy);">
+        <h4 class="urdu">منتخب شدہ عرصے کی آمدن (Filtered Total)</h4>
+        <div class="amount" id="statFilteredIncome" style="color:#2563EB;">Rs. 0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 2. PENDING BILTY LIST ON DASHBOARD ==================== -->
+  <div class="card" style="border-top:4px solid #0284C7;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+      <h3 class="urdu" style="margin:0; color:var(--navy);">⏳ روانگی کے لیے پینڈنگ بلٹیاں (Pending Bilties Waiting for Loading)</h3>
+      <span class="urdu" style="background:#FEF3C7; color:#B45309; padding:2px 10px; border-radius:50px; font-weight:700;" id="pendingBiltiesCount">0 پینڈنگ</span>
     </div>
 
     <div style="overflow-x:auto;">
       <table>
         <thead>
           <tr>
-            <th class="urdu">تاریخ</th>
+            <th class="urdu">بکنگ تاریخ</th>
+            <th class="urdu">بلٹی نمبر</th>
+            <th class="urdu">سینڈر (بھیجنے والا)</th>
+            <th class="urdu">ریسیور (وصول کنندہ) و فون</th>
+            <th class="urdu">منزل شہر</th>
+            <th class="urdu">تعداد سامان</th>
+            <th class="urdu">ادائیگی طریقہ</th>
+            <th class="urdu">ٹوٹل بل</th>
+          </tr>
+        </thead>
+        <tbody id="dashboardPendingTableBody">
+          <tr><td colspan="8" style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ==================== 3. MANIFEST HISTORY DASHBOARD ==================== -->
+  <div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+      <h3 class="urdu" style="margin:0; color:var(--navy);">🚛 تمام روانہ شدہ مینی فیسٹ ہسٹری (Dispatched Manifests)</h3>
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th class="urdu">روانی تاریخ</th>
             <th class="urdu">مینی فیسٹ #</th>
             <th class="urdu">گاڑی / ٹرک نمبر</th>
-            <th class="urdu">ڈرائیور کا نام و فون</th>
+            <th class="urdu">ڈرائیور نام و فون</th>
             <th class="urdu">منزل شہر</th>
-            <th class="urdu">کل بلٹیاں</th>
-            <th class="urdu">ڈرائیور کرایہ</th>
+            <th class="urdu">بلٹیاں تعداد</th>
+            <th class="urdu">طے شدہ کرایہ</th>
             <th class="urdu">اسٹیٹس / الرٹ</th>
             <th class="urdu">ایکشن</th>
           </tr>
@@ -295,7 +368,7 @@ th { background: #F1F5F9; color: var(--navy); }
         </div>
       </div>
 
-      <h4 class="urdu" style="margin:10px 0 5px 0; color:var(--navy);">📦 غیر روانہ شدہ بلٹیاں منتخب کریں (Pending Bilties):</h4>
+      <h4 class="urdu" style="margin:10px 0 5px 0; color:var(--navy);">📦 اس شہر کی غیر روانہ شدہ بلٹیاں منتخب کریں:</h4>
       <div style="overflow-x:auto; max-height:220px; overflow-y:auto; border:1px solid var(--border); border-radius:6px; margin-bottom:12px;">
         <table>
           <thead>
@@ -306,23 +379,27 @@ th { background: #F1F5F9; color: var(--navy); }
               <th class="urdu">سینڈر</th>
               <th class="urdu">ریسیور</th>
               <th class="urdu">تعداد</th>
-              <th class="urdu">کرایہ (Freight)</th>
+              <th class="urdu">کل بل</th>
             </tr>
           </thead>
-          <tbody id="pendingBookingsBody">
+          <tbody id="modalPendingBookingsBody">
             <tr><td colspan="7" style="text-align:center;">کوئی شہر منتخب کریں</td></tr>
           </tbody>
         </table>
       </div>
 
-      <div class="grid-2" style="background:#F8FAFC; padding:10px; border-radius:6px; border:1px solid var(--border); margin-bottom:12px;">
+      <div class="grid-3" style="background:#F8FAFC; padding:10px; border-radius:6px; border:1px solid var(--border); margin-bottom:12px;">
         <div>
           <label class="urdu">کل منتخب بلٹیاں:</label>
           <input type="text" id="mTotalSelected" value="0" readonly style="font-weight:800; color:var(--navy);">
         </div>
         <div>
-          <label class="urdu">ڈرائیور کا طے شدہ کرایہ (Freight Charges PKR) *</label>
+          <label class="urdu">ڈرائیور کا طے شدہ کرایہ (Freight) *</label>
           <input type="number" id="mTotalFreight" placeholder="0" required>
+        </div>
+        <div>
+          <label class="urdu">کمپنی ڈائریکٹ کمیشن (Company Commission %)</label>
+          <input type="number" id="mCommissionRate" value="10" placeholder="10">
         </div>
       </div>
 
@@ -369,7 +446,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-window.allPendingBookings = {};
+window.allBookingsMap = {};
 window.allManifestsMap = {};
 
 document.getElementById('mDispatchDate').valueAsDate = new Date();
@@ -381,8 +458,7 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
   if(pass === "gujrat2001") {
     document.getElementById('authSection').style.display = 'none';
     document.getElementById('mainDashboard').style.display = 'block';
-    loadCitiesList();
-    loadManifestHistory();
+    refreshAllData();
   } else {
     alert("پاس کوڈ غلط ہے!");
   }
@@ -392,6 +468,12 @@ window.logoutUser = function() {
   document.getElementById('authSection').style.display = 'block';
   document.getElementById('mainDashboard').style.display = 'none';
   document.getElementById('passInput').value = '';
+};
+
+window.refreshAllData = function() {
+  loadCitiesList();
+  loadFinancialAndPendingData();
+  loadManifestHistory();
 };
 
 // FETCH DYNAMIC CITIES FROM PARTNERS NODE
@@ -410,6 +492,119 @@ async function loadCitiesList() {
     }
   } catch(e) {}
 }
+
+// LOAD FINANCIAL CALCULATIONS AND PENDING BILTY TABLE
+async function loadFinancialAndPendingData() {
+  const pendingTbody = document.getElementById('dashboardPendingTableBody');
+  pendingTbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے...</td></tr>';
+
+  try {
+    const snap = await get(ref(db, 'bookings'));
+    if(!snap.exists()) {
+      pendingTbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">کوئی پینڈنگ بلٹی موجود نہیں ہے۔</td></tr>';
+      document.getElementById('pendingBiltiesCount').innerText = "0 پینڈنگ";
+      updateFinancialCards({});
+      return;
+    }
+
+    window.allBookingsMap = {};
+    pendingTbody.innerHTML = '';
+    let pendingCount = 0;
+
+    snap.forEach(child => {
+      const bId = child.key;
+      const b = child.val();
+      window.allBookingsMap[bId] = b;
+
+      const isPending = (!b.status || b.status === "Booking Received");
+
+      if(isPending) {
+        pendingCount++;
+        pendingTbody.innerHTML += `
+          <tr>
+            <td><strong>${b.date}</strong></td>
+            <td><strong style="color:var(--navy);">${b.biltyNo}</strong></td>
+            <td>${b.senderName}</td>
+            <td><strong>${b.receiverName}</strong><br><small>📞 ${b.receiverPhone || 'N/A'}</small></td>
+            <td><strong style="color:red;">${b.destCity}</strong></td>
+            <td>${b.totalQty || 0}</td>
+            <td><strong style="color:${b.paymentMode === 'PAID' ? 'green' : 'blue'};">${b.paymentMode || 'TO PAY'}</strong></td>
+            <td style="color:green; font-weight:700;">Rs. ${b.netTotal || 0}</td>
+          </tr>
+        `;
+      }
+    });
+
+    document.getElementById('pendingBiltiesCount').innerText = `${pendingCount} پینڈنگ`;
+
+    if(pendingCount === 0) {
+      pendingTbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">کوئی پینڈنگ بلٹی موجود نہیں ہے۔ تمام بلٹیاں روانہ ہو چکی ہیں!</td></tr>';
+    }
+
+    updateFinancialCards(window.allBookingsMap);
+
+  } catch(err) {
+    pendingTbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:red;">ڈیٹا لوڈ میں مسئلہ: ' + err.message + '</td></tr>';
+  }
+}
+
+// CALCULATE FINANCIAL SUMMARY (TODAY, WEEKLY, MONTHLY & FILTERED)
+function updateFinancialCards(bookings) {
+  const todayStr = new Date().toISOString().split('T')[0];
+  const now = new Date();
+
+  let todaySum = 0;
+  let weeklySum = 0;
+  let monthlySum = 0;
+  let filteredSum = 0;
+
+  const fromVal = document.getElementById('filterFromDate').value;
+  const toVal = document.getElementById('filterToDate').value;
+
+  Object.values(bookings).forEach(b => {
+    const amt = Number(b.netTotal) || 0;
+    const bDateStr = b.date;
+
+    if(bDateStr === todayStr) {
+      todaySum += amt;
+    }
+
+    if(bDateStr) {
+      const bDate = new Date(bDateStr);
+      const diffTime = Math.abs(now - bDate);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      if(diffDays <= 7) weeklySum += amt;
+      if(bDate.getMonth() === now.getMonth() && bDate.getFullYear() === now.getFullYear()) monthlySum += amt;
+
+      if(fromVal && toVal) {
+        if(bDateStr >= fromVal && bDateStr <= toVal) {
+          filteredSum += amt;
+        }
+      }
+    }
+  });
+
+  document.getElementById('statTodayIncome').innerText = `Rs. ${todaySum.toLocaleString()}`;
+  document.getElementById('statWeeklyIncome').innerText = `Rs. ${weeklySum.toLocaleString()}`;
+  document.getElementById('statMonthlyIncome').innerText = `Rs. ${monthlySum.toLocaleString()}`;
+  
+  if(fromVal && toVal) {
+    document.getElementById('statFilteredIncome').innerText = `Rs. ${filteredSum.toLocaleString()}`;
+  } else {
+    document.getElementById('statFilteredIncome').innerText = `Rs. ${monthlySum.toLocaleString()}`;
+  }
+}
+
+window.applyFinancialFilter = function() {
+  updateFinancialCards(window.allBookingsMap);
+};
+
+window.resetFinancialFilter = function() {
+  document.getElementById('filterFromDate').value = "";
+  document.getElementById('filterToDate').value = "";
+  updateFinancialCards(window.allBookingsMap);
+};
 
 // LOAD MANIFEST HISTORY WITH AUTOMATIC DELETED BOOKINGS DETECTOR & ALERTS
 async function loadManifestHistory() {
@@ -454,12 +649,10 @@ async function loadManifestHistory() {
 
       totalBookings = bookingIdsList.length;
 
-      // CHECK HOW MANY BOOKINGS STILL EXIST
       bookingIdsList.forEach(bId => {
         if(bookingsMap[bId]) existingBookingsCount++;
       });
 
-      // IF ALL BOOKINGS IN THIS MANIFEST WERE DELETED FROM CUSTOMER PORTAL, AUTO CLEANUP
       if(totalBookings > 0 && existingBookingsCount === 0) {
         remove(ref(db, 'manifests/' + mId));
         return;
@@ -514,7 +707,6 @@ window.deleteManifest = async function(mId) {
         bookingIdsList = Object.values(m.bookingIds);
       }
 
-      // REVERT BOOKINGS BACK TO PENDING
       for(let bId of bookingIdsList) {
         await update(ref(db, 'bookings/' + bId), {
           status: "Booking Received",
@@ -526,10 +718,9 @@ window.deleteManifest = async function(mId) {
         });
       }
 
-      // DELETE MANIFEST RECORD
       await remove(ref(db, 'manifests/' + mId));
       alert("مینی فیسٹ ڈیلیٹ کر دیا گیا اور تمام بلٹیاں دوبارہ پینڈنگ میں منتقل ہو گئی ہیں!");
-      loadManifestHistory();
+      refreshAllData();
 
     } catch(err) {
       alert("Error: " + err.message);
@@ -541,7 +732,7 @@ window.openNewManifestModal = function() {
   document.getElementById('manifestForm').reset();
   document.getElementById('mDispatchDate').valueAsDate = new Date();
   document.getElementById('mManifestNo').value = "MNF-" + Math.floor(100000 + Math.random() * 900000);
-  document.getElementById('pendingBookingsBody').innerHTML = '<tr><td colspan="7" style="text-align:center;">کوئی شہر منتخب کریں</td></tr>';
+  document.getElementById('modalPendingBookingsBody').innerHTML = '<tr><td colspan="7" style="text-align:center;">کوئی شہر منتخب کریں</td></tr>';
   document.getElementById('mTotalSelected').value = "0";
   document.getElementById('manifestModal').style.display = 'flex';
 };
@@ -550,10 +741,10 @@ window.closeManifestModal = function() {
   document.getElementById('manifestModal').style.display = 'none';
 };
 
-// FILTER PENDING BOOKINGS BY DESTINATION CITY
+// FILTER PENDING BOOKINGS BY DESTINATION CITY IN MODAL
 window.filterPendingBookings = async function() {
   const city = document.getElementById('mDestCity').value;
-  const tbody = document.getElementById('pendingBookingsBody');
+  const tbody = document.getElementById('modalPendingBookingsBody');
 
   if(!city) {
     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">کوئی شہر منتخب کریں</td></tr>';
@@ -570,7 +761,6 @@ window.filterPendingBookings = async function() {
     }
 
     tbody.innerHTML = '';
-    window.allPendingBookings = {};
     let count = 0;
 
     snap.forEach(child => {
@@ -579,7 +769,6 @@ window.filterPendingBookings = async function() {
 
       if(b.destCity === city && (!b.status || b.status === "Booking Received")) {
         count++;
-        window.allPendingBookings[bId] = b;
 
         tbody.innerHTML += `
           <tr>
@@ -591,7 +780,7 @@ window.filterPendingBookings = async function() {
             <td>${b.senderName}</td>
             <td>${b.receiverName}</td>
             <td>${b.totalQty || 0}</td>
-            <td>Rs. ${b.freightCharges || 0}</td>
+            <td>Rs. ${b.netTotal || 0}</td>
           </tr>
         `;
       }
@@ -607,7 +796,7 @@ window.filterPendingBookings = async function() {
 };
 
 window.updateSelectedCount = function() {
-  const checked = document.querySelectorAll('#pendingBookingsBody input[type="checkbox"]:checked');
+  const checked = document.querySelectorAll('#modalPendingBookingsBody input[type="checkbox"]:checked');
   document.getElementById('mTotalSelected').value = checked.length;
 };
 
@@ -616,7 +805,7 @@ document.getElementById('manifestForm').addEventListener('submit', async (e) => 
   e.preventDefault();
   const saveBtn = document.getElementById('saveManifestBtn');
 
-  const selectedBoxes = document.querySelectorAll('#pendingBookingsBody input[type="checkbox"]:checked');
+  const selectedBoxes = document.querySelectorAll('#modalPendingBookingsBody input[type="checkbox"]:checked');
   if(selectedBoxes.length === 0) {
     alert("برائے مہربانی کم از کم ایک بلٹی منتخب کریں!");
     return;
@@ -635,6 +824,7 @@ document.getElementById('manifestForm').addEventListener('submit', async (e) => 
     driverName: document.getElementById('mDriverName').value,
     driverPhone: document.getElementById('mDriverPhone').value,
     totalFreight: Number(document.getElementById('mTotalFreight').value) || 0,
+    commissionRate: Number(document.getElementById('mCommissionRate').value) || 10,
     bookingIds: selectedBIds,
     createdAt: new Date().toISOString()
   };
@@ -643,7 +833,6 @@ document.getElementById('manifestForm').addEventListener('submit', async (e) => 
     const newRef = push(ref(db, 'manifests'));
     await set(newRef, manifestData);
 
-    // UPDATE STATUS OF SELECTED BOOKINGS
     for(let bId of selectedBIds) {
       await update(ref(db, 'bookings/' + bId), {
         status: "On the way",
@@ -657,7 +846,7 @@ document.getElementById('manifestForm').addEventListener('submit', async (e) => 
 
     alert("نیا گاڑی مینی فیسٹ کامیابی سے تیار ہو گیا!");
     closeManifestModal();
-    loadManifestHistory();
+    refreshAllData();
 
   } catch(err) {
     alert("Error: " + err.message);
@@ -749,7 +938,7 @@ window.viewManifestPrint = async function(mId) {
           <tr style="font-weight:800; background:#FEF3C7;">
             <td colspan="4" style="text-align:left;">کل تعداد سامان (Total Packages):</td>
             <td style="text-align:center;">${grandTotalQty}</td>
-            <td colspan="2"><b>طے شدہ کرایہ: Rs. ${m.totalFreight || 0}</b></td>
+            <td colspan="2"><b>طے شدہ کرایہ: Rs. ${m.totalFreight || 0} | کمیشن: ${m.commissionRate || 10}%</b></td>
           </tr>
         </tfoot>
       </table>
