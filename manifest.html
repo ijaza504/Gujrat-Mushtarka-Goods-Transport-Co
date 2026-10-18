@@ -157,8 +157,8 @@ th { background: #F1F5F9; color: var(--navy); }
   background: #fff;
   padding: 20px;
   border-radius: 8px;
-  width: 90%;
-  max-width: 800px;
+  width: 95%;
+  max-width: 900px;
   max-height: 90vh;
   overflow-y: auto;
 }
@@ -397,10 +397,10 @@ th { background: #F1F5F9; color: var(--navy); }
 
 <!-- VIEW MANIFEST MODAL -->
 <div id="viewManifestModal" class="modal-overlay">
-  <div class="modal-box">
-    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--navy); padding-bottom:8px; margin-bottom:12px;">
-      <h3 style="margin:0; color:var(--navy);" class="urdu">مینی فیسٹ تفصیلات (View Manifest)</h3>
-      <button type="button" class="btn btn-secondary" onclick="closeViewModal()">Close ✖</button>
+  <div class="modal-box" style="padding:15px; position:relative;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+      <button type="button" class="btn btn-secondary" onclick="closeViewModal()" style="font-size:0.85rem;">بند کریں ✖</button>
+      <h2 style="margin:0; font-weight:700; font-size:1.4rem;" class="urdu">مینی فیسٹ تفصیلات (View Manifest)</h2>
     </div>
     <div id="modalManifestContent"></div>
   </div>
@@ -892,60 +892,184 @@ async function loadManifestHistory() {
   }
 }
 
-window.viewManifestModal = function(mId) {
-  const m = window.allManifests[mId];
-  if(!m) return;
-
-  let html = `
-    <div style="font-size:0.9rem;">
-      <p><strong>مینی فیسٹ نمبر:</strong> ${m.manifestNo}</p>
-      <p><strong>گاڑی نمبر:</strong> ${m.truckNo} | <strong>ڈرائیور:</strong> ${m.driverName} (${m.driverPhone})</p>
-      <p><strong>روٹ:</strong> ${m.routeCities} | <strong>تاریخ:</strong> ${m.dispatchDate}</p>
-      <hr>
-      <h4>شامل بلٹیاں:</h4>
-      <table style="width:100%; border-collapse:collapse;" border="1">
-        <thead>
-          <tr style="background:#f1f5f9;">
-            <th>بلٹی #</th>
-            <th>بھیجنے والا</th>
-            <th>وصول کنندہ</th>
-            <th>شہر</th>
-            <th>کرایہ</th>
-          </tr>
-        </thead>
-        <tbody>
-  `;
+// HELPER TO GENERATE EXACT ORIGINAL MANIFEST HTML FOR VIEW & PRINT
+function generateManifestTemplateHTML(m) {
+  // Group bookings by destination city
+  const cityGroups = {};
+  let totalBiltiCount = 0;
 
   if(m.bookingIds && m.bookingIds.length > 0) {
     m.bookingIds.forEach(bId => {
       const b = window.allBookingsList[bId];
       if(b) {
-        html += `
-          <tr>
-            <td>${b.biltyNo}</td>
-            <td>${b.senderName}</td>
-            <td>${b.receiverName}</td>
-            <td>${b.destCity}</td>
-            <td>Rs. ${b.freightCharges || 0}</td>
-          </tr>
-        `;
+        totalBiltiCount++;
+        const city = b.destCity || 'دیگر';
+        if(!cityGroups[city]) {
+          cityGroups[city] = [];
+        }
+        cityGroups[city].push(b);
       }
     });
-  } else {
-    html += `<tr><td colspan="5" style="text-align:center;">کوئی بلٹی موجود نہیں</td></tr>`;
   }
 
-  html += `
-        </tbody>
-      </table>
-      <div style="margin-top:10px; font-weight:bold;">
-        <p>کل ڈرائیور کرایہ: Rs. ${m.totalFreight || 0}</p>
-        <p>کمپنی نیٹ کمائی: Rs. ${m.totalPayable || 0}</p>
+  let cityTablesHtml = '';
+
+  Object.keys(cityGroups).forEach(city => {
+    const list = cityGroups[city];
+    let cityFreightSum = 0;
+    let cityQtySum = 0;
+    let rowsHtml = '';
+
+    const partner = window.dynamicPartnersMap[city] || {
+      name: (city + ' Goods'),
+      address: (city + ' Adda'),
+      phone: '03001234567'
+    };
+
+    list.forEach((b, index) => {
+      const freight = Number(b.freightCharges) || 0;
+      const qty = Number(b.totalQty) || 0;
+      cityFreightSum += freight;
+      cityQtySum += qty;
+
+      rowsHtml += `
+        <tr>
+          <td style="text-align:center; border:1px solid #718096;">${index + 1}</td>
+          <td style="text-align:center; font-weight:bold; border:1px solid #718096;">${b.biltyNo}</td>
+          <td style="border:1px solid #718096;">${b.senderName}</td>
+          <td style="border:1px solid #718096;">${b.receiverName}</td>
+          <td style="text-align:center; border:1px solid #718096;">${b.receiverPhone || '0582474487'}</td>
+          <td style="text-align:center; font-weight:bold; border:1px solid #718096;">${qty}</td>
+          <td style="text-align:center; font-weight:bold; color:#0056b3; border:1px solid #718096;">Rs. ${freight}</td>
+        </tr>
+      `;
+    });
+
+    cityTablesHtml += `
+      <div style="border:1px solid #2d3748; padding:6px; margin-bottom:12px; border-radius:4px; font-size:0.85rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;" class="urdu">
+          <div><strong>منزل / شہر:</strong> <span style="color:#d9534f; font-weight:bold;">${city}</span> | <strong>پارٹنر:</strong> ${partner.name} (${partner.phone})</div>
+          <div><strong>پتہ:</strong> ${partner.address}</div>
+        </div>
+        <table style="width:100%; border-collapse:collapse; font-size:0.83rem;" border="1" borderColor="#718096">
+          <thead>
+            <tr style="background:#f8f9fa;">
+              <th style="width:30px; text-align:center;">#</th>
+              <th style="text-align:center;" class="urdu">بلٹی #</th>
+              <th class="urdu">مال بھیجنے والا</th>
+              <th class="urdu">مال وصول کنندہ</th>
+              <th style="text-align:center;" class="urdu">فون نمبر</th>
+              <th style="text-align:center;" class="urdu">تعداد</th>
+              <th style="text-align:center;" class="urdu">کرایہ (Freight)</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rowsHtml}
+            <tr style="background:#fffde7; font-weight:bold;">
+              <td colspan="5" style="text-align:center; color:#b78103;" class="urdu">اس شہر کی کل بلٹیاں (${list.length}) اور ڈرائیور وصولی کرایہ:</td>
+              <td style="text-align:center; color:#b78103;">${cityQtySum}</td>
+              <td style="text-align:center; color:#b78103;">Rs. ${cityFreightSum}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+    `;
+  });
+
+  return `
+    <div style="font-family:'Noto Nastaliq Urdu', 'Plus Jakarta Sans', serif; direction:rtl; text-align:right; color:#000; padding:10px;">
+      
+      <!-- HEADER SECTION -->
+      <div style="text-align:center; margin-bottom:8px;">
+        <h1 class="urdu" style="margin:0; font-size:1.8rem; color:#1a365d; font-weight:bold;">گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی (رجسٹرڈ)</h1>
+        <p class="urdu" style="margin:2px 0; font-size:0.9rem; color:#4a5568;">مین آفس جی ٹی روڈ، نزد پرانی فروٹ منڈی، گجرات | فون: 053-3729517</p>
+        <h3 class="urdu" style="margin:4px 0 0; font-size:1.15rem; color:#d9534f; font-weight:bold;">🚚 ٹرک لوڈنگ مینی فیسٹ و ڈرائیور روٹ شیٹ (Truck Loading Manifest)</h3>
+      </div>
+
+      <hr style="border:0; border-top:2px solid #1a365d; margin:6px 0 10px;">
+
+      <!-- MANIFEST SUMMARY BOX -->
+      <div style="border:1px solid #cbd5e1; border-radius:4px; padding:8px 12px; margin-bottom:12px; background:#fafafa; font-size:0.88rem;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px;" class="urdu">
+          <div><strong>مینی فیسٹ #:</strong> ${m.manifestNo}</div>
+          <div><strong>تاریخ:</strong> ${m.dispatchDate}</div>
+          <div><strong>گاڑی / ٹرک #:</strong> <span style="font-weight:bold;">${m.truckNo}</span></div>
+          <div><strong>کل بلٹیاں:</strong> ${totalBiltiCount} (تعداد: ${m.bookingIds ? m.bookingIds.length : 0})</div>
+        </div>
+        <div style="display:flex; justify-content:space-between;" class="urdu">
+          <div><strong>ڈرائیور کا نام:</strong> ${m.driverName}</div>
+          <div><strong>ڈرائیور موبائل:</strong> ${m.driverPhone}</div>
+          <div><strong>روٹ / ڈسٹینیشن:</strong> ${m.routeCities}</div>
+        </div>
+      </div>
+
+      <!-- CITY WISE TABLES -->
+      ${cityTablesHtml || '<p style="text-align:center;" class="urdu">کوئی بکنگ موجود نہیں ہے</p>'}
+
+      <!-- FINANCIAL SUMMARY & DRIVER SETTLEMENT TABLE -->
+      <div style="border:1px solid #2d3748; border-radius:4px; padding:6px; margin-top:15px; font-size:0.85rem;">
+        <h4 class="urdu" style="margin:0 0 6px; text-align:center; color:#1a365d; font-size:1rem; border-bottom:1px solid #cbd5e1; padding-bottom:4px;">
+          📊 فنانشل سمری اور ڈرائیور سیٹلمنٹ (Excel Calculation Table)
+        </h4>
+        <table style="width:100%; border-collapse:collapse; font-size:0.85rem;" border="1" borderColor="#cbd5e1">
+          <thead>
+            <tr style="background:#f8f9fa;" class="urdu">
+              <th>تفصیل (Description)</th>
+              <th style="width:140px; text-align:center;">رقم (Amount)</th>
+              <th>وضاحت / ریمارکس</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="urdu">کل ڈرائیور کرایہ (Total Driver Freight Collection)</td>
+              <td style="text-align:center; font-weight:bold; color:#0056b3;">Rs. ${m.totalFreight || 0}</td>
+              <td class="urdu" style="font-size:0.78rem; color:#4a5568;">ڈرائیور نے یہ رقم راستے میں یا منزل پر وصول کرنی ہے۔</td>
+            </tr>
+            <tr>
+              <td class="urdu">کل اڈہ چارجز (Total Adda Charges)</td>
+              <td style="text-align:center; font-weight:bold;">Rs. ${m.totalAdda || 0}</td>
+              <td class="urdu" style="font-size:0.78rem; color:#4a5568;">کمپنی کا اڈہ حصہ جو ڈرائیور وصول کرے گا۔</td>
+            </tr>
+            <tr>
+              <td class="urdu">کل رکشہ کرایہ / لوکل پک اپ (Total Rickshaw Fare)</td>
+              <td style="text-align:center; font-weight:bold;">Rs. ${m.totalRickshaw || 0}</td>
+              <td class="urdu" style="font-size:0.78rem; color:#4a5568;">فیکٹری سے اڈے تک کا رکشہ بھاڑا۔</td>
+            </tr>
+            <tr>
+              <td class="urdu">کل لیبر چارجز (Total Labour Charges)</td>
+              <td style="text-align:center; font-weight:bold;">Rs. ${m.totalLabour || 0}</td>
+              <td class="urdu" style="font-size:0.78rem; color:#4a5568;">لوڈنگ / ان لوڈنگ مزدوری۔</td>
+            </tr>
+            <tr>
+              <td class="urdu">کمپنی کمیشن (${m.commissionPercent || 3}% ڈرائیور کرائے پر)</td>
+              <td style="text-align:center; font-weight:bold; color:#d97706;">Rs. ${m.commissionAmount || 0}</td>
+              <td class="urdu" style="font-size:0.78rem; color:#4a5568;">کمپنی سروس کمیشن۔</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- TOTAL PAYABLE DARK BAR -->
+        <div style="background:#000; color:#fff; padding:10px; margin-top:8px; border-radius:4px; display:flex; justify-content:space-between; align-items:center; font-size:1.05rem; font-weight:bold;">
+          <span style="color:#ffc107;">Rs. ${m.totalPayable || 0}</span>
+          <span class="urdu" style="color:#d0d0d0;">کمپنی نے ڈرائیور سے کل کتنے پیسے لینے ہیں (Total Payable by Driver to Company):</span>
+        </div>
+      </div>
+
+      <!-- SIGNATURE SECTION -->
+      <div style="display:flex; justify-content:space-between; margin-top:35px; padding:0 30px; font-size:0.85rem;" class="urdu">
+        <div>----------------------------------------<br>منیجر کے دستخط:</div>
+        <div>----------------------------------------<br>ڈرائیور کے دستخط / انگوٹھا:</div>
+      </div>
+
     </div>
   `;
+}
 
-  document.getElementById('modalManifestContent').innerHTML = html;
+window.viewManifestModal = function(mId) {
+  const m = window.allManifests[mId];
+  if(!m) return;
+
+  document.getElementById('modalManifestContent').innerHTML = generateManifestTemplateHTML(m);
   document.getElementById('viewManifestModal').style.display = 'flex';
 };
 
@@ -957,104 +1081,8 @@ window.printManifestSheet = function(mId) {
   const m = window.allManifests[mId];
   if(!m) return;
 
-  let biltiRows = '';
-  let count = 1;
-
-  if(m.bookingIds && m.bookingIds.length > 0) {
-    m.bookingIds.forEach(bId => {
-      const b = window.allBookingsList[bId];
-      if(b) {
-        const partner = window.dynamicPartnersMap[b.destCity] || {
-          name: (b.destCity || '') + ' گڈز / اڈا',
-          address: (b.destCity || '') + ' اڈا',
-          phone: 'N/A'
-        };
-
-        biltiRows += `
-          <tr>
-            <td style="text-align:center; font-weight:bold;">${count++}</td>
-            <td style="text-align:center; font-weight:bold; color:#0B2545;">${b.biltyNo}</td>
-            <td>${b.senderName}</td>
-            <td><strong>${b.receiverName}</strong><br><small style="color:#475569;">${b.destCity}</small></td>
-            <td><strong>${partner.name}</strong><br><small style="color:#475569;">فون: ${partner.phone}</small></td>
-            <td style="text-align:center; font-weight:bold;">${b.totalQty || 0}</td>
-            <td style="text-align:center; font-weight:bold; color:green;">Rs. ${b.freightCharges || 0}</td>
-          </tr>
-        `;
-      }
-    });
-  }
-
   const printArea = document.getElementById('printArea');
-  printArea.innerHTML = `
-    <div style="padding:15px; font-family:'Plus Jakarta Sans', 'Noto Nastaliq Urdu', serif; direction:rtl; text-align:right; color:#000;">
-      
-      <div style="text-align:center; border-bottom:3px double #0B2545; padding-bottom:8px; margin-bottom:12px;">
-        <h1 style="margin:0; font-size:1.6rem; color:#0B2545; font-family:'Plus Jakarta Sans', sans-serif;">GUJRAT MUSHTARKA GOODS TRANSPORT CO.</h1>
-        <h2 class="urdu" style="margin:2px 0; font-size:1.2rem; color:#DC2626;">گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی (رجسٹرڈ)</h2>
-        <p class="urdu" style="margin:0; font-size:0.85rem; color:#334155;">جی ٹی روڈ بالمقابل پی ایس او پٹرول پمپ، گجرات | فون: 053-3729517 / 0300-6212852</p>
-      </div>
-
-      <div style="display:flex; justify-content:space-between; align-items:center; background:#F1F5F9; padding:8px 12px; border-radius:6px; margin-bottom:12px; border:1px solid #CBD5E1; font-size:0.88rem;">
-        <div><strong>مینی فیسٹ نمبر:</strong> <span style="color:#0B2545; font-weight:800;">${m.manifestNo}</span></div>
-        <div><strong>روانی کی تاریخ:</strong> ${m.dispatchDate}</div>
-        <div><strong>گاڑی / ٹرک نمبر:</strong> <span style="font-weight:800;">${m.truckNo}</span></div>
-      </div>
-
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:12px; font-size:0.85rem;">
-        <div style="border:1px solid #CBD5E1; padding:8px; border-radius:5px;">
-          <strong>ڈرائیور کی تفاصیل:</strong><br>
-          نام: ${m.driverName}<br>
-          موبائل نمبر: ${m.driverPhone}
-        </div>
-        <div style="border:1px solid #CBD5E1; padding:8px; border-radius:5px;">
-          <strong>روٹ تفاصیل:</strong><br>
-          روٹ / ڈسٹینیشن: ${m.routeCities}<br>
-          کمیشن شرح: ${m.commissionPercent}%
-        </div>
-      </div>
-
-      <h3 class="urdu" style="margin:10px 0 5px; font-size:1rem; color:#0B2545; border-bottom:1px solid #0B2545; padding-bottom:3px;">📦 گاڑی میں لوڈ کی گئی تمام بلٹیاں و سامان کا چالان</h3>
-
-      <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:0.8rem;" border="1">
-        <thead>
-          <tr style="background:#E2E8F0; color:#0B2545;">
-            <th style="width:30px; text-align:center;">#</th>
-            <th style="text-align:center;">بلٹی نمبر</th>
-            <th>مال بھیجنے والا (Sender)</th>
-            <th>وصول کنندہ (Receiver)</th>
-            <th>مقامی شراکت دار / اڈا (Partner Adda)</th>
-            <th style="text-align:center;">تعداد (Qty)</th>
-            <th style="text-align:center;">کرایہ (Freight)</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${biltiRows || '<tr><td colspan="7" style="text-align:center;">کوئی مال لوڈ نہیں ہے۔</td></tr>'}
-        </tbody>
-      </table>
-
-      <div style="background:#EFF6FF; border:1px solid #BFDBFE; padding:10px; border-radius:6px; margin-bottom:15px; font-size:0.88rem;">
-        <div style="font-weight:800; color:#0B2545; margin-bottom:6px; border-bottom:1px solid #BFDBFE; padding-bottom:4px;" class="urdu">💰 ڈرائیور سیٹلمنٹ و کمپنی صاف حساب کتاب (Settlement Summary)</div>
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:6px; font-size:0.82rem;">
-          <div>کل ڈرائیور کرایہ: <strong>Rs. ${m.totalFreight || 0}</strong></div>
-          <div>اڈا چارجز: <strong>Rs. ${m.totalAdda || 0}</strong></div>
-          <div>رکشہ کرایہ: <strong>Rs. ${m.totalRickshaw || 0}</strong></div>
-          <div>لیبر چارجز: <strong>Rs. ${m.totalLabour || 0}</strong></div>
-          <div>کمیشن رقم (${m.commissionPercent}%): <strong>Rs. ${m.commissionAmount || 0}</strong></div>
-        </div>
-        <div style="margin-top:8px; border-top:1px dashed #93C5FD; padding-top:6px; display:flex; justify-content:space-between; font-size:0.95rem; font-weight:800; color:#15803D;">
-          <span>کمپنی وصولی واجب الادا (Total Driver Payable to Company):</span>
-          <span>Rs. ${m.totalPayable || 0}</span>
-        </div>
-      </div>
-
-      <div style="display:flex; justify-content:space-between; margin-top:35px; padding:0 20px; font-size:0.85rem;" class="urdu">
-        <div style="text-align:center; border-top:1px solid #000; width:200px; padding-top:4px;">دستخط منیجر / ایڈمن</div>
-        <div style="text-align:center; border-top:1px solid #000; width:200px; padding-top:4px;">دستخط ڈرائیور / وصول کنندہ</div>
-      </div>
-
-    </div>
-  `;
+  printArea.innerHTML = generateManifestTemplateHTML(m);
 
   window.print();
 };
