@@ -124,7 +124,7 @@ input, select {
 .btn-info { background: #0284C7; color: #fff; }
 
 table { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 0.82rem; }
-th, td { border: 1px solid var(--border); padding: 4px 6px; text-align: right; }
+th, td { border: 1px solid var(--border); padding: 5px 6px; text-align: right; }
 th { background: #F1F5F9; color: var(--navy); }
 
 .card {
@@ -287,14 +287,15 @@ th { background: #F1F5F9; color: var(--navy); }
               <th class="urdu">مینی فیسٹ #</th>
               <th class="urdu">گاڑی نمبر</th>
               <th class="urdu">ڈرائیور و موبائل</th>
+              <th class="urdu">روٹ / ڈسٹینیشن</th>
               <th class="urdu">بلٹیاں</th>
-              <th class="urdu">کل ڈرائیور کرایه</th>
-              <th class="urdu">کمپنی کی صاف کمائی</th>
+              <th class="urdu">کل بلٹی رقم</th>
+              <th class="urdu">اسٹیٹس</th>
               <th class="urdu">ایکشن</th>
             </tr>
           </thead>
           <tbody id="manifestHistoryBody">
-            <tr><td colspan="8" style="text-align:center;">ریکارڈ لوڈ ہو رہا ہے...</td></tr>
+            <tr><td colspan="9" style="text-align:center;">ریکارڈ لوڈ ہو رہا ہے...</td></tr>
           </tbody>
         </table>
       </div>
@@ -398,8 +399,11 @@ th { background: #F1F5F9; color: var(--navy); }
 <!-- VIEW MANIFEST MODAL -->
 <div id="viewManifestModal" class="modal-overlay">
   <div class="modal-box" style="padding:12px; position:relative;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-      <button type="button" class="btn btn-secondary" onclick="closeViewModal()" style="font-size:0.85rem; padding:4px 10px;">بند کریں ✖</button>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+      <div style="display:flex; gap:6px;">
+        <button type="button" class="btn btn-secondary" onclick="closeViewModal()" style="font-size:0.85rem; padding:4px 10px;">بند کریں ✖</button>
+        <button type="button" class="btn btn-primary" id="viewModalPrintBtn" style="font-size:0.85rem; padding:4px 12px;">🖨️ Print</button>
+      </div>
       <h2 style="margin:0; font-weight:700; font-size:1.3rem;" class="urdu">مینی فیسٹ تفصیلات (View Manifest)</h2>
     </div>
     <div id="modalManifestContent"></div>
@@ -715,6 +719,7 @@ window.saveAndDispatchManifest = async function() {
         commissionAmount: commissionAmount,
         totalPayable: totalPayable,
         bookingIds: selectedBookingIds,
+        status: oldManifest?.status || "On the way",
         updatedAt: new Date().toISOString()
       };
 
@@ -751,6 +756,7 @@ window.saveAndDispatchManifest = async function() {
         commissionAmount: commissionAmount,
         totalPayable: totalPayable,
         bookingIds: selectedBookingIds,
+        status: "On the way",
         createdAt: new Date().toISOString()
       };
 
@@ -852,7 +858,7 @@ async function loadManifestHistory() {
   try {
     const snap = await get(ref(db, 'manifests'));
     if(!snap.exists()) {
-      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">کوئی پرانا ریکارڈ موجود نہیں ہے۔</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;">کوئی پرانا ریکارڈ موجود نہیں ہے۔</td></tr>';
       return;
     }
 
@@ -864,20 +870,27 @@ async function loadManifestHistory() {
       const m = child.val();
       window.allManifests[mId] = m;
 
+      let currentStatus = m.status || "On the way";
+      let statusBadge = `<span style="background:#DBEAFE; color:#1E40AF; padding:2px 8px; border-radius:4px; font-weight:700;">${currentStatus}</span>`;
+
+      if(currentStatus.includes("warehouse") || currentStatus.includes("Received")) {
+        statusBadge = `<span style="background:#D1FAE5; color:#065F46; padding:2px 8px; border-radius:4px; font-weight:700;">${currentStatus}</span>`;
+      }
+
       tbody.innerHTML += `
         <tr>
           <td>${m.dispatchDate}</td>
           <td><strong>${m.manifestNo}</strong></td>
           <td><strong style="color:navy;">${m.truckNo}</strong></td>
           <td>${m.driverName} (${m.driverPhone})</td>
+          <td><strong>${m.routeCities || 'N/A'}</strong></td>
           <td>${m.bookingIds ? m.bookingIds.length : 0}</td>
           <td><strong style="color:green;">Rs. ${m.totalFreight || 0}</strong></td>
-          <td><strong style="color:#10B981;">Rs. ${m.totalPayable || 0}</strong></td>
+          <td>${statusBadge}</td>
           <td>
             <div style="display:flex; gap:4px; flex-wrap:wrap;">
               <button class="btn btn-info" onclick="viewManifestModal('${mId}')">👁️ View</button>
               <button class="btn btn-warning" onclick="editManifest('${mId}')">📝 Edit</button>
-              <button class="btn btn-primary" onclick="printManifestSheet('${mId}')">🖨️ Print</button>
               <button class="btn btn-danger" onclick="deleteManifest('${mId}')">🗑️ Delete</button>
             </div>
           </td>
@@ -888,7 +901,7 @@ async function loadManifestHistory() {
     calculateDashboardStats();
 
   } catch(e) {
-    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:red;">ریکارڈ لوڈ کرنے میں مسئلہ: ' + e.message + '</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:red;">ریکارڈ لوڈ کرنے میں مسئلہ: ' + e.message + '</td></tr>';
   }
 }
 
@@ -932,14 +945,14 @@ function generateManifestTemplateHTML(m) {
       cityQtySum += qty;
 
       rowsHtml += `
-        <tr style="height:22px;">
-          <td style="text-align:center; border:1px solid #718096; padding:2px 4px;">${index + 1}</td>
-          <td style="text-align:center; font-weight:bold; border:1px solid #718096; padding:2px 4px;">${b.biltyNo}</td>
-          <td style="border:1px solid #718096; padding:2px 6px;">${b.senderName}</td>
-          <td style="border:1px solid #718096; padding:2px 6px;">${b.receiverName}</td>
-          <td style="text-align:center; border:1px solid #718096; padding:2px 4px;">${b.receiverPhone || '0582474487'}</td>
-          <td style="text-align:center; font-weight:bold; border:1px solid #718096; padding:2px 4px;">${qty}</td>
-          <td style="text-align:center; font-weight:bold; color:#0056b3; border:1px solid #718096; padding:2px 4px;">Rs. ${freight}</td>
+        <tr style="height:26px;">
+          <td style="text-align:center; border:1px solid #718096; padding:4px 5px;">${index + 1}</td>
+          <td style="text-align:center; font-weight:bold; border:1px solid #718096; padding:4px 5px;">${b.biltyNo}</td>
+          <td style="border:1px solid #718096; padding:4px 6px;">${b.senderName}</td>
+          <td style="border:1px solid #718096; padding:4px 6px;">${b.receiverName}</td>
+          <td style="text-align:center; border:1px solid #718096; padding:4px 5px;">${b.receiverPhone || '0582474487'}</td>
+          <td style="text-align:center; font-weight:bold; border:1px solid #718096; padding:4px 5px;">${qty}</td>
+          <td style="text-align:center; font-weight:bold; color:#0056b3; border:1px solid #718096; padding:4px 5px;">Rs. ${freight}</td>
         </tr>
       `;
     });
@@ -952,22 +965,22 @@ function generateManifestTemplateHTML(m) {
         </div>
         <table style="width:100%; border-collapse:collapse; font-size:0.82rem;" border="1" borderColor="#718096">
           <thead>
-            <tr style="background:#f8f9fa; height:24px;">
-              <th style="width:25px; text-align:center; padding:2px 4px;">#</th>
-              <th style="text-align:center; padding:2px 4px;" class="urdu">بلٹی #</th>
-              <th style="padding:2px 6px;" class="urdu">مال بھیجنے والا</th>
-              <th style="padding:2px 6px;" class="urdu">مال وصول کنندہ</th>
-              <th style="text-align:center; padding:2px 4px;" class="urdu">فون نمبر</th>
-              <th style="text-align:center; padding:2px 4px;" class="urdu">تعداد</th>
-              <th style="text-align:center; padding:2px 4px;" class="urdu">کرایہ (Freight)</th>
+            <tr style="background:#f8f9fa; height:26px;">
+              <th style="width:25px; text-align:center; padding:3px 5px;">#</th>
+              <th style="text-align:center; padding:3px 5px;" class="urdu">بلٹی #</th>
+              <th style="padding:3px 6px;" class="urdu">مال بھیجنے والا</th>
+              <th style="padding:3px 6px;" class="urdu">مال وصول کنندہ</th>
+              <th style="text-align:center; padding:3px 5px;" class="urdu">فون نمبر</th>
+              <th style="text-align:center; padding:3px 5px;" class="urdu">تعداد</th>
+              <th style="text-align:center; padding:3px 5px;" class="urdu">کرایہ (Freight)</th>
             </tr>
           </thead>
           <tbody>
             ${rowsHtml}
-            <tr style="background:#fffde7; font-weight:bold; height:24px;">
-              <td colspan="5" style="text-align:center; color:#b78103; padding:2px 4px;" class="urdu">اس شہر کی کل بلٹیاں (${list.length}) اور ڈرائیور وصولی کرایہ:</td>
-              <td style="text-align:center; color:#b78103; padding:2px 4px;">${cityQtySum}</td>
-              <td style="text-align:center; color:#b78103; padding:2px 4px;">Rs. ${cityFreightSum}</td>
+            <tr style="background:#fffde7; font-weight:bold; height:26px;">
+              <td colspan="5" style="text-align:center; color:#b78103; padding:3px 5px;" class="urdu">اس شہر کی کل بلٹیاں (${list.length}) اور ڈرائیور وصولی کرایہ:</td>
+              <td style="text-align:center; color:#b78103; padding:3px 5px;">${cityQtySum}</td>
+              <td style="text-align:center; color:#b78103; padding:3px 5px;">Rs. ${cityFreightSum}</td>
             </tr>
           </tbody>
         </table>
@@ -1012,34 +1025,34 @@ function generateManifestTemplateHTML(m) {
         </h4>
         <table style="width:100%; border-collapse:collapse; font-size:0.82rem;" border="1" borderColor="#cbd5e1">
           <thead>
-            <tr style="background:#f8f9fa; height:22px;" class="urdu">
+            <tr style="background:#f8f9fa; height:24px;" class="urdu">
               <th style="padding:2px 4px;">تفصیل (Description)</th>
               <th style="width:130px; text-align:center; padding:2px 4px;">رقم (Amount)</th>
               <th style="padding:2px 4px;">وضاحت / ریمارکس</th>
             </tr>
           </thead>
           <tbody>
-            <tr style="height:20px;">
+            <tr style="height:22px;">
               <td class="urdu" style="padding:2px 4px;">کل ڈرائیور کرایہ (Total Driver Freight Collection)</td>
               <td style="text-align:center; font-weight:bold; color:#0056b3; padding:2px 4px;">Rs. ${m.totalFreight || 0}</td>
               <td class="urdu" style="font-size:0.75rem; color:#4a5568; padding:2px 4px;">ڈرائیور نے یہ رقم راستے میں یا منزل پر وصول کرنی ہے۔</td>
             </tr>
-            <tr style="height:20px;">
+            <tr style="height:22px;">
               <td class="urdu" style="padding:2px 4px;">کل اڈہ چارجز (Total Adda Charges)</td>
               <td style="text-align:center; font-weight:bold; padding:2px 4px;">Rs. ${m.totalAdda || 0}</td>
               <td class="urdu" style="font-size:0.75rem; color:#4a5568; padding:2px 4px;">کمپنی کا اڈہ حصہ جو ڈرائیور وصول کرے گا۔</td>
             </tr>
-            <tr style="height:20px;">
+            <tr style="height:22px;">
               <td class="urdu" style="padding:2px 4px;">کل رکشہ کرایہ / لوکل پک اپ (Total Rickshaw Fare)</td>
               <td style="text-align:center; font-weight:bold; padding:2px 4px;">Rs. ${m.totalRickshaw || 0}</td>
               <td class="urdu" style="font-size:0.75rem; color:#4a5568; padding:2px 4px;">فیکٹری سے اڈے تک کا رکشہ بھاڑا۔</td>
             </tr>
-            <tr style="height:20px;">
+            <tr style="height:22px;">
               <td class="urdu" style="padding:2px 4px;">کل لیبر چارجز (Total Labour Charges)</td>
               <td style="text-align:center; font-weight:bold; padding:2px 4px;">Rs. ${m.totalLabour || 0}</td>
               <td class="urdu" style="font-size:0.75rem; color:#4a5568; padding:2px 4px;">لوڈنگ / ان لوڈنگ مزدوری۔</td>
             </tr>
-            <tr style="height:20px;">
+            <tr style="height:22px;">
               <td class="urdu" style="padding:2px 4px;">کمپنی کمیشن (${m.commissionPercent || 3}% ڈرائیور کرائے پر)</td>
               <td style="text-align:center; font-weight:bold; color:#d97706; padding:2px 4px;">Rs. ${m.commissionAmount || 0}</td>
               <td class="urdu" style="font-size:0.75rem; color:#4a5568; padding:2px 4px;">کمپنی سروس کمیشن۔</td>
@@ -1069,6 +1082,12 @@ window.viewManifestModal = function(mId) {
   if(!m) return;
 
   document.getElementById('modalManifestContent').innerHTML = generateManifestTemplateHTML(m);
+  
+  const printBtn = document.getElementById('viewModalPrintBtn');
+  printBtn.onclick = function() {
+    printManifestSheet(mId);
+  };
+
   document.getElementById('viewManifestModal').style.display = 'flex';
 };
 
