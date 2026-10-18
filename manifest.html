@@ -18,7 +18,7 @@
 }
 
 body {
-  font-family: 'Plus Jakarta Sans', 'Noto Nastaliq Urdu', serif;
+  font-family: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Plus Jakarta Sans', serif;
   background-color: var(--light-bg);
   margin: 0;
   padding: 12px;
@@ -27,7 +27,7 @@ body {
   text-align: right;
 }
 
-.urdu { font-family: 'Noto Nastaliq Urdu', serif; line-height: 1.5 !important; }
+.urdu { font-family: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif; line-height: 1.4 !important; }
 
 .auth-box {
   max-width: 400px;
@@ -124,7 +124,7 @@ input, select {
 .btn-info { background: #0284C7; color: #fff; }
 
 table { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 0.82rem; }
-th, td { border: 1px solid var(--border); padding: 5px 8px; text-align: right; }
+th, td { border: 1px solid var(--border); padding: 4px 6px; text-align: right; }
 th { background: #F1F5F9; color: var(--navy); }
 
 .card {
@@ -155,11 +155,11 @@ th { background: #F1F5F9; color: var(--navy); }
 }
 .modal-box {
   background: #fff;
-  padding: 20px;
+  padding: 15px;
   border-radius: 8px;
   width: 95%;
   max-width: 900px;
-  max-height: 90vh;
+  max-height: 92vh;
   overflow-y: auto;
 }
 
@@ -173,7 +173,7 @@ th { background: #F1F5F9; color: var(--navy); }
     position: absolute;
     left: 0; top: 0; width: 100%; margin: 0; padding: 0;
   }
-  @page { size: A4; margin: 6mm 6mm; }
+  @page { size: A4; margin: 4mm 4mm; }
   table { page-break-inside: auto; }
   tr { page-break-inside: avoid; page-break-after: auto; }
   thead { display: table-header-group; }
@@ -397,10 +397,10 @@ th { background: #F1F5F9; color: var(--navy); }
 
 <!-- VIEW MANIFEST MODAL -->
 <div id="viewManifestModal" class="modal-overlay">
-  <div class="modal-box" style="padding:15px; position:relative;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-      <button type="button" class="btn btn-secondary" onclick="closeViewModal()" style="font-size:0.85rem;">بند کریں ✖</button>
-      <h2 style="margin:0; font-weight:700; font-size:1.4rem;" class="urdu">مینی فیسٹ تفصیلات (View Manifest)</h2>
+  <div class="modal-box" style="padding:12px; position:relative;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+      <button type="button" class="btn btn-secondary" onclick="closeViewModal()" style="font-size:0.85rem; padding:4px 10px;">بند کریں ✖</button>
+      <h2 style="margin:0; font-weight:700; font-size:1.3rem;" class="urdu">مینی فیسٹ تفصیلات (View Manifest)</h2>
     </div>
     <div id="modalManifestContent"></div>
   </div>
@@ -892,9 +892,8 @@ async function loadManifestHistory() {
   }
 }
 
-// HELPER TO GENERATE EXACT ORIGINAL MANIFEST HTML FOR VIEW & PRINT
+// HELPER TO GENERATE COMPACT EXACT ORIGINAL MANIFEST HTML FOR VIEW & PRINT
 function generateManifestTemplateHTML(m) {
-  // Group bookings by destination city
   const cityGroups = {};
   let totalBiltiCount = 0;
 
@@ -933,42 +932,42 @@ function generateManifestTemplateHTML(m) {
       cityQtySum += qty;
 
       rowsHtml += `
-        <tr>
-          <td style="text-align:center; border:1px solid #718096;">${index + 1}</td>
-          <td style="text-align:center; font-weight:bold; border:1px solid #718096;">${b.biltyNo}</td>
-          <td style="border:1px solid #718096;">${b.senderName}</td>
-          <td style="border:1px solid #718096;">${b.receiverName}</td>
-          <td style="text-align:center; border:1px solid #718096;">${b.receiverPhone || '0582474487'}</td>
-          <td style="text-align:center; font-weight:bold; border:1px solid #718096;">${qty}</td>
-          <td style="text-align:center; font-weight:bold; color:#0056b3; border:1px solid #718096;">Rs. ${freight}</td>
+        <tr style="height:22px;">
+          <td style="text-align:center; border:1px solid #718096; padding:2px 4px;">${index + 1}</td>
+          <td style="text-align:center; font-weight:bold; border:1px solid #718096; padding:2px 4px;">${b.biltyNo}</td>
+          <td style="border:1px solid #718096; padding:2px 6px;">${b.senderName}</td>
+          <td style="border:1px solid #718096; padding:2px 6px;">${b.receiverName}</td>
+          <td style="text-align:center; border:1px solid #718096; padding:2px 4px;">${b.receiverPhone || '0582474487'}</td>
+          <td style="text-align:center; font-weight:bold; border:1px solid #718096; padding:2px 4px;">${qty}</td>
+          <td style="text-align:center; font-weight:bold; color:#0056b3; border:1px solid #718096; padding:2px 4px;">Rs. ${freight}</td>
         </tr>
       `;
     });
 
     cityTablesHtml += `
-      <div style="border:1px solid #2d3748; padding:6px; margin-bottom:12px; border-radius:4px; font-size:0.85rem;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;" class="urdu">
+      <div style="border:1px solid #2d3748; padding:4px 6px; margin-bottom:8px; border-radius:4px; font-size:0.83rem; page-break-inside:avoid;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;" class="urdu">
           <div><strong>منزل / شہر:</strong> <span style="color:#d9534f; font-weight:bold;">${city}</span> | <strong>پارٹنر:</strong> ${partner.name} (${partner.phone})</div>
           <div><strong>پتہ:</strong> ${partner.address}</div>
         </div>
-        <table style="width:100%; border-collapse:collapse; font-size:0.83rem;" border="1" borderColor="#718096">
+        <table style="width:100%; border-collapse:collapse; font-size:0.82rem;" border="1" borderColor="#718096">
           <thead>
-            <tr style="background:#f8f9fa;">
-              <th style="width:30px; text-align:center;">#</th>
-              <th style="text-align:center;" class="urdu">بلٹی #</th>
-              <th class="urdu">مال بھیجنے والا</th>
-              <th class="urdu">مال وصول کنندہ</th>
-              <th style="text-align:center;" class="urdu">فون نمبر</th>
-              <th style="text-align:center;" class="urdu">تعداد</th>
-              <th style="text-align:center;" class="urdu">کرایہ (Freight)</th>
+            <tr style="background:#f8f9fa; height:24px;">
+              <th style="width:25px; text-align:center; padding:2px 4px;">#</th>
+              <th style="text-align:center; padding:2px 4px;" class="urdu">بلٹی #</th>
+              <th style="padding:2px 6px;" class="urdu">مال بھیجنے والا</th>
+              <th style="padding:2px 6px;" class="urdu">مال وصول کنندہ</th>
+              <th style="text-align:center; padding:2px 4px;" class="urdu">فون نمبر</th>
+              <th style="text-align:center; padding:2px 4px;" class="urdu">تعداد</th>
+              <th style="text-align:center; padding:2px 4px;" class="urdu">کرایہ (Freight)</th>
             </tr>
           </thead>
           <tbody>
             ${rowsHtml}
-            <tr style="background:#fffde7; font-weight:bold;">
-              <td colspan="5" style="text-align:center; color:#b78103;" class="urdu">اس شہر کی کل بلٹیاں (${list.length}) اور ڈرائیور وصولی کرایہ:</td>
-              <td style="text-align:center; color:#b78103;">${cityQtySum}</td>
-              <td style="text-align:center; color:#b78103;">Rs. ${cityFreightSum}</td>
+            <tr style="background:#fffde7; font-weight:bold; height:24px;">
+              <td colspan="5" style="text-align:center; color:#b78103; padding:2px 4px;" class="urdu">اس شہر کی کل بلٹیاں (${list.length}) اور ڈرائیور وصولی کرایہ:</td>
+              <td style="text-align:center; color:#b78103; padding:2px 4px;">${cityQtySum}</td>
+              <td style="text-align:center; color:#b78103; padding:2px 4px;">Rs. ${cityFreightSum}</td>
             </tr>
           </tbody>
         </table>
@@ -977,20 +976,20 @@ function generateManifestTemplateHTML(m) {
   });
 
   return `
-    <div style="font-family:'Noto Nastaliq Urdu', 'Plus Jakarta Sans', serif; direction:rtl; text-align:right; color:#000; padding:10px;">
+    <div style="font-family:'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Plus Jakarta Sans', serif; direction:rtl; text-align:right; color:#000; padding:6px; line-height:1.3;">
       
       <!-- HEADER SECTION -->
-      <div style="text-align:center; margin-bottom:8px;">
-        <h1 class="urdu" style="margin:0; font-size:1.8rem; color:#1a365d; font-weight:bold;">گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی (رجسٹرڈ)</h1>
-        <p class="urdu" style="margin:2px 0; font-size:0.9rem; color:#4a5568;">مین آفس جی ٹی روڈ، نزد پرانی فروٹ منڈی، گجرات | فون: 053-3729517</p>
-        <h3 class="urdu" style="margin:4px 0 0; font-size:1.15rem; color:#d9534f; font-weight:bold;">🚚 ٹرک لوڈنگ مینی فیسٹ و ڈرائیور روٹ شیٹ (Truck Loading Manifest)</h3>
+      <div style="text-align:center; margin-bottom:4px;">
+        <h1 class="urdu" style="margin:0; font-size:1.6rem; color:#1a365d; font-weight:bold;">گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی (رجسٹرڈ)</h1>
+        <p class="urdu" style="margin:1px 0; font-size:0.85rem; color:#4a5568;">مین آفس جی ٹی روڈ، نزد پرانی فروٹ منڈی، گجرات | فون: 053-3729517</p>
+        <h3 class="urdu" style="margin:2px 0 0; font-size:1.1rem; color:#d9534f; font-weight:bold;">🚚 ٹرک لوڈنگ مینی فیسٹ و ڈرائیور روٹ شیٹ (Truck Loading Manifest)</h3>
       </div>
 
-      <hr style="border:0; border-top:2px solid #1a365d; margin:6px 0 10px;">
+      <hr style="border:0; border-top:2px solid #1a365d; margin:4px 0 6px;">
 
       <!-- MANIFEST SUMMARY BOX -->
-      <div style="border:1px solid #cbd5e1; border-radius:4px; padding:8px 12px; margin-bottom:12px; background:#fafafa; font-size:0.88rem;">
-        <div style="display:flex; justify-content:space-between; margin-bottom:6px;" class="urdu">
+      <div style="border:1px solid #cbd5e1; border-radius:4px; padding:6px 10px; margin-bottom:8px; background:#fafafa; font-size:0.85rem; page-break-inside:avoid;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;" class="urdu">
           <div><strong>مینی فیسٹ #:</strong> ${m.manifestNo}</div>
           <div><strong>تاریخ:</strong> ${m.dispatchDate}</div>
           <div><strong>گاڑی / ٹرک #:</strong> <span style="font-weight:bold;">${m.truckNo}</span></div>
@@ -1007,56 +1006,56 @@ function generateManifestTemplateHTML(m) {
       ${cityTablesHtml || '<p style="text-align:center;" class="urdu">کوئی بکنگ موجود نہیں ہے</p>'}
 
       <!-- FINANCIAL SUMMARY & DRIVER SETTLEMENT TABLE -->
-      <div style="border:1px solid #2d3748; border-radius:4px; padding:6px; margin-top:15px; font-size:0.85rem;">
-        <h4 class="urdu" style="margin:0 0 6px; text-align:center; color:#1a365d; font-size:1rem; border-bottom:1px solid #cbd5e1; padding-bottom:4px;">
+      <div style="border:1px solid #2d3748; border-radius:4px; padding:4px 6px; margin-top:8px; font-size:0.82rem; page-break-inside:avoid;">
+        <h4 class="urdu" style="margin:0 0 4px; text-align:center; color:#1a365d; font-size:0.95rem; border-bottom:1px solid #cbd5e1; padding-bottom:2px;">
           📊 فنانشل سمری اور ڈرائیور سیٹلمنٹ (Excel Calculation Table)
         </h4>
-        <table style="width:100%; border-collapse:collapse; font-size:0.85rem;" border="1" borderColor="#cbd5e1">
+        <table style="width:100%; border-collapse:collapse; font-size:0.82rem;" border="1" borderColor="#cbd5e1">
           <thead>
-            <tr style="background:#f8f9fa;" class="urdu">
-              <th>تفصیل (Description)</th>
-              <th style="width:140px; text-align:center;">رقم (Amount)</th>
-              <th>وضاحت / ریمارکس</th>
+            <tr style="background:#f8f9fa; height:22px;" class="urdu">
+              <th style="padding:2px 4px;">تفصیل (Description)</th>
+              <th style="width:130px; text-align:center; padding:2px 4px;">رقم (Amount)</th>
+              <th style="padding:2px 4px;">وضاحت / ریمارکس</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td class="urdu">کل ڈرائیور کرایہ (Total Driver Freight Collection)</td>
-              <td style="text-align:center; font-weight:bold; color:#0056b3;">Rs. ${m.totalFreight || 0}</td>
-              <td class="urdu" style="font-size:0.78rem; color:#4a5568;">ڈرائیور نے یہ رقم راستے میں یا منزل پر وصول کرنی ہے۔</td>
+            <tr style="height:20px;">
+              <td class="urdu" style="padding:2px 4px;">کل ڈرائیور کرایہ (Total Driver Freight Collection)</td>
+              <td style="text-align:center; font-weight:bold; color:#0056b3; padding:2px 4px;">Rs. ${m.totalFreight || 0}</td>
+              <td class="urdu" style="font-size:0.75rem; color:#4a5568; padding:2px 4px;">ڈرائیور نے یہ رقم راستے میں یا منزل پر وصول کرنی ہے۔</td>
             </tr>
-            <tr>
-              <td class="urdu">کل اڈہ چارجز (Total Adda Charges)</td>
-              <td style="text-align:center; font-weight:bold;">Rs. ${m.totalAdda || 0}</td>
-              <td class="urdu" style="font-size:0.78rem; color:#4a5568;">کمپنی کا اڈہ حصہ جو ڈرائیور وصول کرے گا۔</td>
+            <tr style="height:20px;">
+              <td class="urdu" style="padding:2px 4px;">کل اڈہ چارجز (Total Adda Charges)</td>
+              <td style="text-align:center; font-weight:bold; padding:2px 4px;">Rs. ${m.totalAdda || 0}</td>
+              <td class="urdu" style="font-size:0.75rem; color:#4a5568; padding:2px 4px;">کمپنی کا اڈہ حصہ جو ڈرائیور وصول کرے گا۔</td>
             </tr>
-            <tr>
-              <td class="urdu">کل رکشہ کرایہ / لوکل پک اپ (Total Rickshaw Fare)</td>
-              <td style="text-align:center; font-weight:bold;">Rs. ${m.totalRickshaw || 0}</td>
-              <td class="urdu" style="font-size:0.78rem; color:#4a5568;">فیکٹری سے اڈے تک کا رکشہ بھاڑا۔</td>
+            <tr style="height:20px;">
+              <td class="urdu" style="padding:2px 4px;">کل رکشہ کرایہ / لوکل پک اپ (Total Rickshaw Fare)</td>
+              <td style="text-align:center; font-weight:bold; padding:2px 4px;">Rs. ${m.totalRickshaw || 0}</td>
+              <td class="urdu" style="font-size:0.75rem; color:#4a5568; padding:2px 4px;">فیکٹری سے اڈے تک کا رکشہ بھاڑا۔</td>
             </tr>
-            <tr>
-              <td class="urdu">کل لیبر چارجز (Total Labour Charges)</td>
-              <td style="text-align:center; font-weight:bold;">Rs. ${m.totalLabour || 0}</td>
-              <td class="urdu" style="font-size:0.78rem; color:#4a5568;">لوڈنگ / ان لوڈنگ مزدوری۔</td>
+            <tr style="height:20px;">
+              <td class="urdu" style="padding:2px 4px;">کل لیبر چارجز (Total Labour Charges)</td>
+              <td style="text-align:center; font-weight:bold; padding:2px 4px;">Rs. ${m.totalLabour || 0}</td>
+              <td class="urdu" style="font-size:0.75rem; color:#4a5568; padding:2px 4px;">لوڈنگ / ان لوڈنگ مزدوری۔</td>
             </tr>
-            <tr>
-              <td class="urdu">کمپنی کمیشن (${m.commissionPercent || 3}% ڈرائیور کرائے پر)</td>
-              <td style="text-align:center; font-weight:bold; color:#d97706;">Rs. ${m.commissionAmount || 0}</td>
-              <td class="urdu" style="font-size:0.78rem; color:#4a5568;">کمپنی سروس کمیشن۔</td>
+            <tr style="height:20px;">
+              <td class="urdu" style="padding:2px 4px;">کمپنی کمیشن (${m.commissionPercent || 3}% ڈرائیور کرائے پر)</td>
+              <td style="text-align:center; font-weight:bold; color:#d97706; padding:2px 4px;">Rs. ${m.commissionAmount || 0}</td>
+              <td class="urdu" style="font-size:0.75rem; color:#4a5568; padding:2px 4px;">کمپنی سروس کمیشن۔</td>
             </tr>
           </tbody>
         </table>
 
         <!-- TOTAL PAYABLE DARK BAR -->
-        <div style="background:#000; color:#fff; padding:10px; margin-top:8px; border-radius:4px; display:flex; justify-content:space-between; align-items:center; font-size:1.05rem; font-weight:bold;">
+        <div style="background:#000; color:#fff; padding:6px 10px; margin-top:6px; border-radius:4px; display:flex; justify-content:space-between; align-items:center; font-size:1rem; font-weight:bold;">
           <span style="color:#ffc107;">Rs. ${m.totalPayable || 0}</span>
           <span class="urdu" style="color:#d0d0d0;">کمپنی نے ڈرائیور سے کل کتنے پیسے لینے ہیں (Total Payable by Driver to Company):</span>
         </div>
       </div>
 
       <!-- SIGNATURE SECTION -->
-      <div style="display:flex; justify-content:space-between; margin-top:35px; padding:0 30px; font-size:0.85rem;" class="urdu">
+      <div style="display:flex; justify-content:space-between; margin-top:25px; padding:0 25px; font-size:0.82rem; page-break-inside:avoid;" class="urdu">
         <div>----------------------------------------<br>منیجر کے دستخط:</div>
         <div>----------------------------------------<br>ڈرائیور کے دستخط / انگوٹھا:</div>
       </div>
