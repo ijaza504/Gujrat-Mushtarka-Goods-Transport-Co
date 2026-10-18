@@ -289,7 +289,7 @@ th { background: #F1F5F9; color: var(--navy); }
               <th class="urdu">ڈرائیور و موبائل</th>
               <th class="urdu">روٹ / ڈسٹینیشن</th>
               <th class="urdu">بلٹیاں</th>
-              <th class="urdu">کل بلٹی رقم</th>
+              <th class="urdu">کل بلٹی رقم (Total Bilti Amount)</th>
               <th class="urdu">اسٹیٹس</th>
               <th class="urdu">ایکشن</th>
             </tr>
@@ -664,7 +664,7 @@ window.saveAndDispatchManifest = async function() {
   }
 
   const selectedBookingIds = [];
-  let totalFreight = 0, totalAdda = 0, totalRickshaw = 0, totalLabour = 0;
+  let totalFreight = 0, totalAdda = 0, totalRickshaw = 0, totalLabour = 0, totalBiltiAmt = 0;
 
   selectedCheckboxes.forEach(chk => {
     const bId = chk.value;
@@ -675,6 +675,7 @@ window.saveAndDispatchManifest = async function() {
       totalAdda += Number(b.addaCharges) || 0;
       totalRickshaw += Number(b.rickshawFare) || 0;
       totalLabour += Number(b.labourCharges) || 0;
+      totalBiltiAmt += Number(b.netTotal || b.freightCharges) || 0;
     }
   });
 
@@ -718,6 +719,7 @@ window.saveAndDispatchManifest = async function() {
         commissionPercent: commissionPercent,
         commissionAmount: commissionAmount,
         totalPayable: totalPayable,
+        totalBiltiAmount: totalBiltiAmt,
         bookingIds: selectedBookingIds,
         status: oldManifest?.status || "On the way",
         updatedAt: new Date().toISOString()
@@ -755,6 +757,7 @@ window.saveAndDispatchManifest = async function() {
         commissionPercent: commissionPercent,
         commissionAmount: commissionAmount,
         totalPayable: totalPayable,
+        totalBiltiAmount: totalBiltiAmt,
         bookingIds: selectedBookingIds,
         status: "On the way",
         createdAt: new Date().toISOString()
@@ -870,10 +873,31 @@ async function loadManifestHistory() {
       const m = child.val();
       window.allManifests[mId] = m;
 
-      let currentStatus = m.status || "On the way";
-      let statusBadge = `<span style="background:#DBEAFE; color:#1E40AF; padding:2px 8px; border-radius:4px; font-weight:700;">${currentStatus}</span>`;
+      // Auto compute total bilti amount if not saved explicitly
+      let totalBiltiAmt = m.totalBiltiAmount || 0;
+      if (!totalBiltiAmt && m.bookingIds && window.allBookingsList) {
+        m.bookingIds.forEach(bId => {
+          const bk = window.allBookingsList[bId];
+          if (bk) {
+            totalBiltiAmt += Number(bk.netTotal || bk.freightCharges) || 0;
+          }
+        });
+      }
 
-      if(currentStatus.includes("warehouse") || currentStatus.includes("Received")) {
+      // Check live status from bookings if any booking status changed by partner/admin
+      let currentStatus = m.status || "On the way";
+      if (m.bookingIds && window.allBookingsList) {
+        for(let bId of m.bookingIds) {
+          const bk = window.allBookingsList[bId];
+          if (bk && bk.status && bk.status !== "On the way" && bk.status !== "Goods received") {
+            currentStatus = bk.status;
+            break;
+          }
+        }
+      }
+
+      let statusBadge = `<span style="background:#DBEAFE; color:#1E40AF; padding:2px 8px; border-radius:4px; font-weight:700;">${currentStatus}</span>`;
+      if(currentStatus.includes("warehouse") || currentStatus.includes("Received") || currentStatus.includes("Delivered")) {
         statusBadge = `<span style="background:#D1FAE5; color:#065F46; padding:2px 8px; border-radius:4px; font-weight:700;">${currentStatus}</span>`;
       }
 
@@ -885,7 +909,7 @@ async function loadManifestHistory() {
           <td>${m.driverName} (${m.driverPhone})</td>
           <td><strong>${m.routeCities || 'N/A'}</strong></td>
           <td>${m.bookingIds ? m.bookingIds.length : 0}</td>
-          <td><strong style="color:green;">Rs. ${m.totalFreight || 0}</strong></td>
+          <td><strong style="color:green;">Rs. ${totalBiltiAmt}</strong></td>
           <td>${statusBadge}</td>
           <td>
             <div style="display:flex; gap:4px; flex-wrap:wrap;">
@@ -939,48 +963,48 @@ function generateManifestTemplateHTML(m) {
     };
 
     list.forEach((b, index) => {
-      const freight = Number(b.freightCharges) || 0;
+      const freight = Number(b.netTotal || b.freightCharges) || 0;
       const qty = Number(b.totalQty) || 0;
       cityFreightSum += freight;
       cityQtySum += qty;
 
       rowsHtml += `
-        <tr style="height:26px;">
-          <td style="text-align:center; border:1px solid #718096; padding:4px 5px;">${index + 1}</td>
-          <td style="text-align:center; font-weight:bold; border:1px solid #718096; padding:4px 5px;">${b.biltyNo}</td>
-          <td style="border:1px solid #718096; padding:4px 6px;">${b.senderName}</td>
-          <td style="border:1px solid #718096; padding:4px 6px;">${b.receiverName}</td>
-          <td style="text-align:center; border:1px solid #718096; padding:4px 5px;">${b.receiverPhone || '0582474487'}</td>
-          <td style="text-align:center; font-weight:bold; border:1px solid #718096; padding:4px 5px;">${qty}</td>
-          <td style="text-align:center; font-weight:bold; color:#0056b3; border:1px solid #718096; padding:4px 5px;">Rs. ${freight}</td>
+        <tr style="height:28px;">
+          <td style="text-align:center; border:1px solid #718096; padding:5px 6px;">${index + 1}</td>
+          <td style="text-align:center; font-weight:bold; border:1px solid #718096; padding:5px 6px;">${b.biltyNo}</td>
+          <td style="border:1px solid #718096; padding:5px 8px;">${b.senderName}</td>
+          <td style="border:1px solid #718096; padding:5px 8px;">${b.receiverName}</td>
+          <td style="text-align:center; border:1px solid #718096; padding:5px 6px;">${b.receiverPhone || '0582474487'}</td>
+          <td style="text-align:center; font-weight:bold; border:1px solid #718096; padding:5px 6px;">${qty}</td>
+          <td style="text-align:center; font-weight:bold; color:#0056b3; border:1px solid #718096; padding:5px 6px;">Rs. ${freight}</td>
         </tr>
       `;
     });
 
     cityTablesHtml += `
-      <div style="border:1px solid #2d3748; padding:4px 6px; margin-bottom:8px; border-radius:4px; font-size:0.83rem; page-break-inside:avoid;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;" class="urdu">
+      <div style="border:1px solid #2d3748; padding:6px 8px; margin-bottom:10px; border-radius:4px; font-size:0.83rem; page-break-inside:avoid;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;" class="urdu">
           <div><strong>منزل / شہر:</strong> <span style="color:#d9534f; font-weight:bold;">${city}</span> | <strong>پارٹنر:</strong> ${partner.name} (${partner.phone})</div>
           <div><strong>پتہ:</strong> ${partner.address}</div>
         </div>
         <table style="width:100%; border-collapse:collapse; font-size:0.82rem;" border="1" borderColor="#718096">
           <thead>
-            <tr style="background:#f8f9fa; height:26px;">
-              <th style="width:25px; text-align:center; padding:3px 5px;">#</th>
-              <th style="text-align:center; padding:3px 5px;" class="urdu">بلٹی #</th>
-              <th style="padding:3px 6px;" class="urdu">مال بھیجنے والا</th>
-              <th style="padding:3px 6px;" class="urdu">مال وصول کنندہ</th>
-              <th style="text-align:center; padding:3px 5px;" class="urdu">فون نمبر</th>
-              <th style="text-align:center; padding:3px 5px;" class="urdu">تعداد</th>
-              <th style="text-align:center; padding:3px 5px;" class="urdu">کرایہ (Freight)</th>
+            <tr style="background:#f8f9fa; height:28px;">
+              <th style="width:25px; text-align:center; padding:4px 6px;">#</th>
+              <th style="text-align:center; padding:4px 6px;" class="urdu">بلٹی #</th>
+              <th style="padding:4px 8px;" class="urdu">مال بھیجنے والا</th>
+              <th style="padding:4px 8px;" class="urdu">مال وصول کنندہ</th>
+              <th style="text-align:center; padding:4px 6px;" class="urdu">فون نمبر</th>
+              <th style="text-align:center; padding:4px 6px;" class="urdu">تعداد</th>
+              <th style="text-align:center; padding:4px 6px;" class="urdu">کل رقم (Total Amount)</th>
             </tr>
           </thead>
           <tbody>
             ${rowsHtml}
-            <tr style="background:#fffde7; font-weight:bold; height:26px;">
-              <td colspan="5" style="text-align:center; color:#b78103; padding:3px 5px;" class="urdu">اس شہر کی کل بلٹیاں (${list.length}) اور ڈرائیور وصولی کرایہ:</td>
-              <td style="text-align:center; color:#b78103; padding:3px 5px;">${cityQtySum}</td>
-              <td style="text-align:center; color:#b78103; padding:3px 5px;">Rs. ${cityFreightSum}</td>
+            <tr style="background:#fffde7; font-weight:bold; height:28px;">
+              <td colspan="5" style="text-align:center; color:#b78103; padding:4px 6px;" class="urdu">اس شہر کی کل بلٹیاں (${list.length}) اور کل رقم:</td>
+              <td style="text-align:center; color:#b78103; padding:4px 6px;">${cityQtySum}</td>
+              <td style="text-align:center; color:#b78103; padding:4px 6px;">Rs. ${cityFreightSum}</td>
             </tr>
           </tbody>
         </table>
@@ -989,7 +1013,7 @@ function generateManifestTemplateHTML(m) {
   });
 
   return `
-    <div style="font-family:'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Plus Jakarta Sans', serif; direction:rtl; text-align:right; color:#000; padding:6px; line-height:1.3;">
+    <div style="font-family:'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Plus Jakarta Sans', serif; direction:rtl; text-align:right; color:#000; padding:6px; line-height:1.35;">
       
       <!-- HEADER SECTION -->
       <div style="text-align:center; margin-bottom:4px;">
