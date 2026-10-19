@@ -290,12 +290,14 @@ th { background: #F1F5F9; color: var(--navy); }
               <th class="urdu">روٹ / ڈسٹینیشن</th>
               <th class="urdu">بلٹیاں</th>
               <th class="urdu">کل بلٹی رقم</th>
+              <th class="urdu">Total driver karaya</th>
+              <th class="urdu">Grand total</th>
               <th class="urdu">اسٹیٹس</th>
               <th class="urdu">ایکشن</th>
             </tr>
           </thead>
           <tbody id="manifestHistoryBody">
-            <tr><td colspan="9" style="text-align:center;">ریکارڈ لوڈ ہو رہا ہے...</td></tr>
+            <tr><td colspan="11" style="text-align:center;">ریکارڈ لوڈ ہو رہا ہے...</td></tr>
           </tbody>
         </table>
       </div>
@@ -856,26 +858,64 @@ window.cancelManifestEdit = function() {
 async function loadManifestHistory() {
   const tbody = document.getElementById('manifestHistoryBody');
   try {
-    const snap = await get(ref(db, 'manifests'));
-    if(!snap.exists()) {
-      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;">کوئی پرانا ریکارڈ موجود نہیں ہے۔</td></tr>';
+    const manifestsSnap = await get(ref(db, 'manifests'));
+    const bookingsSnap = await get(ref(db, 'bookings'));
+
+    if(!manifestsSnap.exists()) {
+      tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;">کوئی پرانا ریکارڈ موجود نہیں ہے۔</td></tr>';
       return;
+    }
+
+    // Load all bookings map for status checking
+    const bookingsMap = {};
+    if(bookingsSnap.exists()) {
+      bookingsSnap.forEach(child => {
+        bookingsMap[child.key] = child.val();
+      });
     }
 
     tbody.innerHTML = '';
     window.allManifests = {};
 
-    snap.forEach(child => {
+    manifestsSnap.forEach(child => {
       const mId = child.key;
       const m = child.val();
       window.allManifests[mId] = m;
 
-      let currentStatus = m.status || "On the way";
-      let statusBadge = `<span style="background:#DBEAFE; color:#1E40AF; padding:2px 8px; border-radius:4px; font-weight:700;">${currentStatus}</span>`;
+      // AUTOMATIC STATUS CALCULATION BASED ON ASSOCIATED BILTIES
+      let totalBiltiCount = m.bookingIds ? m.bookingIds.length : 0;
+      let deliveredCount = 0;
+      let warehouseCount = 0;
+      let onTheWayCount = 0;
 
-      if(currentStatus.includes("warehouse") || currentStatus.includes("Received")) {
-        statusBadge = `<span style="background:#D1FAE5; color:#065F46; padding:2px 8px; border-radius:4px; font-weight:700;">${currentStatus}</span>`;
+      if(m.bookingIds && m.bookingIds.length > 0) {
+        m.bookingIds.forEach(bId => {
+          const b = bookingsMap[bId];
+          if(b) {
+            const st = b.status || "On the way";
+            if(st === "Delivered") deliveredCount++;
+            else if(st.includes("warehouse") || st.includes("Received")) warehouseCount++;
+            else onTheWayCount++;
+          }
+        });
       }
+
+      let derivedStatus = "On the way";
+      if(totalBiltiCount > 0 && deliveredCount === totalBiltiCount) {
+        derivedStatus = "Delivered (مکمل ڈیلیور)";
+      } else if(warehouseCount > 0 || deliveredCount > 0) {
+        derivedStatus = `Partial (${deliveredCount}/${totalBiltiCount} Delivered)`;
+      }
+
+      let statusBadge = `<span style="background:#DBEAFE; color:#1E40AF; padding:2px 8px; border-radius:4px; font-weight:700;">${derivedStatus}</span>`;
+      if(derivedStatus.includes("Delivered")) {
+        statusBadge = `<span style="background:#D1FAE5; color:#065F46; padding:2px 8px; border-radius:4px; font-weight:700;">${derivedStatus}</span>`;
+      } else if(derivedStatus.includes("Partial")) {
+        statusBadge = `<span style="background:#FEF3C7; color:#B45309; padding:2px 8px; border-radius:4px; font-weight:700;">${derivedStatus}</span>`;
+      }
+
+      // Calculate Grand Total for this manifest (Total freight + total charges if applicable, or total grand sum)
+      let grandTotalSum = Number(m.totalFreight || 0) + Number(m.totalAdda || 0) + Number(m.totalRickshaw || 0) + Number(m.totalLabour || 0);
 
       tbody.innerHTML += `
         <tr>
@@ -884,8 +924,10 @@ async function loadManifestHistory() {
           <td><strong style="color:navy;">${m.truckNo}</strong></td>
           <td>${m.driverName} (${m.driverPhone})</td>
           <td><strong>${m.routeCities || 'N/A'}</strong></td>
-          <td>${m.bookingIds ? m.bookingIds.length : 0}</td>
+          <td>${totalBiltiCount}</td>
           <td><strong style="color:green;">Rs. ${m.totalFreight || 0}</strong></td>
+          <td><strong style="color:#0284C7;">Rs. ${m.totalFreight || 0}</strong></td>
+          <td><strong style="color:#7C3AED;">Rs. ${grandTotalSum}</strong></td>
           <td>${statusBadge}</td>
           <td>
             <div style="display:flex; gap:4px; flex-wrap:wrap;">
@@ -901,7 +943,7 @@ async function loadManifestHistory() {
     calculateDashboardStats();
 
   } catch(e) {
-    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:red;">ریکارڈ لوڈ کرنے میں مسئلہ: ' + e.message + '</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; color:red;">ریکارڈ لوڈ کرنے میں مسئلہ: ' + e.message + '</td></tr>';
   }
 }
 
@@ -1035,7 +1077,7 @@ function generateManifestTemplateHTML(m) {
             <tr style="height:22px;">
               <td class="urdu" style="padding:2px 4px;">کل ڈرائیور کرایہ (Total Driver Freight Collection)</td>
               <td style="text-align:center; font-weight:bold; color:#0056b3; padding:2px 4px;">Rs. ${m.totalFreight || 0}</td>
-              <td class="urdu" style="font-size:0.75rem; color:#4a5568; padding:2px 4px;">ڈرائیور نے یہ رقم راستے میں یا منزل پر وصول کرنی ہے۔</td>
+              <td class="urdu" style="font-size:0.75rem; color:#4a5568; padding:2px 4px;">ڈرائیور نے یہ رقم راستے میں یا منزل پر وصول करनी ہے۔</td>
             </tr>
             <tr style="height:22px;">
               <td class="urdu" style="padding:2px 4px;">کل اڈہ چارجز (Total Adda Charges)</td>
