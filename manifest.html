@@ -41,7 +41,7 @@ body {
 }
 
 .container {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
   background: #fff;
   padding: 15px;
@@ -292,7 +292,7 @@ th { background: #F1F5F9; color: var(--navy); }
               <th class="urdu">کل بلٹی رقم</th>
               <th class="urdu">Total driver karaya</th>
               <th class="urdu">Grand total</th>
-              <th class="urdu">اسٹیٹس</th>
+              <th class="urdu">اسٹیٹس (آٹو اپ ڈیٹ)</th>
               <th class="urdu">ایکشن</th>
             </tr>
           </thead>
@@ -866,7 +866,6 @@ async function loadManifestHistory() {
       return;
     }
 
-    // Load all bookings map for status checking
     const bookingsMap = {};
     if(bookingsSnap.exists()) {
       bookingsSnap.forEach(child => {
@@ -882,7 +881,6 @@ async function loadManifestHistory() {
       const m = child.val();
       window.allManifests[mId] = m;
 
-      // AUTOMATIC STATUS CALCULATION BASED ON ASSOCIATED BILTIES
       let totalBiltiCount = m.bookingIds ? m.bookingIds.length : 0;
       let deliveredCount = 0;
       let warehouseCount = 0;
@@ -914,7 +912,7 @@ async function loadManifestHistory() {
         statusBadge = `<span style="background:#FEF3C7; color:#B45309; padding:2px 8px; border-radius:4px; font-weight:700;">${derivedStatus}</span>`;
       }
 
-      // Calculate Grand Total for this manifest (Total freight + total charges if applicable, or total grand sum)
+      // Grand total calculation for manifest history row
       let grandTotalSum = Number(m.totalFreight || 0) + Number(m.totalAdda || 0) + Number(m.totalRickshaw || 0) + Number(m.totalLabour || 0);
 
       tbody.innerHTML += `
@@ -1077,7 +1075,7 @@ function generateManifestTemplateHTML(m) {
             <tr style="height:22px;">
               <td class="urdu" style="padding:2px 4px;">کل ڈرائیور کرایہ (Total Driver Freight Collection)</td>
               <td style="text-align:center; font-weight:bold; color:#0056b3; padding:2px 4px;">Rs. ${m.totalFreight || 0}</td>
-              <td class="urdu" style="font-size:0.75rem; color:#4a5568; padding:2px 4px;">ڈرائیور نے یہ رقم راستے میں یا منزل پر وصول करनी ہے۔</td>
+              <td class="urdu" style="font-size:0.75rem; color:#4a5568; padding:2px 4px;">ڈرائیور نے یہ رقم راستے میں یا منزل پر وصول کرنی ہے۔</td>
             </tr>
             <tr style="height:22px;">
               <td class="urdu" style="padding:2px 4px;">کل اڈہ چارجز (Total Adda Charges)</td>
