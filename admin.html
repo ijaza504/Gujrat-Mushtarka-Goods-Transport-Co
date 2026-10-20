@@ -27,51 +27,6 @@ body {
 
 .urdu { font-family: 'Noto Nastaliq Urdu', serif; line-height: 1.8 !important; }
 
-/* SIDEBAR STYLING */
-.sidebar-overlay {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.4);
-  display: none;
-  z-index: 1100;
-}
-.sidebar {
-  position: fixed;
-  top: 0; left: -280px; width: 280px; height: 100%;
-  background: #fff;
-  box-shadow: 5px 0 25px rgba(0,0,0,0.15);
-  transition: left 0.3s ease;
-  z-index: 1200;
-  display: flex;
-  flex-direction: column;
-}
-.sidebar.open { left: 0; }
-.sidebar-header {
-  background: var(--navy);
-  color: #fff;
-  padding: 20px 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.sidebar-header h3 { margin: 0; font-size: 1.1rem; }
-.sidebar-menu { list-style: none; padding: 0; margin: 0; overflow-y: auto; flex: 1; }
-.sidebar-menu li a {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 20px;
-  color: #334155;
-  text-decoration: none;
-  font-weight: 600;
-  border-bottom: 1px solid #F1F5F9;
-  transition: background 0.2s;
-}
-.sidebar-menu li a:hover {
-  background: #EFF6FF;
-  color: var(--navy);
-}
-
 .container {
   max-width: 1350px;
   margin: 0 auto;
@@ -81,6 +36,15 @@ body {
   box-shadow: 0 10px 25px rgba(0,0,0,0.08);
   border-top: 5px solid var(--navy);
 }
+
+.header-title {
+  text-align: center;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+.header-title h1 { color: var(--navy); margin: 0; font-size: 1.6rem; font-weight: 800; }
+.header-title p { color: #64748B; margin: 3px 0 0; font-weight: 600; font-size: 0.85rem; }
 
 .auth-box {
   max-width: 400px;
@@ -94,7 +58,7 @@ body {
 }
 
 label { font-weight: 600; font-size: 0.85rem; color: #334155; display: block; margin-bottom: 4px; text-align: left; }
-input, select, textarea {
+input, select {
   width: 100%;
   padding: 8px;
   border: 1px solid var(--border);
@@ -150,8 +114,17 @@ table { width: 100%; border-collapse: collapse; margin-top: 10px; }
 th, td { border: 1px solid var(--border); padding: 8px; text-align: left; font-size: 0.8rem; vertical-align: middle; }
 th { background: #F1F5F9; color: var(--navy); }
 
-.single-line { white-space: nowrap !important; }
-.sender-cell { max-width: 160px; word-wrap: break-word; line-height: 1.25; }
+/* STRICT SINGLE LINE WRAPPING FOR DATE & BILTY NO */
+.single-line {
+  white-space: nowrap !important;
+}
+
+/* COMPACT SENDER COLUMN (MAX 2 LINES) */
+.sender-cell {
+  max-width: 160px;
+  word-wrap: break-word;
+  line-height: 1.25;
+}
 
 select.status-select {
   padding: 4px;
@@ -185,6 +158,7 @@ select.status-select {
 }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
+/* PRINT STYLING FOR EXACT SINGLE PAGE FIT */
 #printArea { display: none; }
 
 @media print {
@@ -198,17 +172,19 @@ select.status-select {
     margin: 0;
     padding: 0;
   }
-  .bilty-slip {
+  .bilty-page {
     page-break-after: always;
-    break-after: page;
-    padding: 20px;
+    padding: 15px;
     box-sizing: border-box;
-    font-size: 13px;
-    background: #fff;
-    width: 100%;
+    font-size: 11px;
   }
-  .bilty-slip:last-child { page-break-after: avoid; break-after: avoid; }
-  @page { size: A4; margin: 10mm; }
+  .bilty-page:last-child {
+    page-break-after: avoid;
+  }
+  @page {
+    size: A4;
+    margin: 8mm;
+  }
 }
 </style>
 </head>
@@ -228,22 +204,17 @@ select.status-select {
 
 <!-- ADMIN DASHBOARD PANEL -->
 <div id="adminDashboard" class="container" style="display:none;">
-  
-  <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid var(--border); padding-bottom:10px; margin-bottom:15px;" class="no-print">
-    <button class="btn btn-navy" onclick="toggleSidebar()" style="font-size:1rem; padding:6px 12px;">☰ Menu</button>
-    <div style="text-align:center; flex:1;">
-      <h1 id="globalCompanyName" style="color:var(--navy); margin:0; font-size:1.6rem; font-weight:800;">GUJRAT MUSHTARKA GOODS TRANSPORT CO.</h1>
-      <p id="globalCompanySub" style="color:#64748B; margin:3px 0 0; font-weight:600; font-size:0.85rem;">Admin Booking & Order Management Panel</p>
-    </div>
-    <div style="width:70px;"></div>
+  <div class="header-title no-print">
+    <h1>GUJRAT MUSHTARKA GOODS TRANSPORT CO.</h1>
+    <p>Admin Booking & Order Management Panel</p>
   </div>
 
   <div class="top-bar no-print">
     <div>
       <strong>Live Customer Bookings List</strong>
     </div>
-    <div style="display:flex; gap:8px; flex-wrap:wrap;">
-      <a href="manifest.html" target="_blank" class="btn btn-success">🚛 Loading Manifest</a>
+    <div style="display:flex; gap:8px;">
+      <a href="manifest.html" class="btn btn-success">🚛 Loading Manifest</a>
       <button class="btn btn-primary" onclick="printSelectedBookings()">🖨️ Print Selected (<span id="selectedCount">0</span>)</button>
       <button class="btn btn-navy" onclick="loadAllBookings()">🔄 Refresh</button>
       <button class="btn btn-danger" onclick="logoutAdmin()">🚪 Logout</button>
@@ -304,25 +275,11 @@ select.status-select {
   </div>
 </div>
 
-<!-- SIDEBAR NAVIGATION DRAWER -->
-<div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
-<div id="appSidebar" class="sidebar">
-  <div class="sidebar-header">
-    <h3>Gujrat Mushtarka Panel</h3>
-    <button class="btn btn-danger" onclick="toggleSidebar()" style="padding:2px 8px;">✕</button>
-  </div>
-  <ul class="sidebar-menu">
-    <li><a href="manifest.html" target="_blank">🚛 Loading Manifest</a></li>
-    <li><a href="customer.html" target="_blank">👥 Customer Management</a></li>
-    <li><a href="partners.html" target="_blank">🏢 Partner Management</a></li>
-    <li><a href="#" onclick="toggleSidebar(); openCompanyDetailsModal();">⚙️ Company Details</a></li>
-  </ul>
-</div>
-
 <!-- MAKE BILTY MODAL DIALOG -->
 <div id="biltyModal" class="modal-overlay">
   <div class="modal-box">
     <h3 style="color:var(--navy); margin-top:0; border-bottom:2px solid var(--gold); padding-bottom:8px; font-size:1.1rem;" id="modalBiltyTitle">Make Bilty - #GMGT-0000</h3>
+    
     <input type="hidden" id="modalBookingId">
 
     <div style="margin-bottom:10px;">
@@ -333,6 +290,7 @@ select.status-select {
     <div style="margin-bottom:10px;">
       <label>Local Pickup / Rickshaw Fare / رکشہ بھیڑا (PKR)</label>
       <input type="number" id="rickshawFare" placeholder="0" oninput="calculateBiltyTotal()" value="0">
+      <small style="color:#64748B; font-size:0.75rem;">(فیکٹری سے اڈے تک کا کرایہ)</small>
     </div>
 
     <div class="grid-2" style="margin-bottom:10px;">
@@ -362,47 +320,13 @@ select.status-select {
   </div>
 </div>
 
-<!-- COMPANY DETAILS & PASSCODE MODAL -->
-<div id="companyDetailsModal" class="modal-overlay">
-  <div class="modal-box">
-    <h3 style="color:var(--navy); margin-top:0; border-bottom:2px solid var(--gold); padding-bottom:8px;">⚙️ Global Company & Password</h3>
-    <form id="companyDetailsForm" onsubmit="saveCompanyDetails(event)">
-      <div style="margin-bottom:10px;">
-        <label>Company Name (English)</label>
-        <input type="text" id="compName" required>
-      </div>
-      <div style="margin-bottom:10px;">
-        <label>Company Name (Urdu)</label>
-        <input type="text" id="compNameUrdu" required>
-      </div>
-      <div style="margin-bottom:10px;">
-        <label>Head Office Address & Details</label>
-        <textarea id="compAddress" rows="2" required></textarea>
-      </div>
-      <div style="margin-bottom:10px;">
-        <label>Contact Phone / Helpline</label>
-        <input type="text" id="compPhone" required>
-      </div>
-      <div style="margin-bottom:15px; background:#FEF3C7; padding:10px; border-radius:6px; border:1px solid #F59E0B;">
-        <label style="color:#B45309;">Universal Admin Passcode (نیا پاسورڈ)</label>
-        <input type="text" id="compAdminPass" required placeholder="gujrat2001">
-        <small style="color:#92400E; font-size:0.75rem;">یہ پاسورڈ تبدیل کرنے سے تمام صفحات پر نیا پاسورڈ لاگو ہو جائے گا۔</small>
-      </div>
-      <div style="display:flex; justify-content:flex-end; gap:8px;">
-        <button type="button" class="btn btn-secondary" onclick="closeCompanyDetailsModal()">Cancel</button>
-        <button type="submit" class="btn btn-navy">💾 Save & Sync All</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- HIDDEN PRINT AREA -->
+<!-- HIDDEN PRINT AREA FOR SINGLE & BULK PRINTING -->
 <div id="printArea"></div>
 
 <!-- Firebase Realtime Database SDKs -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, ref, get, update, set, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDsHjE5-6yoKjZG7mU7vKenvJtilvvXthg",
@@ -418,79 +342,10 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 window.allAdminBookings = {};
-window.globalCompanyInfo = {
-  name: "GUJRAT MUSHTARKA GOODS TRANSPORT CO.",
-  nameUrdu: "گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی (رجسٹرڈ)",
-  address: "Head Office: Gujrat | Daily Direct Service to Karachi, Peshawar, Rawalpindi",
-  phone: "053-3729517",
-  adminPass: "gujrat2001"
-};
 
-async function loadGlobalCompanyDetails() {
-  try {
-    const snap = await get(ref(db, 'companyDetails'));
-    if(snap.exists()) {
-      window.globalCompanyInfo = snap.val();
-      if(!window.globalCompanyInfo.adminPass) window.globalCompanyInfo.adminPass = "gujrat2001";
-      document.getElementById('globalCompanyName').innerText = window.globalCompanyInfo.name;
-      document.getElementById('globalCompanySub').innerText = window.globalCompanyInfo.address;
-    }
-  } catch(e) {}
-}
-
-window.toggleSidebar = function() {
-  const sidebar = document.getElementById('appSidebar');
-  const overlay = document.getElementById('sidebarOverlay');
-  if(sidebar.classList.contains('open')) {
-    sidebar.classList.remove('open');
-    overlay.style.display = 'none';
-  } else {
-    sidebar.classList.add('open');
-    overlay.style.display = 'block';
-  }
-};
-
-window.openCompanyDetailsModal = async function() {
-  await loadGlobalCompanyDetails();
-  document.getElementById('compName').value = window.globalCompanyInfo.name;
-  document.getElementById('compNameUrdu').value = window.globalCompanyInfo.nameUrdu;
-  document.getElementById('compAddress').value = window.globalCompanyInfo.address;
-  document.getElementById('compPhone').value = window.globalCompanyInfo.phone;
-  document.getElementById('compAdminPass').value = window.globalCompanyInfo.adminPass || "gujrat2001";
-  document.getElementById('companyDetailsModal').style.display = 'flex';
-};
-
-window.closeCompanyDetailsModal = function() {
-  document.getElementById('companyDetailsModal').style.display = 'none';
-};
-
-window.saveCompanyDetails = async function(e) {
-  e.preventDefault();
-  const info = {
-    name: document.getElementById('compName').value,
-    nameUrdu: document.getElementById('compNameUrdu').value,
-    address: document.getElementById('compAddress').value,
-    phone: document.getElementById('compPhone').value,
-    adminPass: document.getElementById('compAdminPass').value.trim() || "gujrat2001"
-  };
-  try {
-    await set(ref(db, 'companyDetails'), info);
-    window.globalCompanyInfo = info;
-    document.getElementById('globalCompanyName').innerText = info.name;
-    document.getElementById('globalCompanySub').innerText = info.address;
-    alert("کمپنی کی تفصیلات اور گلوبل پاسورڈ کامیابی سے اپ ڈیٹ ہو گئے ہیں!");
-    closeCompanyDetailsModal();
-  } catch(err) {
-    alert("Error: " + err.message);
-  }
-};
-
-window.loginAdmin = async function() {
+window.loginAdmin = function() {
   const pass = document.getElementById('adminPassInput').value;
-  await loadGlobalCompanyDetails();
-  const correctPass = window.globalCompanyInfo.adminPass || "gujrat2001";
-
-  if(pass === correctPass) {
+  if(pass === "gujrat2001") {
     document.getElementById('adminAuthBox').style.display = 'none';
     document.getElementById('adminDashboard').style.display = 'block';
     loadAllBookings();
@@ -510,7 +365,9 @@ window.loadAllBookings = async function() {
   tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;">Loading data...</td></tr>';
   
   try {
-    const snapshot = await get(ref(db, 'bookings'));
+    const bookingsRef = ref(db, 'bookings');
+    const snapshot = await get(bookingsRef);
+    
     if(!snapshot.exists()) {
       tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;">No bookings found.</td></tr>';
       return;
@@ -523,18 +380,26 @@ window.loadAllBookings = async function() {
       const bId = childSnap.key;
       const b = childSnap.val();
       window.allAdminBookings[bId] = b;
-      if(b.destCity) citiesSet.add(b.destCity);
+
+      if(b.destCity) {
+        citiesSet.add(b.destCity);
+      }
     });
 
     const citySelect = document.getElementById('filterCity');
     const currentSelectedCity = citySelect.value;
     citySelect.innerHTML = '<option value="ALL">All Cities (تمام شہر)</option>';
+    
     citiesSet.forEach(city => {
       citySelect.innerHTML += `<option value="${city}">${city}</option>`;
     });
-    if([...citiesSet].includes(currentSelectedCity)) citySelect.value = currentSelectedCity;
+    
+    if([...citiesSet].includes(currentSelectedCity)) {
+      citySelect.value = currentSelectedCity;
+    }
 
     applyFilters();
+
   } catch(err) {
     tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; color:red;">Failed to load data: ' + err.message + '</td></tr>';
   }
@@ -547,6 +412,7 @@ window.applyFilters = function() {
 
   tbody.innerHTML = '';
   let matchCount = 0;
+
   const statuses = ["Booking Received", "Goods received", "In warehouse", "On the way", "Logistics partner warehouse", "Delivered"];
 
   Object.keys(window.allAdminBookings).forEach(bId => {
@@ -554,15 +420,19 @@ window.applyFilters = function() {
     const bStatus = b.status || "Booking Received";
     const bCity = b.destCity || "";
 
-    if ((selectedStatus === "ALL" || bStatus === selectedStatus) && (selectedCity === "ALL" || bCity === selectedCity)) {
+    const statusMatch = (selectedStatus === "ALL" || bStatus === selectedStatus);
+    const cityMatch = (selectedCity === "ALL" || bCity === selectedCity);
+
+    if (statusMatch && cityMatch) {
       matchCount++;
+
       let optionsHtml = '';
       statuses.forEach(st => {
         optionsHtml += `<option value="${st}" ${bStatus === st ? 'selected' : ''}>${st}</option>`;
       });
 
       const totalBill = b.netTotal ? `Rs. ${b.netTotal}` : 'Pending';
-      const truckInfo = b.truckNo ? `<strong style="color:#0B2545;">🚛 ${b.truckNo}</strong><br><small style="color:#475569;">👤 ${b.driverName || 'N/A'}</small>` : '<span style="color:#94A3B8;">Not Loaded yet</span>';
+      const truckInfo = b.truckNo ? `<strong style="color:#0B2545;">🚛 ${b.truckNo}</strong><br><small style="color:#475569;">👤 ${b.driverName || 'N/A'} (${b.driverPhone || ''})</small><br><small style="color:#2563EB;">M#: ${b.manifestNo || 'N/A'}</small>` : '<span style="color:#94A3B8;">Not Loaded yet</span>';
 
       tbody.innerHTML += `
         <tr>
@@ -575,7 +445,11 @@ window.applyFilters = function() {
           <td style="text-align:center; font-weight:700;">${b.totalQty || 0}</td>
           <td>${truckInfo}</td>
           <td><strong style="color:green;">${totalBill}</strong></td>
-          <td><select class="status-select" onchange="updateStatus('${bId}', this.value)">${optionsHtml}</select></td>
+          <td>
+            <select class="status-select" onchange="updateStatus('${bId}', this.value)">
+              ${optionsHtml}
+            </select>
+          </td>
           <td>
             <div style="display:flex; gap:4px; flex-wrap:wrap;">
               <button class="btn btn-navy" onclick="openBiltyModal('${bId}')">📝 Make</button>
@@ -589,7 +463,10 @@ window.applyFilters = function() {
 
   document.getElementById('selectAllCheck').checked = false;
   updateSelectedCount();
-  if (matchCount === 0) tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;">کوئی بکنگ نہیں ملی۔</td></tr>';
+
+  if (matchCount === 0) {
+    tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;">منتخب کردہ فلٹر کے مطابق کوئی بکنگ نہیں ملی۔</td></tr>';
+  }
 };
 
 window.resetFilters = function() {
@@ -599,26 +476,34 @@ window.resetFilters = function() {
 };
 
 window.toggleSelectAll = function(masterCheck) {
-  document.querySelectorAll('.booking-check').forEach(chk => chk.checked = masterCheck.checked);
+  document.querySelectorAll('.booking-check').forEach(chk => {
+    chk.checked = masterCheck.checked;
+  });
   updateSelectedCount();
 };
 
 window.updateSelectedCount = function() {
-  document.getElementById('selectedCount').innerText = document.querySelectorAll('.booking-check:checked').length;
+  const count = document.querySelectorAll('.booking-check:checked').length;
+  document.getElementById('selectedCount').innerText = count;
 };
 
 window.updateStatus = async function(bId, newStatus) {
   try {
     await update(ref(db, 'bookings/' + bId), { status: newStatus });
-    if(window.allAdminBookings[bId]) window.allAdminBookings[bId].status = newStatus;
-    alert("Status updated!");
+    if(window.allAdminBookings[bId]) {
+      window.allAdminBookings[bId].status = newStatus;
+    }
+    alert("Order status updated successfully!");
     applyFilters();
-  } catch(err) { alert("Error: " + err.message); }
+  } catch(err) {
+    alert("Status update failed: " + err.message);
+  }
 };
 
 window.openBiltyModal = function(bId) {
   const b = window.allAdminBookings[bId];
   if(!b) return;
+
   document.getElementById('modalBookingId').value = bId;
   document.getElementById('modalBiltyTitle').innerText = "Make Bilty - #" + b.biltyNo;
   document.getElementById('freightCharges').value = b.freightCharges || 0;
@@ -626,146 +511,209 @@ window.openBiltyModal = function(bId) {
   document.getElementById('labourCharges').value = b.labourCharges || 0;
   document.getElementById('addaCharges').value = b.addaCharges || 0;
   document.getElementById('otherCharges').value = b.otherCharges || 0;
+
   calculateBiltyTotal();
   document.getElementById('biltyModal').style.display = 'flex';
 };
 
-window.closeBiltyModal = function() { document.getElementById('biltyModal').style.display = 'none'; };
+window.closeBiltyModal = function() {
+  document.getElementById('biltyModal').style.display = 'none';
+};
 
 window.calculateBiltyTotal = function() {
-  const f = Number(document.getElementById('freightCharges').value) || 0;
-  const r = Number(document.getElementById('rickshawFare').value) || 0;
-  const l = Number(document.getElementById('labourCharges').value) || 0;
-  const a = Number(document.getElementById('addaCharges').value) || 0;
-  const o = Number(document.getElementById('otherCharges').value) || 0;
-  document.getElementById('modalNetTotal').innerText = f + r + l + a + o;
+  const freight = Number(document.getElementById('freightCharges').value) || 0;
+  const rickshaw = Number(document.getElementById('rickshawFare').value) || 0;
+  const labour = Number(document.getElementById('labourCharges').value) || 0;
+  const adda = Number(document.getElementById('addaCharges').value) || 0;
+  const other = Number(document.getElementById('otherCharges').value) || 0;
+  
+  const netTotal = freight + rickshaw + labour + adda + other;
+  document.getElementById('modalNetTotal').innerText = netTotal;
 };
 
 window.saveBiltyCharges = async function() {
   const bId = document.getElementById('modalBookingId').value;
   if(!bId) return;
-  const f = Number(document.getElementById('freightCharges').value) || 0;
-  const r = Number(document.getElementById('rickshawFare').value) || 0;
-  const l = Number(document.getElementById('labourCharges').value) || 0;
-  const a = Number(document.getElementById('addaCharges').value) || 0;
-  const o = Number(document.getElementById('otherCharges').value) || 0;
-  const net = f + r + l + a + o;
+
+  const saveBtn = document.getElementById('saveBiltyBtn');
+  saveBtn.disabled = true;
+  saveBtn.innerText = "Saving...";
+
+  const freight = Number(document.getElementById('freightCharges').value) || 0;
+  const rickshaw = Number(document.getElementById('rickshawFare').value) || 0;
+  const labour = Number(document.getElementById('labourCharges').value) || 0;
+  const adda = Number(document.getElementById('addaCharges').value) || 0;
+  const other = Number(document.getElementById('otherCharges').value) || 0;
+  
+  const netTotal = freight + rickshaw + labour + adda + other;
 
   try {
-    const booking = window.allAdminBookings[bId];
-    if (booking && booking.userPhone && booking.userPhone !== "N/A") {
-      const customersSnap = await get(ref(db, 'customers'));
-      let exists = false;
-      if (customersSnap.exists()) {
-        customersSnap.forEach(child => {
-          if ((child.val().phone || "").trim() === booking.userPhone.trim()) exists = true;
-        });
-      }
-      if (!exists) {
-        await set(push(ref(db, 'customers')), {
-          fullName: booking.senderName || "N/A",
-          phone: booking.userPhone,
-          companyName: booking.senderName || "N/A",
-          address: "Auto-saved from booking",
-          createdAt: new Date().toISOString()
-        });
-      }
+    await update(ref(db, 'bookings/' + bId), {
+      freightCharges: freight,
+      rickshawFare: rickshaw,
+      labourCharges: labour,
+      addaCharges: adda,
+      otherCharges: other,
+      netTotal: netTotal,
+      biltyGenerated: true,
+      status: "Goods received"
+    });
+
+    if(window.allAdminBookings[bId]) {
+      window.allAdminBookings[bId].freightCharges = freight;
+      window.allAdminBookings[bId].rickshawFare = rickshaw;
+      window.allAdminBookings[bId].labourCharges = labour;
+      window.allAdminBookings[bId].addaCharges = adda;
+      window.allAdminBookings[bId].otherCharges = other;
+      window.allAdminBookings[bId].netTotal = netTotal;
+      window.allAdminBookings[bId].status = "Goods received";
     }
 
-    await update(ref(db, 'bookings/' + bId), {
-      freightCharges: f, rickshawFare: r, labourCharges: l, addaCharges: a, otherCharges: o,
-      netTotal: net, biltyGenerated: true, status: "Goods received"
-    });
     alert("بلٹی محفوظ ہو گئی ہے!");
     closeBiltyModal();
-    loadAllBookings();
-  } catch(err) { alert("Error: " + err.message); }
+    applyFilters();
+  } catch(err) {
+    alert("Error: " + err.message);
+  } finally {
+    saveBtn.disabled = false;
+    saveBtn.innerText = "💾 Save & Generate";
+  }
 };
 
+// PRINT SINGLE BILTY
 window.printSingleBilty = function(bId) {
   const b = window.allAdminBookings[bId];
   if(!b) return;
-  document.getElementById('printArea').innerHTML = generateBiltyHTML(b);
+
+  const printArea = document.getElementById('printArea');
+  printArea.innerHTML = generateBiltyHTML(b);
+
   window.print();
 };
 
+// BULK PRINT SELECTED
 window.printSelectedBookings = function() {
-  const checks = document.querySelectorAll('.booking-check:checked');
-  if(checks.length === 0) { alert("براہ کرم کم از کم ایک بکنگ سلیکٹ کریں!"); return; }
-  let html = '';
-  checks.forEach(chk => {
-    const b = window.allAdminBookings[chk.value];
-    if(b) html += generateBiltyHTML(b);
+  const selectedCheckboxes = document.querySelectorAll('.booking-check:checked');
+  if(selectedCheckboxes.length === 0) {
+    alert("براہ کرم پرنٹ کرنے کے لیے کم از کم ایک بکنگ سلیکٹ کریں!");
+    return;
+  }
+
+  const printArea = document.getElementById('printArea');
+  printArea.innerHTML = '';
+
+  selectedCheckboxes.forEach(chk => {
+    const bId = chk.value;
+    const b = window.allAdminBookings[bId];
+    if(b) {
+      printArea.innerHTML += generateBiltyHTML(b);
+    }
   });
-  document.getElementById('printArea').innerHTML = html;
+
   window.print();
 };
 
+// TEMPLATE GENERATOR FOR EXACT SINGLE PAGE PRINT
 function generateBiltyHTML(b) {
   let itemsHtml = '';
-  let itemsArr = Array.isArray(b.items) ? b.items : (b.items ? Object.values(b.items) : []);
+  let itemsArr = [];
+  if (b.items && Array.isArray(b.items)) itemsArr = b.items;
+  else if (b.items && typeof b.items === 'object') itemsArr = Object.values(b.items);
+
   if(itemsArr.length > 0) {
     itemsArr.forEach(it => {
-      itemsHtml += `<tr><td style="border:1px solid #000; padding:4px 8px;">${it.name||''}</td><td style="border:1px solid #000; padding:4px 8px; text-align:center;">${it.qty||0}</td><td style="border:1px solid #000; padding:4px 8px; text-align:center;">${it.weight||'-'}</td></tr>`;
+      itemsHtml += `<tr><td style="border:1px solid #cbd5e1; padding:4px 8px;">${it.name || ''}</td><td style="border:1px solid #cbd5e1; padding:4px 8px;">${it.qty || 0}</td><td style="border:1px solid #cbd5e1; padding:4px 8px;">${it.weight || '-'}</td></tr>`;
     });
   } else {
-    itemsHtml = `<tr><td style="border:1px solid #000; padding:4px 8px;">${b.itemType||'Goods'}</td><td style="border:1px solid #000; padding:4px 8px; text-align:center;">${b.totalQty||'1'}</td><td style="border:1px solid #000; padding:4px 8px; text-align:center;">-</td></tr>`;
+    itemsHtml = `<tr><td style="border:1px solid #cbd5e1; padding:4px 8px;">${b.itemType || 'Goods'}</td><td style="border:1px solid #cbd5e1; padding:4px 8px;">${b.totalQty || '1'}</td><td style="border:1px solid #cbd5e1; padding:4px 8px;">-</td></tr>`;
   }
+
   const mode = b.paymentMode || "TO PAY";
-  const comp = window.globalCompanyInfo;
+  const borderCol = mode === "PAID" ? "#DC2626" : "#2563EB";
+
   return `
-    <div class="bilty-slip" style="border:2px solid #000; border-radius:4px; margin-bottom:20px; font-family:'Plus Jakarta Sans', sans-serif;">
-      <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:6px; margin-bottom:8px;">
-        <h2 style="margin:0; font-size:1.4rem; font-weight:800; color:#000;">${comp.name}</h2>
-        <h3 class="urdu" style="margin:2px 0 0; font-size:1.1rem; color:#000;">${comp.nameUrdu}</h3>
-        <p style="margin:2px 0 0; font-size:0.8rem; color:#000;">${comp.address} | Phone: ${comp.phone}</p>
+    <div class="bilty-page" style="position:relative; border:2px solid #0B2545; border-radius:6px; background:#fff; font-family:'Plus Jakarta Sans', sans-serif;">
+      
+      <!-- HEADER -->
+      <div style="text-align:center; border-bottom:2px solid #0B2545; padding-bottom:6px; margin-bottom:10px;">
+        <h2 style="color:#0B2545; margin:0; font-size:1.3rem; font-weight:800;">GUJRAT MUSHTARKA GOODS TRANSPORT CO.</h2>
+        <h3 class="urdu" style="color:#DC2626; margin:2px 0 0; font-size:1rem;">گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی (رجسٹرڈ)</h3>
+        <p style="color:#475569; margin:1px 0 0; font-size:0.75rem;">Head Office: Gujrat | Daily Direct Service to Karachi, Peshawar, Rawalpindi</p>
       </div>
-      <div style="display:flex; justify-content:space-between; font-size:0.85rem; border-bottom:1px solid #000; padding-bottom:6px; margin-bottom:8px;">
-        <div><strong>Bilty No:</strong> ${b.biltyNo}</div>
+
+      <!-- STAMP -->
+      <div style="position:absolute; top:40%; left:50%; transform:translate(-50%, -50%) rotate(-15deg); border:4px double ${borderCol}; color:${borderCol}; font-size:2rem; font-weight:900; padding:10px 25px; opacity:0.25; border-radius:50%; text-transform:uppercase;">
+        ${mode}
+      </div>
+
+      <!-- BASIC DETAILS -->
+      <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px; margin-bottom:10px; border-bottom:1px solid #cbd5e1; padding-bottom:6px; font-size:0.8rem;">
+        <div><strong>Bilty / Booking No:</strong> ${b.biltyNo}</div>
         <div><strong>Date:</strong> ${b.date}</div>
-        <div><strong>Payment Mode:</strong> <b>${mode}</b></div>
+        <div><strong>Payment Mode:</strong> <span style="color:${mode==='PAID'?'green':'blue'}; font-weight:700;">${mode}</span></div>
       </div>
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:8px; font-size:0.85rem;">
-        <div style="border:1px solid #000; padding:6px;"><strong>SENDER:</strong> ${b.senderName} <br><small>Phone: ${b.userPhone||'N/A'}</small></div>
-        <div style="border:1px solid #000; padding:6px;"><strong>RECEIVER:</strong> ${b.receiverName} <br><small>Phone: ${b.receiverPhone||'N/A'}</small></div>
+
+      <!-- SENDER / RECEIVER -->
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:10px; font-size:0.8rem;">
+        <div style="background:#f8fafc; padding:8px; border-radius:4px; border:1px solid #cbd5e1;">
+          <strong style="color:#0B2545;">SENDER (مال بھیجنے والا):</strong><br>
+          ${b.senderName}<br>
+          <small>Phone: ${b.userPhone || 'N/A'}</small>
+        </div>
+        <div style="background:#f8fafc; padding:8px; border-radius:4px; border:1px solid #cbd5e1;">
+          <strong style="color:#0B2545;">RECEIVER (مال وصول کرنے والا):</strong><br>
+          ${b.receiverName}<br>
+          <small>Phone: ${b.receiverPhone || 'N/A'}</small><br>
+          <small>Address: ${b.receiverAddress || 'N/A'}</small>
+        </div>
       </div>
-      <div style="margin-bottom:8px; font-size:0.85rem; border:1px solid #000; padding:6px;">
-        <strong>Route:</strong> Gujrat ➔ <b>${b.destCity}</b>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:10px; font-size:0.8rem; background:#EFF6FF; padding:6px; border-radius:4px;">
+        <div><strong>From:</strong> Gujrat</div>
+        <div><strong>Destination:</strong> ${b.destCity}</div>
       </div>
-      <table style="width:100%; border-collapse:collapse; margin-bottom:8px; font-size:0.85rem;">
+
+      <!-- ITEMS TABLE -->
+      <h4 class="urdu" style="margin:0 0 4px 0; font-size:0.85rem;">تفصیلِ سامان (Items List)</h4>
+      <table style="width:100%; border-collapse:collapse; margin-bottom:10px; font-size:0.78rem;">
         <thead>
-          <tr style="background:#eee;">
-            <th style="border:1px solid #000; padding:4px 8px; text-align:left;">Description of Goods</th>
-            <th style="border:1px solid #000; padding:4px 8px; text-align:center; width:80px;">Qty</th>
-            <th style="border:1px solid #000; padding:4px 8px; text-align:center; width:80px;">Weight</th>
+          <tr style="background:#f1f5f9; color:#0B2545;">
+            <th style="border:1px solid #cbd5e1; padding:4px 8px;">Item Name</th>
+            <th style="border:1px solid #cbd5e1; padding:4px 8px;">Qty</th>
+            <th style="border:1px solid #cbd5e1; padding:4px 8px;">Weight</th>
           </tr>
         </thead>
         <tbody>${itemsHtml}</tbody>
         <tfoot>
-          <tr>
-            <td style="border:1px solid #000; padding:4px 8px; text-align:right;"><strong>Total Qty:</strong></td>
-            <td style="border:1px solid #000; padding:4px 8px; text-align:center;"><strong>${b.totalQty||0}</strong></td>
-            <td style="border:1px solid #000; padding:4px 8px;">-</td>
+          <tr style="font-weight:700; background:#f8fafc;">
+            <td style="border:1px solid #cbd5e1; padding:4px 8px;">Total Qty</td>
+            <td style="border:1px solid #cbd5e1; padding:4px 8px;">${b.totalQty || '0'}</td>
+            <td style="border:1px solid #cbd5e1; padding:4px 8px;">-</td>
           </tr>
         </tfoot>
       </table>
-      <div style="border:1px solid #000; padding:6px; margin-bottom:8px; font-size:0.8rem;">
-        <strong>Charges Breakdown:</strong>
-        <div style="display:flex; justify-content:space-between; margin-top:4px;">
-          <span>Freight: Rs.${b.freightCharges||0}</span>
-          <span>Pickup: Rs.${b.rickshawFare||0}</span>
-          <span>Labour: Rs.${b.labourCharges||0}</span>
-          <span>Adda: Rs.${b.addaCharges||0}</span>
-          <span>Other: Rs.${b.otherCharges||0}</span>
+
+      <!-- CHARGES BREAKDOWN -->
+      <div style="border:1px solid #cbd5e1; padding:8px; border-radius:4px; background:#f8fafc; margin-bottom:10px; font-size:0.78rem;">
+        <strong>Billing Breakdown:</strong>
+        <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap:6px; margin-top:4px;">
+          <div>Freight: <b>Rs.${b.freightCharges||0}</b></div>
+          <div>Pickup: <b>Rs.${b.rickshawFare||0}</b></div>
+          <div>Labour: <b>Rs.${b.labourCharges||0}</b></div>
+          <div>Adda: <b>Rs.${b.addaCharges||0}</b></div>
+          <div>Other: <b>Rs.${b.otherCharges||0}</b></div>
+        </div>
+        <div style="text-align:right; border-top:1px dashed #cbd5e1; margin-top:4px; padding-top:4px; font-size:0.9rem; font-weight:800; color:green;">
+          Net Total Bill: Rs. ${b.netTotal || 0}
         </div>
       </div>
-      <div style="text-align:right; font-size:1rem; font-weight:800; border:1px solid #000; padding:6px; background:#f9f9f9;">
-        Net Total Bill: Rs. ${b.netTotal||0}
+
+      <div style="font-size:0.7rem; color:#64748B; text-align:center;">
+        Status: <strong>${b.status || 'Booking Received'}</strong> | Gujrat Mushtarka Transport - Software System
       </div>
     </div>
   `;
 }
-loadGlobalCompanyDetails();
 </script>
 
 </body>
