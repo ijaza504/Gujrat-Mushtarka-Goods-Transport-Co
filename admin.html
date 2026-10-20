@@ -198,14 +198,17 @@ select.status-select {
     margin: 0;
     padding: 0;
   }
-  .bilty-page {
+  .bilty-slip {
     page-break-after: always;
-    padding: 15px;
+    break-after: page;
+    padding: 20px;
     box-sizing: border-box;
-    font-size: 11px;
+    font-size: 13px;
+    background: #fff;
+    width: 100%;
   }
-  .bilty-page:last-child { page-break-after: avoid; }
-  @page { size: A4; margin: 8mm; }
+  .bilty-slip:last-child { page-break-after: avoid; break-after: avoid; }
+  @page { size: A4; margin: 10mm; }
 }
 </style>
 </head>
@@ -214,7 +217,7 @@ select.status-select {
 <!-- ADMIN LOGIN SECTION -->
 <div id="adminAuthBox" class="auth-box">
   <h2 style="color:var(--navy); margin-top:0;">Admin Login</h2>
-  <p style="color:#64748B; font-size:0.85rem;" id="loginSubTitle">Gujrat Mushtarka Control Panel</p>
+  <p style="color:#64748B; font-size:0.85rem;">Gujrat Mushtarka Control Panel</p>
   
   <div style="margin-bottom:15px;">
     <label>Admin Passcode</label>
@@ -475,7 +478,7 @@ window.saveCompanyDetails = async function(e) {
     window.globalCompanyInfo = info;
     document.getElementById('globalCompanyName').innerText = info.name;
     document.getElementById('globalCompanySub').innerText = info.address;
-    alert("کمپنی کی تفصیلات اور گلوبل پاسورڈ کامیابی سے اپ ڈیٹ اور تمام پیجز پر سنک ہو گئے ہیں!");
+    alert("کمپنی کی تفصیلات اور گلوبل پاسورڈ کامیابی سے اپ ڈیٹ ہو گئے ہیں!");
     closeCompanyDetailsModal();
   } catch(err) {
     alert("Error: " + err.message);
@@ -703,34 +706,62 @@ function generateBiltyHTML(b) {
   let itemsArr = Array.isArray(b.items) ? b.items : (b.items ? Object.values(b.items) : []);
   if(itemsArr.length > 0) {
     itemsArr.forEach(it => {
-      itemsHtml += `<tr><td style="border:1px solid #cbd5e1; padding:4px 8px;">${it.name||''}</td><td style="border:1px solid #cbd5e1; padding:4px 8px;">${it.qty||0}</td><td style="border:1px solid #cbd5e1; padding:4px 8px;">${it.weight||'-'}</td></tr>`;
+      itemsHtml += `<tr><td style="border:1px solid #000; padding:4px 8px;">${it.name||''}</td><td style="border:1px solid #000; padding:4px 8px; text-align:center;">${it.qty||0}</td><td style="border:1px solid #000; padding:4px 8px; text-align:center;">${it.weight||'-'}</td></tr>`;
     });
   } else {
-    itemsHtml = `<tr><td style="border:1px solid #cbd5e1; padding:4px 8px;">${b.itemType||'Goods'}</td><td style="border:1px solid #cbd5e1; padding:4px 8px;">${b.totalQty||'1'}</td><td style="border:1px solid #cbd5e1; padding:4px 8px;">-</td></tr>`;
+    itemsHtml = `<tr><td style="border:1px solid #000; padding:4px 8px;">${b.itemType||'Goods'}</td><td style="border:1px solid #000; padding:4px 8px; text-align:center;">${b.totalQty||'1'}</td><td style="border:1px solid #000; padding:4px 8px; text-align:center;">-</td></tr>`;
   }
   const mode = b.paymentMode || "TO PAY";
   const comp = window.globalCompanyInfo;
   return `
-    <div class="bilty-page" style="position:relative; border:2px solid #0B2545; border-radius:6px; background:#fff; font-family:'Plus Jakarta Sans', sans-serif;">
-      <div style="text-align:center; border-bottom:2px solid #0B2545; padding-bottom:6px; margin-bottom:10px;">
-        <h2 style="color:#0B2545; margin:0; font-size:1.3rem; font-weight:800;">${comp.name}</h2>
-        <h3 class="urdu" style="color:#DC2626; margin:2px 0 0; font-size:1rem;">${comp.nameUrdu}</h3>
-        <p style="color:#475569; margin:1px 0 0; font-size:0.75rem;">${comp.address} | Phone: ${comp.phone}</p>
+    <div class="bilty-slip" style="border:2px solid #000; border-radius:4px; margin-bottom:20px; font-family:'Plus Jakarta Sans', sans-serif;">
+      <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:6px; margin-bottom:8px;">
+        <h2 style="margin:0; font-size:1.4rem; font-weight:800; color:#000;">${comp.name}</h2>
+        <h3 class="urdu" style="margin:2px 0 0; font-size:1.1rem; color:#000;">${comp.nameUrdu}</h3>
+        <p style="margin:2px 0 0; font-size:0.8rem; color:#000;">${comp.address} | Phone: ${comp.phone}</p>
       </div>
-      <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px; margin-bottom:10px; border-bottom:1px solid #cbd5e1; padding-bottom:6px; font-size:0.8rem;">
+      <div style="display:flex; justify-content:space-between; font-size:0.85rem; border-bottom:1px solid #000; padding-bottom:6px; margin-bottom:8px;">
         <div><strong>Bilty No:</strong> ${b.biltyNo}</div>
         <div><strong>Date:</strong> ${b.date}</div>
-        <div><strong>Mode:</strong> ${mode}</div>
+        <div><strong>Payment Mode:</strong> <b>${mode}</b></div>
       </div>
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:10px; font-size:0.8rem;">
-        <div style="background:#f8fafc; padding:8px; border-radius:4px; border:1px solid #cbd5e1;"><strong>SENDER:</strong> ${b.senderName} (${b.userPhone||'N/A'})</div>
-        <div style="background:#f8fafc; padding:8px; border-radius:4px; border:1px solid #cbd5e1;"><strong>RECEIVER:</strong> ${b.receiverName} (${b.receiverPhone||'N/A'})</div>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:8px; font-size:0.85rem;">
+        <div style="border:1px solid #000; padding:6px;"><strong>SENDER:</strong> ${b.senderName} <br><small>Phone: ${b.userPhone||'N/A'}</small></div>
+        <div style="border:1px solid #000; padding:6px;"><strong>RECEIVER:</strong> ${b.receiverName} <br><small>Phone: ${b.receiverPhone||'N/A'}</small></div>
       </div>
-      <table style="width:100%; border-collapse:collapse; margin-bottom:10px; font-size:0.78rem;">
-        <thead><tr style="background:#f1f5f9; color:#0B2545;"><th style="border:1px solid #cbd5e1; padding:4px;">Item</th><th style="border:1px solid #cbd5e1; padding:4px;">Qty</th><th style="border:1px solid #cbd5e1; padding:4px;">Weight</th></tr></thead>
+      <div style="margin-bottom:8px; font-size:0.85rem; border:1px solid #000; padding:6px;">
+        <strong>Route:</strong> Gujrat ➔ <b>${b.destCity}</b>
+      </div>
+      <table style="width:100%; border-collapse:collapse; margin-bottom:8px; font-size:0.85rem;">
+        <thead>
+          <tr style="background:#eee;">
+            <th style="border:1px solid #000; padding:4px 8px; text-align:left;">Description of Goods</th>
+            <th style="border:1px solid #000; padding:4px 8px; text-align:center; width:80px;">Qty</th>
+            <th style="border:1px solid #000; padding:4px 8px; text-align:center; width:80px;">Weight</th>
+          </tr>
+        </thead>
         <tbody>${itemsHtml}</tbody>
+        <tfoot>
+          <tr>
+            <td style="border:1px solid #000; padding:4px 8px; text-align:right;"><strong>Total Qty:</strong></td>
+            <td style="border:1px solid #000; padding:4px 8px; text-align:center;"><strong>${b.totalQty||0}</strong></td>
+            <td style="border:1px solid #000; padding:4px 8px;">-</td>
+          </tr>
+        </tfoot>
       </table>
-      <div style="text-align:right; font-size:0.9rem; font-weight:800; color:green;">Net Total: Rs. ${b.netTotal||0}</div>
+      <div style="border:1px solid #000; padding:6px; margin-bottom:8px; font-size:0.8rem;">
+        <strong>Charges Breakdown:</strong>
+        <div style="display:flex; justify-content:space-between; margin-top:4px;">
+          <span>Freight: Rs.${b.freightCharges||0}</span>
+          <span>Pickup: Rs.${b.rickshawFare||0}</span>
+          <span>Labour: Rs.${b.labourCharges||0}</span>
+          <span>Adda: Rs.${b.addaCharges||0}</span>
+          <span>Other: Rs.${b.otherCharges||0}</span>
+        </div>
+      </div>
+      <div style="text-align:right; font-size:1rem; font-weight:800; border:1px solid #000; padding:6px; background:#f9f9f9;">
+        Net Total Bill: Rs. ${b.netTotal||0}
+      </div>
     </div>
   `;
 }
