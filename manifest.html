@@ -41,7 +41,7 @@ body {
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1250px;
   margin: 0 auto;
   background: #fff;
   padding: 15px;
@@ -104,16 +104,17 @@ input, select {
 .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
 
 .btn {
-  padding: 6px 12px;
-  border-radius: 5px;
+  padding: 3px 7px;
+  border-radius: 4px;
   font-weight: 700;
   cursor: pointer;
   border: none;
-  font-size: 0.82rem;
+  font-size: 0.75rem;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   text-decoration: none;
+  white-space: nowrap !important;
 }
 .btn-primary { background: var(--gold); color: var(--navy); }
 .btn-navy { background: var(--navy); color: #fff; }
@@ -123,8 +124,8 @@ input, select {
 .btn-warning { background: #F59E0B; color: #fff; }
 .btn-info { background: #0284C7; color: #fff; }
 
-table { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 0.82rem; }
-th, td { border: 1px solid var(--border); padding: 5px 6px; text-align: right; }
+table { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 0.8rem; }
+th, td { border: 1px solid var(--border); padding: 5px 6px; text-align: right; white-space: nowrap !important; }
 th { background: #F1F5F9; color: var(--navy); }
 
 .card {
@@ -208,7 +209,7 @@ th { background: #F1F5F9; color: var(--navy); }
       <strong class="urdu" style="font-size:1.05rem; color:var(--navy);">🚛 مینی فیسٹ کنٹرول پینل</strong>
     </div>
     <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-      <button class="btn btn-success" style="padding:7px 14px; font-size:0.88rem;" onclick="showCreateManifestForm()">➕ Create New Manifest</button>
+      <button class="btn btn-success" style="padding:6px 12px; font-size:0.82rem;" onclick="showCreateManifestForm()">➕ Create New Manifest</button>
       <button class="btn btn-navy" onclick="loadAllDataAndInit()">🔄 Refresh</button>
       <a href="admin.html" class="btn btn-navy">📋 Admin Panel</a>
       <button class="btn btn-danger" onclick="logoutManifestAdmin()">🚪 Logout</button>
@@ -233,44 +234,44 @@ th { background: #F1F5F9; color: var(--navy); }
 
       <div class="kpi-grid">
         <div class="kpi-card gold-border">
-          <div class="kpi-title urdu">کل مینی فیسٹس (Total Manifests):</div>
+          <div class="kpi-title urdu">کل مینی فیسٹس (Total Manifests):[cite: 6]</div>
           <div class="kpi-value" id="kpiManifestCount">0</div>
         </div>
 
         <div class="kpi-card">
-          <div class="kpi-title urdu">گودام میں پینڈنگ بلٹیاں (Pending Bilties):</div>
+          <div class="kpi-title urdu">گودام میں پینڈنگ بلٹیاں (Pending Bilties):[cite: 6]</div>
           <div class="kpi-value" style="color:#DC2626;" id="kpiPendingCount">0</div>
         </div>
 
         <div class="kpi-card green-border">
-          <div class="kpi-title urdu">کمپنی کی خالص آمدنی / کمائی (Net Earnings):</div>
+          <div class="kpi-title urdu">کمپنی کی خالص آمدنی / کمائی (Net Earnings):[cite: 6]</div>
           <div class="kpi-value" style="color:#10B981;" id="kpiNetIncome">Rs. 0</div>
-          <small style="color:#64748B; font-size:0.7rem;">(کل بلٹی چارجز مائنس ڈرائیور کرایہ)</small>
+          <small style="color:#64748B; font-size:0.7rem;">(کل بلٹی چارجز مائنس ڈرائیور کرایہ)[cite: 6]</small>
         </div>
       </div>
     </div>
 
     <!-- PENDING WAREHOUSE BOOKINGS LIST -->
     <div class="card">
-      <h3 class="urdu" style="margin-top:0; color:#DC2626; border-bottom:2px solid #FCA5A5; padding-bottom:4px;">📦 گودام میں لوڈنگ کے لیے موجود پینڈنگ بلٹیاں (Pending Warehouse Bilties)</h3>
+      <h3 class="urdu" style="margin-top:0; color:#DC2626; border-bottom:2px solid #FCA5A5; padding-bottom:4px;">📦 گودام میں لوڈنگ کے لیے موجود پینڈنگ بلٹیاں (Pending Warehouse Bilties)[cite: 6]</h3>
       <div style="overflow-x:auto;">
         <table>
           <thead>
             <tr>
-              <th class="urdu">بلٹی نمبر</th>
-              <th class="urdu">تاریخ</th>
-              <th class="urdu">مال بھیجنے والا</th>
-              <th class="urdu">وصول کنندہ و شہر</th>
-              <th class="urdu">تعداد</th>
-              <th class="urdu">ڈرائیور کرایه</th>
-              <th class="urdu">اڈا چارجز</th>
-              <th class="urdu">رکشہ کرایه</th>
-              <th class="urdu">لیبر</th>
-              <th class="urdu">اسٹیٹس</th>
+              <th class="urdu">بلٹی نمبر[cite: 6]</th>
+              <th class="urdu">تاریخ[cite: 6]</th>
+              <th class="urdu">مال بھیجنے والا[cite: 6]</th>
+              <th class="urdu">وصول کنندہ و شہر[cite: 6]</th>
+              <th class="urdu">تعداد[cite: 6]</th>
+              <th class="urdu">ڈرائیور کرایه[cite: 6]</th>
+              <th class="urdu">اڈا چارجز[cite: 6]</th>
+              <th class="urdu">رکشہ کرایه[cite: 6]</th>
+              <th class="urdu">لیبر[cite: 6]</th>
+              <th class="urdu">اسٹیٹس[cite: 6]</th>
             </tr>
           </thead>
           <tbody id="dashboardPendingBody">
-            <tr><td colspan="10" style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے...</td></tr>
+            <tr><td colspan="10" style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے...[cite: 6]</td></tr>
           </tbody>
         </table>
       </div>
@@ -278,26 +279,25 @@ th { background: #F1F5F9; color: var(--navy); }
 
     <!-- MANIFEST HISTORY -->
     <div class="card">
-      <h3 class="urdu" style="margin-top:0; color:var(--navy); border-bottom:2px solid var(--gold); padding-bottom:4px;">📜 پرانے تمام مینی فیسٹ / گاڑیوں کا ریکارڈ (Manifest History)</h3>
+      <h3 class="urdu" style="margin-top:0; color:var(--navy); border-bottom:2px solid var(--gold); padding-bottom:4px;">📜 پرانے تمام مینی فیسٹ / گاڑیوں کا ریکارڈ (Manifest History)[cite: 6]</h3>
       <div style="overflow-x:auto;">
         <table>
           <thead>
             <tr>
-              <th class="urdu">تاریخ</th>
-              <th class="urdu">مینی فیسٹ #</th>
-              <th class="urdu">گاڑی نمبر</th>
-              <th class="urdu">ڈرائیور و موبائل</th>
-              <th class="urdu">روٹ / ڈسٹینیشن</th>
-              <th class="urdu">بلٹیاں</th>
-              <th class="urdu">کل بلٹی رقم</th>
-              <th class="urdu">Total driver karaya</th>
-              <th class="urdu">Grand total</th>
+              <th class="urdu">تاریخ[cite: 6]</th>
+              <th class="urdu">مینی فیسٹ #[cite: 6]</th>
+              <th class="urdu">گاڑی نمبر[cite: 6]</th>
+              <th class="urdu">ڈرائیور و موبائل[cite: 6]</th>
+              <th class="urdu">روٹ / ڈسٹینیشن[cite: 6]</th>
+              <th class="urdu">بلٹیاں[cite: 6]</th>
+              <th class="urdu">کل ڈرائیور کرایہ</th>
+              <th class="urdu">کل ٹوٹل کرایہ</th>
               <th class="urdu">اسٹیٹس (آٹو اپ ڈیٹ)</th>
-              <th class="urdu">ایکشن</th>
+              <th class="urdu" style="text-align:center;">ایکشن[cite: 6]</th>
             </tr>
           </thead>
           <tbody id="manifestHistoryBody">
-            <tr><td colspan="11" style="text-align:center;">ریکارڈ لوڈ ہو رہا ہے...</td></tr>
+            <tr><td colspan="10" style="text-align:center;">ریکارڈ لوڈ ہو رہا ہے...[cite: 6]</td></tr>
           </tbody>
         </table>
       </div>
@@ -308,90 +308,90 @@ th { background: #F1F5F9; color: var(--navy); }
   <!-- CREATE / EDIT MANIFEST FORM -->
   <div id="createFormView" style="display:none;">
     <div style="display:flex; justify-content:space-between; align-items:center; background:#EFF6FF; padding:10px; border-radius:6px; margin-bottom:12px;">
-      <h3 class="urdu" style="margin:0; color:var(--navy);" id="formMainTitle">🚛 نیا ٹرک مینی فیسٹ / لوڈنگ شیٹ بنائیں</h3>
+      <h3 class="urdu" style="margin:0; color:var(--navy);" id="formMainTitle">🚛 نیا ٹرک مینی فیسٹ / لوڈنگ شیٹ بنائیں[cite: 6]</h3>
       <div style="display:flex; gap:6px;">
-        <button type="button" class="btn btn-danger" onclick="showDashboardView()">✖ Close</button>
+        <button type="button" class="btn btn-danger" onclick="showDashboardView()">✖ Close[cite: 6]</button>
       </div>
     </div>
 
     <div class="card">
-      <h3 class="urdu" style="margin-top:0; color:var(--navy); border-bottom:2px solid var(--gold); padding-bottom:4px;">1. ٹرک، ڈرائیور اور کمیشن کی تفاصیل</h3>
+      <h3 class="urdu" style="margin-top:0; color:var(--navy); border-bottom:2px solid var(--gold); padding-bottom:4px;">1. ٹرک، ڈرائیور اور کمیشن کی تفاصیل[cite: 6]</h3>
       
       <input type="hidden" id="editManifestId" value="">
 
       <div class="grid-3" style="margin-bottom:10px;">
         <div>
-          <label class="urdu">گاڑی / ٹرک نمبر *</label>
+          <label class="urdu">گاڑی / ٹرک نمبر *[cite: 6]</label>
           <input type="text" id="truckNo" placeholder="مثلاً: LES-1234" required>
         </div>
         <div>
-          <label class="urdu">ڈرائیور کا نام *</label>
+          <label class="urdu">ڈرائیور کا نام *[cite: 6]</label>
           <input type="text" id="driverName" placeholder="مثلاً: احمد خان" required>
         </div>
         <div>
-          <label class="urdu">ڈرائیور کا موبائل نمبر *</label>
+          <label class="urdu">ڈرائیور کا موبائل نمبر *[cite: 6]</label>
           <input type="tel" id="driverPhone" placeholder="0300-1234567" required>
         </div>
       </div>
 
       <div class="grid-3" style="margin-bottom:12px;">
         <div>
-          <label class="urdu">روٹ / روانی کی تاریخ *</label>
+          <label class="urdu">روٹ / روانی کی تاریخ *[cite: 6]</label>
           <input type="date" id="dispatchDate" required>
         </div>
         <div>
-          <label class="urdu">روٹ / ڈسٹینیشن</label>
+          <label class="urdu">روٹ / ڈسٹینیشن[cite: 6]</label>
           <input type="text" id="routeCities" placeholder="گجرات تا کراچی براستہ ملتان" required>
         </div>
         <div>
-          <label class="urdu">کمیشن فیصد (%) ڈرائیور کرائے پر *</label>
+          <label class="urdu">کمیشن فیصد (%) ڈرائیور کرائے پر *[cite: 6]</label>
           <input type="number" id="commissionPercent" value="3" step="0.1" min="0" max="100" placeholder="3" oninput="calculateManifestSummary()">
         </div>
       </div>
 
-      <h3 class="urdu" style="color:var(--navy); border-bottom:2px solid var(--gold); padding-bottom:4px; margin-top:15px;">2. گاڑی میں لوڈ کرنے کے لیے گودام کی بلٹیاں منتخب کریں</h3>
+      <h3 class="urdu" style="color:var(--navy); border-bottom:2px solid var(--gold); padding-bottom:4px; margin-top:15px;">2. گاڑی میں لوڈ کرنے کے لیے گودام کی بلٹیاں منتخب کریں[cite: 6]</h3>
       
       <div style="overflow-x:auto;">
         <table>
           <thead>
             <tr>
-              <th style="width:30px;"><input type="checkbox" id="selectAllBookings" onchange="toggleSelectAll(this)"></th>
-              <th class="urdu">بلٹی نمبر</th>
-              <th class="urdu">تاریخ</th>
-              <th class="urdu">مال بھیجنے والا</th>
-              <th class="urdu">وصول کنندہ و شہر</th>
-              <th class="urdu">تعداد</th>
-              <th class="urdu">ڈرائیور کرایه</th>
-              <th class="urdu">اڈا چارجز</th>
-              <th class="urdu">رکشہ کرایه</th>
-              <th class="urdu">لیبر</th>
+              <th style="width:30px;"><input type="checkbox" id="selectAllBookings" onchange="toggleSelectAll(this)">[cite: 6]</th>
+              <th class="urdu">بلٹی نمبر[cite: 6]</th>
+              <th class="urdu">تاریخ[cite: 6]</th>
+              <th class="urdu">مال بھیجنے والا[cite: 6]</th>
+              <th class="urdu">وصول کنندہ و شہر[cite: 6]</th>
+              <th class="urdu">تعداد[cite: 6]</th>
+              <th class="urdu">ڈرائیور کرایه[cite: 6]</th>
+              <th class="urdu">اڈا چارجز[cite: 6]</th>
+              <th class="urdu">رکشہ کرایه[cite: 6]</th>
+              <th class="urdu">لیبر[cite: 6]</th>
             </tr>
           </thead>
           <tbody id="warehouseTableBody">
-            <tr><td colspan="10" style="text-align:center;">گودام کا ڈیٹا لوڈ ہو رہا ہے...</td></tr>
+            <tr><td colspan="10" style="text-align:center;">گودام کا ڈیٹا لوڈ ہو رہا ہے...[cite: 6]</td></tr>
           </tbody>
         </table>
       </div>
 
       <div class="summary-box urdu">
         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:8px;">
-          <div>منتخب بلٹیاں: <span id="sumQty" style="color:var(--navy); font-weight:700;">0</span></div>
-          <div>کل ڈرائیور کرایه: Rs. <span id="sumFreight" style="color:green; font-weight:700;">0</span></div>
-          <div>اڈا چارجز: Rs. <span id="sumAdda" style="font-weight:700;">0</span></div>
-          <div>رکشہ کرایه: Rs. <span id="sumRickshaw" style="font-weight:700;">0</span></div>
-          <div>لیبر چارجز: Rs. <span id="sumLabour" style="font-weight:700;">0</span></div>
-          <div>کمیشن رقم: Rs. <span id="sumCommission" style="color:#D97706; font-weight:700;">0</span></div>
+          <div>منتخب بلٹیاں: <span id="sumQty" style="color:var(--navy); font-weight:700;">0</span>[cite: 6]</div>
+          <div>کل ڈرائیور کرایه: Rs. <span id="sumFreight" style="color:green; font-weight:700;">0</span>[cite: 6]</div>
+          <div>اڈا چارجز: Rs. <span id="sumAdda" style="font-weight:700;">0</span>[cite: 6]</div>
+          <div>رکشہ کرایه: Rs. <span id="sumRickshaw" style="font-weight:700;">0</span>[cite: 6]</div>
+          <div>لیبر چارجز: Rs. <span id="sumLabour" style="font-weight:700;">0</span>[cite: 6]</div>
+          <div>کمیشن رقم: Rs. <span id="sumCommission" style="color:#D97706; font-weight:700;">0</span>[cite: 6]</div>
         </div>
         <div style="margin-top:10px; border-top:1px dashed #BFDBFE; padding-top:8px; display:flex; justify-content:space-between; font-size:1rem; font-weight:800; color:var(--navy);">
-          <span>کمپنی نے ڈرائیور سے کل کتنے پیسے لینے ہیں (Total Company Settlement):</span>
-          <span style="color:green; font-size:1.15rem;" id="sumTotalPayable">Rs. 0</span>
+          <span>کمپنی نے ڈرائیور سے کل کتنے پیسے لینے ہیں (Total Company Settlement):[cite: 6]</span>
+          <span style="color:green; font-size:1.15rem;" id="sumTotalPayable">Rs. 0[cite: 6]</span>
         </div>
       </div>
 
       <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:15px;">
-        <button type="button" class="btn btn-secondary" onclick="showDashboardView()">🏠 Dashboard Home</button>
-        <button type="button" class="btn btn-danger" id="cancelEditBtn" onclick="cancelManifestEdit()">✖ Cancel</button>
-        <button type="button" class="btn btn-success" style="padding:8px 20px; font-size:0.92rem;" id="saveManifestBtn" onclick="saveAndDispatchManifest()">💾 Save & Dispatch Manifest</button>
+        <button type="button" class="btn btn-secondary" onclick="showDashboardView()">🏠 Dashboard Home[cite: 6]</button>
+        <button type="button" class="btn btn-danger" id="cancelEditBtn" onclick="cancelManifestEdit()">✖ Cancel[cite: 6]</button>
+        <button type="button" class="btn btn-success" style="padding:8px 20px; font-size:0.92rem;" id="saveManifestBtn" onclick="saveAndDispatchManifest()">💾 Save & Dispatch Manifest[cite: 6]</button>
       </div>
     </div>
   </div>
@@ -403,10 +403,10 @@ th { background: #F1F5F9; color: var(--navy); }
   <div class="modal-box" style="padding:12px; position:relative;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
       <div style="display:flex; gap:6px;">
-        <button type="button" class="btn btn-secondary" onclick="closeViewModal()" style="font-size:0.85rem; padding:4px 10px;">بند کریں ✖</button>
-        <button type="button" class="btn btn-primary" id="viewModalPrintBtn" style="font-size:0.85rem; padding:4px 12px;">🖨️ Print</button>
+        <button type="button" class="btn btn-secondary" onclick="closeViewModal()" style="font-size:0.85rem; padding:4px 10px;">بند کریں ✖[cite: 6]</button>
+        <button type="button" class="btn btn-primary" id="viewModalPrintBtn" style="font-size:0.85rem; padding:4px 12px;">🖨️ Print[cite: 6]</button>
       </div>
-      <h2 style="margin:0; font-weight:700; font-size:1.3rem;" class="urdu">مینی فیسٹ تفصیلات (View Manifest)</h2>
+      <h2 style="margin:0; font-weight:700; font-size:1.3rem;" class="urdu">مینی فیسٹ تفصیلات (View Manifest)[cite: 6]</h2>
     </div>
     <div id="modalManifestContent"></div>
   </div>
@@ -501,14 +501,14 @@ async function loadWarehouseBookings(selectedIdsToCheck = []) {
   const tbody = document.getElementById('warehouseTableBody');
   const dashPendingBody = document.getElementById('dashboardPendingBody');
   
-  tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">گودام کا ڈیٹا لوڈ ہو رہا ہے...</td></tr>';
-  dashPendingBody.innerHTML = '<tr><td colspan="10" style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے...</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">گودام کا ڈیٹا لوڈ ہو رہا ہے...[cite: 6]</td></tr>';
+  dashPendingBody.innerHTML = '<tr><td colspan="10" style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے...[cite: 6]</td></tr>';
 
   try {
     const snap = await get(ref(db, 'bookings'));
     if(!snap.exists()) {
-      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">کوئی بکنگ موجود نہیں ہے۔</td></tr>';
-      dashPendingBody.innerHTML = '<tr><td colspan="10" style="text-align:center;">گودام میں کوئی پینڈنگ بلٹی موجود نہیں ہے۔</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">کوئی بکنگ موجود نہیں ہے۔[cite: 6]</td></tr>';
+      dashPendingBody.innerHTML = '<tr><td colspan="10" style="text-align:center;">گودام میں کوئی پینڈنگ بلٹی موجود نہیں ہے۔[cite: 6]</td></tr>';
       return;
     }
 
@@ -533,39 +533,39 @@ async function loadWarehouseBookings(selectedIdsToCheck = []) {
 
         tbody.innerHTML += `
           <tr>
-            <td><input type="checkbox" class="manifest-check" value="${bId}" ${isChecked} onchange="calculateManifestSummary()"></td>
-            <td><strong>${b.biltyNo}</strong></td>
-            <td>${b.date}</td>
-            <td>${b.senderName}</td>
-            <td><strong>${b.receiverName}</strong> (${b.destCity})</td>
-            <td>${b.totalQty || 0}</td>
-            <td style="color:green; font-weight:700;">Rs. ${b.freightCharges || 0}</td>
-            <td>Rs. ${b.addaCharges || 0}</td>
-            <td>Rs. ${b.rickshawFare || 0}</td>
-            <td>Rs. ${b.labourCharges || 0}</td>
+            <td><input type="checkbox" class="manifest-check" value="${bId}" ${isChecked} onchange="calculateManifestSummary()">[cite: 6]</td>
+            <td><strong>${b.biltyNo}</strong>[cite: 6]</td>
+            <td>${b.date}[cite: 6]</td>
+            <td>${b.senderName}[cite: 6]</td>
+            <td><strong>${b.receiverName}</strong> (${b.destCity})[cite: 6]</td>
+            <td>${b.totalQty || 0}[cite: 6]</td>
+            <td style="color:green; font-weight:700;">Rs. ${b.freightCharges || 0}[cite: 6]</td>
+            <td>Rs. ${b.addaCharges || 0}[cite: 6]</td>
+            <td>Rs. ${b.rickshawFare || 0}[cite: 6]</td>
+            <td>Rs. ${b.labourCharges || 0}[cite: 6]</td>
           </tr>
         `;
 
         dashPendingBody.innerHTML += `
           <tr>
-            <td><strong>${b.biltyNo}</strong></td>
-            <td>${b.date}</td>
-            <td>${b.senderName}</td>
-            <td><strong>${b.receiverName}</strong> (${b.destCity})</td>
-            <td>${b.totalQty || 0}</td>
-            <td style="color:green; font-weight:700;">Rs. ${b.freightCharges || 0}</td>
-            <td>Rs. ${b.addaCharges || 0}</td>
-            <td>Rs. ${b.rickshawFare || 0}</td>
-            <td>Rs. ${b.labourCharges || 0}</td>
-            <td><span style="background:#FEF3C7; color:#B45309; padding:2px 6px; border-radius:4px; font-weight:700;">${b.status || 'In Warehouse'}</span></td>
+            <td><strong>${b.biltyNo}</strong>[cite: 6]</td>
+            <td>${b.date}[cite: 6]</td>
+            <td>${b.senderName}[cite: 6]</td>
+            <td><strong>${b.receiverName}</strong> (${b.destCity})[cite: 6]</td>
+            <td>${b.totalQty || 0}[cite: 6]</td>
+            <td style="color:green; font-weight:700;">Rs. ${b.freightCharges || 0}[cite: 6]</td>
+            <td>Rs. ${b.addaCharges || 0}[cite: 6]</td>
+            <td>Rs. ${b.rickshawFare || 0}[cite: 6]</td>
+            <td>Rs. ${b.labourCharges || 0}[cite: 6]</td>
+            <td><span style="background:#FEF3C7; color:#B45309; padding:2px 6px; border-radius:4px; font-weight:700;">${b.status || 'In Warehouse'}</span>[cite: 6]</td>
           </tr>
         `;
       }
     });
 
     if(count === 0) {
-      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">ویئر ہاؤس میں لوڈنگ کے لیے کوئی بکنگ موجود نہیں ہے۔</td></tr>';
-      dashPendingBody.innerHTML = '<tr><td colspan="10" style="text-align:center;">گودام میں کوئی پینڈنگ بلٹی موجود نہیں ہے۔</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">ویئر ہاؤس میں لوڈنگ کے لیے کوئی بکنگ موجود نہیں ہے۔[cite: 6]</td></tr>';
+      dashPendingBody.innerHTML = '<tr><td colspan="10" style="text-align:center;">گودام میں کوئی پینڈنگ بلٹی موجود نہیں ہے۔[cite: 6]</td></tr>';
     } else {
       calculateManifestSummary();
     }
@@ -862,7 +862,7 @@ async function loadManifestHistory() {
     const bookingsSnap = await get(ref(db, 'bookings'));
 
     if(!manifestsSnap.exists()) {
-      tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;">کوئی پرانا ریکارڈ موجود نہیں ہے۔</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">کوئی پرانا ریکارڈ موجود نہیں ہے۔</td></tr>';
       return;
     }
 
@@ -883,36 +883,40 @@ async function loadManifestHistory() {
 
       let totalBiltiCount = m.bookingIds ? m.bookingIds.length : 0;
       let deliveredCount = 0;
-      let warehouseCount = 0;
-      let onTheWayCount = 0;
+      let latestCityStatus = "";
+      let lastDestinationCity = "";
 
+      // Track individual bilti updates by partners/addas
       if(m.bookingIds && m.bookingIds.length > 0) {
         m.bookingIds.forEach(bId => {
           const b = bookingsMap[bId];
           if(b) {
+            lastDestinationCity = b.destCity || lastDestinationCity;
             const st = b.status || "On the way";
-            if(st === "Delivered") deliveredCount++;
-            else if(st.includes("warehouse") || st.includes("Received")) warehouseCount++;
-            else onTheWayCount++;
+            if(st === "Delivered") {
+              deliveredCount++;
+              latestCityStatus = `ارائیوڈ ایٹ ڈیسٹینیشن (${b.destCity})`;
+            } else if(st.includes("warehouse") || st.includes("Received")) {
+              latestCityStatus = `ارائیوڈ ایٹ اڈہ (${b.destCity})`;
+            }
           }
         });
       }
 
-      let derivedStatus = "On the way";
+      let derivedStatus = "On the way (راستے میں ہے)";
       if(totalBiltiCount > 0 && deliveredCount === totalBiltiCount) {
-        derivedStatus = "Delivered (مکمل ڈیلیور)";
-      } else if(warehouseCount > 0 || deliveredCount > 0) {
-        derivedStatus = `Partial (${deliveredCount}/${totalBiltiCount} Delivered)`;
+        derivedStatus = `ریچڈ ایٹ ڈیسٹینیشن (${lastDestinationCity})`;
+      } else if(latestCityStatus !== "") {
+        derivedStatus = latestCityStatus;
       }
 
       let statusBadge = `<span style="background:#DBEAFE; color:#1E40AF; padding:2px 8px; border-radius:4px; font-weight:700;">${derivedStatus}</span>`;
-      if(derivedStatus.includes("Delivered")) {
+      if(derivedStatus.includes("ڈیسٹینیشن") || derivedStatus.includes("ریچڈ")) {
         statusBadge = `<span style="background:#D1FAE5; color:#065F46; padding:2px 8px; border-radius:4px; font-weight:700;">${derivedStatus}</span>`;
-      } else if(derivedStatus.includes("Partial")) {
+      } else if(derivedStatus.includes("ارائیوڈ")) {
         statusBadge = `<span style="background:#FEF3C7; color:#B45309; padding:2px 8px; border-radius:4px; font-weight:700;">${derivedStatus}</span>`;
       }
 
-      // Grand total calculation for manifest history row
       let grandTotalSum = Number(m.totalFreight || 0) + Number(m.totalAdda || 0) + Number(m.totalRickshaw || 0) + Number(m.totalLabour || 0);
 
       tbody.innerHTML += `
@@ -924,11 +928,10 @@ async function loadManifestHistory() {
           <td><strong>${m.routeCities || 'N/A'}</strong></td>
           <td>${totalBiltiCount}</td>
           <td><strong style="color:green;">Rs. ${m.totalFreight || 0}</strong></td>
-          <td><strong style="color:#0284C7;">Rs. ${m.totalFreight || 0}</strong></td>
           <td><strong style="color:#7C3AED;">Rs. ${grandTotalSum}</strong></td>
           <td>${statusBadge}</td>
-          <td>
-            <div style="display:flex; gap:4px; flex-wrap:wrap;">
+          <td style="text-align:center;">
+            <div style="display:flex; gap:3px; justify-content:center; flex-wrap:nowrap;">
               <button class="btn btn-info" onclick="viewManifestModal('${mId}')">👁️ View</button>
               <button class="btn btn-warning" onclick="editManifest('${mId}')">📝 Edit</button>
               <button class="btn btn-danger" onclick="deleteManifest('${mId}')">🗑️ Delete</button>
@@ -941,7 +944,7 @@ async function loadManifestHistory() {
     calculateDashboardStats();
 
   } catch(e) {
-    tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; color:red;">ریکارڈ لوڈ کرنے میں مسئلہ: ' + e.message + '</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; color:red;">ریکارڈ لوڈ کرنے میں مسئلہ: ' + e.message + '</td></tr>';
   }
 }
 
