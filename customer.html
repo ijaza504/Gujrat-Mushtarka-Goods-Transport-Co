@@ -1,1 +1,552 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Customer Management | Gujrat Mushtarka Goods Transport Co.</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --navy: #0B2545;
+  --gold: #F2B705;
+  --light-bg: #F8FAFC;
+  --border: #CBD5E1;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: var(--light-bg);
+  margin: 0;
+  padding: 15px;
+  color: #1E293B;
+}
+
+.urdu { font-family: 'Noto Nastaliq Urdu', serif; line-height: 1.8 !important; }
+
+/* SIDEBAR STYLING */
+.sidebar-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  z-index: 1100;
+}
+.sidebar {
+  position: fixed;
+  top: 0; left: -280px; width: 280px; height: 100%;
+  background: #fff;
+  box-shadow: 5px 0 25px rgba(0,0,0,0.15);
+  transition: left 0.3s ease;
+  z-index: 1200;
+  display: flex;
+  flex-direction: column;
+}
+.sidebar.open { left: 0; }
+.sidebar-header {
+  background: var(--navy);
+  color: #fff;
+  padding: 20px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.sidebar-header h3 { margin: 0; font-size: 1.1rem; }
+.sidebar-menu { list-style: none; padding: 0; margin: 0; overflow-y: auto; flex: 1; }
+.sidebar-menu li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  color: #334155;
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 1px solid #F1F5F9;
+  transition: background 0.2s;
+}
+.sidebar-menu li a:hover {
+  background: #EFF6FF;
+  color: var(--navy);
+}
+
+.container {
+  max-width: 1350px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  border-top: 5px solid var(--navy);
+}
+
+.header-title {
+  text-align: center;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+.header-title h1 { color: var(--navy); margin: 0; font-size: 1.6rem; font-weight: 800; }
+.header-title p { color: #64748B; margin: 3px 0 0; font-weight: 600; font-size: 0.85rem; }
+
+label { font-weight: 600; font-size: 0.85rem; color: #334155; display: block; margin-bottom: 4px; text-align: left; }
+input, select, textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font: inherit;
+  box-sizing: border-box;
+}
+
+.btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  text-decoration: none;
+}
+.btn-primary { background: var(--gold); color: var(--navy); }
+.btn-navy { background: var(--navy); color: #fff; }
+.btn-secondary { background: #64748B; color: #fff; }
+.btn-danger { background: #EF4444; color: #fff; }
+.btn-success { background: #10B981; color: #fff; }
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #EFF6FF;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+th, td { border: 1px solid var(--border); padding: 8px; text-align: left; font-size: 0.8rem; vertical-align: middle; }
+th { background: #F1F5F9; color: var(--navy); }
+
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  
+  <!-- TOP HEADER WITH MENU BUTTON -->
+  <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid var(--border); padding-bottom:10px; margin-bottom:15px;">
+    <button class="btn btn-navy" onclick="toggleSidebar()" style="font-size:1rem; padding:6px 12px;">☰ Menu</button>
+    <div style="text-align:center; flex:1;">
+      <h1 id="globalCompanyName" style="color:var(--navy); margin:0; font-size:1.6rem; font-weight:800;">GUJRAT MUSHTARKA GOODS TRANSPORT CO.</h1>
+      <p id="globalCompanySub" style="color:#64748B; margin:3px 0 0; font-weight:600; font-size:0.85rem;">Customer Management Panel</p>
+    </div>
+    <div style="width:70px;"></div>
+  </div>
+
+  <div class="top-bar">
+    <div>
+      <strong style="color:var(--navy); font-size:1rem;">👥 Registered & Auto-Saved Customers Directory</strong>
+    </div>
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <button class="btn btn-success" onclick="openCustomerModal()">➕ Create New Customer</button>
+      <a href="admin.html" class="btn btn-navy">📋 Admin Panel</a>
+      <a href="manifest.html" target="_blank" class="btn btn-secondary">🚛 Loading Manifest</a>
+      <button class="btn btn-navy" onclick="loadCustomersList()">🔄 Refresh</button>
+    </div>
+  </div>
+
+  <!-- SEARCH BAR -->
+  <div style="margin-bottom:15px;">
+    <input type="text" id="searchCustomerInput" placeholder="🔍 Search by Customer Name or Mobile Number..." oninput="filterCustomersTable()" style="padding:10px; font-size:0.9rem;">
+  </div>
+
+  <!-- CUSTOMERS TABLE -->
+  <div style="overflow-x:auto;">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:50px; text-align:center;">#</th>
+          <th>Customer Name</th>
+          <th>Mobile Number</th>
+          <th>Company / Business Name</th>
+          <th>Address / Details</th>
+          <th style="width:120px; text-align:center;">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="customersTableBody">
+        <tr><td colspan="6" style="text-align:center;">Loading customers...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- SIDEBAR NAVIGATION DRAWER -->
+<div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+<div id="appSidebar" class="sidebar">
+  <div class="sidebar-header">
+    <h3>Gujrat Mushtarka Panel</h3>
+    <button class="btn btn-danger" onclick="toggleSidebar()" style="padding:2px 8px;">✕</button>
+  </div>
+  <ul class="sidebar-menu">
+    <li><a href="admin.html">📋 Admin Panel</a></li>
+    <li><a href="manifest.html" target="_blank">🚛 Loading Manifest</a></li>
+    <li><a href="partners.html" target="_blank">🏢 Partner Management</a></li>
+    <li><a href="#" onclick="toggleSidebar(); openCompanyDetailsModal();">⚙️ Company Details</a></li>
+  </ul>
+</div>
+
+<!-- CREATE / EDIT CUSTOMER MODAL -->
+<div id="customerModal" class="modal-overlay">
+  <div class="modal-box">
+    <h3 style="color:var(--navy); margin-top:0; border-bottom:2px solid var(--gold); padding-bottom:8px;" id="modalTitle">➕ Create New Customer</h3>
+    
+    <input type="hidden" id="editCustomerId">
+
+    <div style="margin-bottom:10px;">
+      <label>Full Name / Sender Name *</label>
+      <input type="text" id="custName" required placeholder="محمد علی">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Mobile Number (Unique Key) *</label>
+      <input type="tel" id="custPhone" required placeholder="03001234567">
+      <small style="color:#64748B;">موبائل نمبر یونیک ہونا چاہیے تاکہ ڈپ্লিকেট نہ بنے۔</small>
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Company / Shop Name</label>
+      <input type="text" id="custCompany" placeholder="علی الیکٹرانکس">
+    </div>
+
+    <div style="margin-bottom:15px;">
+      <label>Address / Notes</label>
+      <textarea id="custAddress" rows="2" placeholder="مکمل پتہ درج کریں"></textarea>
+    </div>
+
+    <div style="display:flex; justify-content:flex-end; gap:8px;">
+      <button type="button" class="btn btn-secondary" onclick="closeCustomerModal()">Cancel</button>
+      <button type="button" class="btn btn-success" onclick="saveCustomerData()">💾 Save Customer</button>
+    </div>
+  </div>
+</div>
+
+<!-- COMPANY DETAILS MODAL -->
+<div id="companyDetailsModal" class="modal-overlay">
+  <div class="modal-box">
+    <h3 style="color:var(--navy); margin-top:0; border-bottom:2px solid var(--gold); padding-bottom:8px;">⚙️ Global Company Details</h3>
+    <form id="companyDetailsForm" onsubmit="saveCompanyDetails(event)">
+      <div style="margin-bottom:10px;">
+        <label>Company Name (English)</label>
+        <input type="text" id="compName" required>
+      </div>
+      <div style="margin-bottom:10px;">
+        <label>Company Name (Urdu)</label>
+        <input type="text" id="compNameUrdu" required>
+      </div>
+      <div style="margin-bottom:10px;">
+        <label>Head Office Address & Details</label>
+        <textarea id="compAddress" rows="2" required></textarea>
+      </div>
+      <div style="margin-bottom:15px;">
+        <label>Contact Phone / Helpline</label>
+        <input type="text" id="compPhone" required>
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button type="button" class="btn btn-secondary" onclick="closeCompanyDetailsModal()">Cancel</button>
+        <button type="submit" class="btn btn-navy">💾 Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Firebase SDKs -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getDatabase, ref, get, set, push, update, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDsHjE5-6yoKjZG7mU7vKenvJtilvvXthg",
+  authDomain: "gujrat-mushtarka-transport.firebaseapp.com",
+  databaseURL: "https://gujrat-mushtarka-transport-default-rtdb.firebaseio.com",
+  projectId: "gujrat-mushtarka-transport",
+  storageBucket: "gujrat-mushtarka-transport.firebasestorage.app",
+  messagingSenderId: "244664894427",
+  appId: "1:244664894427:web:b54baa08d078d5ef499dfe"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+window.allCustomersData = {};
+
+async function initPage() {
+  await loadGlobalCompanyDetails();
+  await loadCustomersList();
+}
+
+async function loadGlobalCompanyDetails() {
+  try {
+    const snap = await get(ref(db, 'companyDetails'));
+    if(snap.exists()) {
+      const comp = snap.val();
+      document.getElementById('globalCompanyName').innerText = comp.name;
+      document.getElementById('globalCompanySub').innerText = comp.address;
+    }
+  } catch(e) {}
+}
+
+window.toggleSidebar = function() {
+  const sidebar = document.getElementById('appSidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  if(sidebar.classList.contains('open')) {
+    sidebar.classList.remove('open');
+    overlay.style.display = 'none';
+  } else {
+    sidebar.classList.add('open');
+    overlay.style.display = 'block';
+  }
+};
+
+window.openCompanyDetailsModal = async function() {
+  try {
+    const snap = await get(ref(db, 'companyDetails'));
+    if(snap.exists()) {
+      const c = snap.val();
+      document.getElementById('compName').value = c.name || "";
+      document.getElementById('compNameUrdu').value = c.nameUrdu || "";
+      document.getElementById('compAddress').value = c.address || "";
+      document.getElementById('compPhone').value = c.phone || "";
+    }
+  } catch(e){}
+  document.getElementById('companyDetailsModal').style.display = 'flex';
+};
+
+window.closeCompanyDetailsModal = function() {
+  document.getElementById('companyDetailsModal').style.display = 'none';
+};
+
+window.saveCompanyDetails = async function(e) {
+  e.preventDefault();
+  const info = {
+    name: document.getElementById('compName').value,
+    nameUrdu: document.getElementById('compNameUrdu').value,
+    address: document.getElementById('compAddress').value,
+    phone: document.getElementById('compPhone').value
+  };
+  try {
+    await set(ref(db, 'companyDetails'), info);
+    document.getElementById('globalCompanyName').innerText = info.name;
+    document.getElementById('globalCompanySub').innerText = info.address;
+    alert("کمپنی کی تفصیلات کامیابی سے اپ ڈیٹ ہو گئی ہیں!");
+    closeCompanyDetailsModal();
+  } catch(err) {
+    alert("Error: " + err.message);
+  }
+};
+
+window.loadCustomersList = async function() {
+  const tbody = document.getElementById('customersTableBody');
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Loading customers...</td></tr>';
+
+  try {
+    const snap = await get(ref(db, 'customers'));
+    if(!snap.exists()) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">کوئی کسٹمر موجود نہیں ہے۔</td></tr>';
+      return;
+    }
+
+    window.allCustomersData = {};
+    tbody.innerHTML = '';
+    let index = 1;
+
+    snap.forEach(child => {
+      const cId = child.key;
+      const c = child.val();
+      window.allCustomersData[cId] = c;
+
+      tbody.innerHTML += `
+        <tr>
+          <td style="text-align:center;">${index++}</td>
+          <td><strong>${c.fullName || 'N/A'}</strong></td>
+          <td><strong>📞 ${c.phone || 'N/A'}</strong></td>
+          <td>${c.companyName || '-'}</td>
+          <td>${c.address || '-'}</td>
+          <td style="text-align:center;">
+            <button class="btn btn-primary" onclick="editCustomer('${cId}')" style="padding:3px 8px; font-size:0.75rem;">Edit</button>
+            <button class="btn btn-danger" onclick="deleteCustomer('${cId}')" style="padding:3px 8px; font-size:0.75rem;">Delete</button>
+          </td>
+        </tr>
+      `;
+    });
+
+  } catch(err) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Failed to load customers: ' + err.message + '</td></tr>';
+  }
+};
+
+window.filterCustomersTable = function() {
+  const query = document.getElementById('searchCustomerInput').value.toLowerCase();
+  const tbody = document.getElementById('customersTableBody');
+  tbody.innerHTML = '';
+  let index = 1;
+  let matches = 0;
+
+  Object.keys(window.allCustomersData).forEach(cId => {
+    const c = window.allCustomersData[cId];
+    const name = (c.fullName || "").toLowerCase();
+    const phone = (c.phone || "").toLowerCase();
+    const comp = (c.companyName || "").toLowerCase();
+
+    if(name.includes(query) || phone.includes(query) || comp.includes(query)) {
+      matches++;
+      tbody.innerHTML += `
+        <tr>
+          <td style="text-align:center;">${index++}</td>
+          <td><strong>${c.fullName || 'N/A'}</strong></td>
+          <td><strong>📞 ${c.phone || 'N/A'}</strong></td>
+          <td>${c.companyName || '-'}</td>
+          <td>${c.address || '-'}</td>
+          <td style="text-align:center;">
+            <button class="btn btn-primary" onclick="editCustomer('${cId}')" style="padding:3px 8px; font-size:0.75rem;">Edit</button>
+            <button class="btn btn-danger" onclick="deleteCustomer('${cId}')" style="padding:3px 8px; font-size:0.75rem;">Delete</button>
+          </td>
+        </tr>
+      `;
+    }
+  });
+
+  if(matches === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">کوئی متعلقہ کسٹمر نہیں ملا۔</td></tr>';
+  }
+};
+
+window.openCustomerModal = function() {
+  document.getElementById('editCustomerId').value = "";
+  document.getElementById('modalTitle').innerText = "➕ Create New Customer";
+  document.getElementById('custName').value = "";
+  document.getElementById('custPhone').value = "";
+  document.getElementById('custCompany').value = "";
+  document.getElementById('custAddress').value = "";
+  document.getElementById('customerModal').style.display = 'flex';
+};
+
+window.closeCustomerModal = function() {
+  document.getElementById('customerModal').style.display = 'none';
+};
+
+window.editCustomer = function(cId) {
+  const c = window.allCustomersData[cId];
+  if(!c) return;
+
+  document.getElementById('editCustomerId').value = cId;
+  document.getElementById('modalTitle').innerText = "📝 Edit Customer";
+  document.getElementById('custName').value = c.fullName || "";
+  document.getElementById('custPhone').value = c.phone || "";
+  document.getElementById('custCompany').value = c.companyName || "";
+  document.getElementById('custAddress').value = c.address || "";
+  document.getElementById('customerModal').style.display = 'flex';
+};
+
+window.saveCustomerData = async function() {
+  const cId = document.getElementById('editCustomerId').value;
+  const fullName = document.getElementById('custName').value.trim();
+  const phone = document.getElementById('custPhone').value.trim();
+  const companyName = document.getElementById('custCompany').value.trim();
+  const address = document.getElementById('custAddress').value.trim();
+
+  if(!fullName || !phone) {
+    alert("براہ کرم کسٹمر کا نام اور موبائل نمبر درج کریں!");
+    return;
+  }
+
+  try {
+    // Check if phone already exists for another customer
+    const snap = await get(ref(db, 'customers'));
+    let exists = false;
+    if(snap.exists()) {
+      snap.forEach(child => {
+        if(child.key !== cId) {
+          const c = child.val();
+          if((c.phone || "").trim() === phone) {
+            exists = true;
+          }
+        }
+      });
+    }
+
+    if(exists) {
+      alert("معذرت! اس موبائل نمبر سے پہلے ہی ایک کسٹمر رجسٹرڈ ہے۔");
+      return;
+    }
+
+    const custData = {
+      fullName,
+      phone,
+      companyName: companyName || fullName,
+      address: address || "",
+      updatedAt: new Date().toISOString()
+    };
+
+    if(cId) {
+      await update(ref(db, 'customers/' + cId), custData);
+      alert("کسٹمر کی معلومات اپ ڈیٹ ہو گئی ہیں!");
+    } else {
+      custData.createdAt = new Date().toISOString();
+      const newRef = push(ref(db, 'customers'));
+      await set(newRef, custData);
+      alert("نیا کسٹمر کامیابی سے محفوظ ہو گیا ہے!");
+    }
+
+    closeCustomerModal();
+    loadCustomersList();
+  } catch(err) {
+    alert("Error: " + err.message);
+  }
+};
+
+window.deleteCustomer = async function(cId) {
+  if(confirm("کیا آپ واقعی اس کسٹمر کو ڈیلیٹ کرنا چاہتے ہیں؟")) {
+    try {
+      await remove(ref(db, 'customers/' + cId));
+      alert("کسٹمر ڈیلیٹ کر دیا گیا ہے!");
+      loadCustomersList();
+    } catch(err) {
+      alert("Error: " + err.message);
+    }
+  }
+};
+
+initPage();
+</script>
+
+</body>
+</html>
