@@ -82,14 +82,16 @@ body {
   border-top: 5px solid var(--navy);
 }
 
-.header-title {
+.auth-box {
+  max-width: 400px;
+  margin: 50px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  border-top: 5px solid var(--gold);
   text-align: center;
-  border-bottom: 2px solid var(--border);
-  padding-bottom: 10px;
-  margin-bottom: 15px;
 }
-.header-title h1 { color: var(--navy); margin: 0; font-size: 1.6rem; font-weight: 800; }
-.header-title p { color: #64748B; margin: 3px 0 0; font-weight: 600; font-size: 0.85rem; }
 
 label { font-weight: 600; font-size: 0.85rem; color: #334155; display: block; margin-bottom: 4px; text-align: left; }
 input, select, textarea {
@@ -155,14 +157,25 @@ th { background: #F1F5F9; color: var(--navy); }
   max-height: 90vh;
   overflow-y: auto;
 }
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 </style>
 </head>
 <body>
 
-<div class="container">
+<!-- CUSTOMER PANEL LOGIN SECTION -->
+<div id="customerAuthBox" class="auth-box">
+  <h2 style="color:var(--navy); margin-top:0;">Customer Management Login</h2>
+  <p style="color:#64748B; font-size:0.85rem;">Gujrat Mushtarka Control Panel</p>
   
-  <!-- TOP HEADER WITH MENU BUTTON -->
+  <div style="margin-bottom:15px;">
+    <label>Admin Passcode</label>
+    <input type="password" id="customerPassInput" placeholder="Enter Admin Passcode">
+  </div>
+  <button type="button" class="btn btn-primary" style="width:100%;" onclick="loginCustomerPanel()">Login</button>
+</div>
+
+<!-- CUSTOMER DASHBOARD PANEL -->
+<div id="customerDashboard" class="container" style="display:none;">
+  
   <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid var(--border); padding-bottom:10px; margin-bottom:15px;">
     <button class="btn btn-navy" onclick="toggleSidebar()" style="font-size:1rem; padding:6px 12px;">☰ Menu</button>
     <div style="text-align:center; flex:1;">
@@ -181,15 +194,14 @@ th { background: #F1F5F9; color: var(--navy); }
       <a href="admin.html" class="btn btn-navy">📋 Admin Panel</a>
       <a href="manifest.html" target="_blank" class="btn btn-secondary">🚛 Loading Manifest</a>
       <button class="btn btn-navy" onclick="loadCustomersList()">🔄 Refresh</button>
+      <button class="btn btn-danger" onclick="logoutCustomerPanel()">🚪 Logout</button>
     </div>
   </div>
 
-  <!-- SEARCH BAR -->
   <div style="margin-bottom:15px;">
     <input type="text" id="searchCustomerInput" placeholder="🔍 Search by Customer Name or Mobile Number..." oninput="filterCustomersTable()" style="padding:10px; font-size:0.9rem;">
   </div>
 
-  <!-- CUSTOMERS TABLE -->
   <div style="overflow-x:auto;">
     <table>
       <thead>
@@ -228,30 +240,24 @@ th { background: #F1F5F9; color: var(--navy); }
 <div id="customerModal" class="modal-overlay">
   <div class="modal-box">
     <h3 style="color:var(--navy); margin-top:0; border-bottom:2px solid var(--gold); padding-bottom:8px;" id="modalTitle">➕ Create New Customer</h3>
-    
     <input type="hidden" id="editCustomerId">
 
     <div style="margin-bottom:10px;">
       <label>Full Name / Sender Name *</label>
       <input type="text" id="custName" required placeholder="محمد علی">
     </div>
-
     <div style="margin-bottom:10px;">
       <label>Mobile Number (Unique Key) *</label>
       <input type="tel" id="custPhone" required placeholder="03001234567">
-      <small style="color:#64748B;">موبائل نمبر یونیک ہونا چاہیے تاکہ ڈپ্লিকেট نہ بنے۔</small>
     </div>
-
     <div style="margin-bottom:10px;">
       <label>Company / Shop Name</label>
       <input type="text" id="custCompany" placeholder="علی الیکٹرانکس">
     </div>
-
     <div style="margin-bottom:15px;">
       <label>Address / Notes</label>
       <textarea id="custAddress" rows="2" placeholder="مکمل پتہ درج کریں"></textarea>
     </div>
-
     <div style="display:flex; justify-content:flex-end; gap:8px;">
       <button type="button" class="btn btn-secondary" onclick="closeCustomerModal()">Cancel</button>
       <button type="button" class="btn btn-success" onclick="saveCustomerData()">💾 Save Customer</button>
@@ -259,10 +265,10 @@ th { background: #F1F5F9; color: var(--navy); }
   </div>
 </div>
 
-<!-- COMPANY DETAILS MODAL -->
+<!-- COMPANY DETAILS & PASSCODE MODAL -->
 <div id="companyDetailsModal" class="modal-overlay">
   <div class="modal-box">
-    <h3 style="color:var(--navy); margin-top:0; border-bottom:2px solid var(--gold); padding-bottom:8px;">⚙️ Global Company Details</h3>
+    <h3 style="color:var(--navy); margin-top:0; border-bottom:2px solid var(--gold); padding-bottom:8px;">⚙️ Global Company & Password</h3>
     <form id="companyDetailsForm" onsubmit="saveCompanyDetails(event)">
       <div style="margin-bottom:10px;">
         <label>Company Name (English)</label>
@@ -276,13 +282,18 @@ th { background: #F1F5F9; color: var(--navy); }
         <label>Head Office Address & Details</label>
         <textarea id="compAddress" rows="2" required></textarea>
       </div>
-      <div style="margin-bottom:15px;">
+      <div style="margin-bottom:10px;">
         <label>Contact Phone / Helpline</label>
         <input type="text" id="compPhone" required>
       </div>
+      <div style="margin-bottom:15px; background:#FEF3C7; padding:10px; border-radius:6px; border:1px solid #F59E0B;">
+        <label style="color:#B45309;">Universal Admin Passcode (نیا پاسورڈ)</label>
+        <input type="text" id="compAdminPass" required placeholder="gujrat2001">
+        <small style="color:#92400E; font-size:0.75rem;">یہ پاسورڈ تبدیل کرنے سے تمام صفحات پر نیا پاسورڈ لاگو ہو جائے گا۔</small>
+      </div>
       <div style="display:flex; justify-content:flex-end; gap:8px;">
         <button type="button" class="btn btn-secondary" onclick="closeCompanyDetailsModal()">Cancel</button>
-        <button type="submit" class="btn btn-navy">💾 Save Changes</button>
+        <button type="submit" class="btn btn-navy">💾 Save & Sync All</button>
       </div>
     </form>
   </div>
@@ -307,22 +318,39 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 window.allCustomersData = {};
-
-async function initPage() {
-  await loadGlobalCompanyDetails();
-  await loadCustomersList();
-}
+window.globalCompanyInfo = { adminPass: "gujrat2001" };
 
 async function loadGlobalCompanyDetails() {
   try {
     const snap = await get(ref(db, 'companyDetails'));
     if(snap.exists()) {
-      const comp = snap.val();
-      document.getElementById('globalCompanyName').innerText = comp.name;
-      document.getElementById('globalCompanySub').innerText = comp.address;
+      window.globalCompanyInfo = snap.val();
+      if(!window.globalCompanyInfo.adminPass) window.globalCompanyInfo.adminPass = "gujrat2001";
+      document.getElementById('globalCompanyName').innerText = window.globalCompanyInfo.name;
+      document.getElementById('globalCompanySub').innerText = window.globalCompanyInfo.address;
     }
   } catch(e) {}
 }
+
+window.loginCustomerPanel = async function() {
+  const pass = document.getElementById('customerPassInput').value;
+  await loadGlobalCompanyDetails();
+  const correctPass = window.globalCompanyInfo.adminPass || "gujrat2001";
+
+  if(pass === correctPass) {
+    document.getElementById('customerAuthBox').style.display = 'none';
+    document.getElementById('customerDashboard').style.display = 'block';
+    loadCustomersList();
+  } else {
+    alert("Incorrect Passcode!");
+  }
+};
+
+window.logoutCustomerPanel = function() {
+  document.getElementById('customerAuthBox').style.display = 'block';
+  document.getElementById('customerDashboard').style.display = 'none';
+  document.getElementById('customerPassInput').value = '';
+};
 
 window.toggleSidebar = function() {
   const sidebar = document.getElementById('appSidebar');
@@ -337,6 +365,7 @@ window.toggleSidebar = function() {
 };
 
 window.openCompanyDetailsModal = async function() {
+  await loadGlobalCompanyDetails();
   try {
     const snap = await get(ref(db, 'companyDetails'));
     if(snap.exists()) {
@@ -345,6 +374,7 @@ window.openCompanyDetailsModal = async function() {
       document.getElementById('compNameUrdu').value = c.nameUrdu || "";
       document.getElementById('compAddress').value = c.address || "";
       document.getElementById('compPhone').value = c.phone || "";
+      document.getElementById('compAdminPass').value = c.adminPass || "gujrat2001";
     }
   } catch(e){}
   document.getElementById('companyDetailsModal').style.display = 'flex';
@@ -360,13 +390,15 @@ window.saveCompanyDetails = async function(e) {
     name: document.getElementById('compName').value,
     nameUrdu: document.getElementById('compNameUrdu').value,
     address: document.getElementById('compAddress').value,
-    phone: document.getElementById('compPhone').value
+    phone: document.getElementById('compPhone').value,
+    adminPass: document.getElementById('compAdminPass').value.trim() || "gujrat2001"
   };
   try {
     await set(ref(db, 'companyDetails'), info);
+    window.globalCompanyInfo = info;
     document.getElementById('globalCompanyName').innerText = info.name;
     document.getElementById('globalCompanySub').innerText = info.address;
-    alert("کمپنی کی تفصیلات کامیابی سے اپ ڈیٹ ہو گئی ہیں!");
+    alert("کمپنی کی تفصیلات اور پاسورڈ کامیابی سے اپ ڈیٹ ہو گئے ہیں!");
     closeCompanyDetailsModal();
   } catch(err) {
     alert("Error: " + err.message);
@@ -376,23 +408,19 @@ window.saveCompanyDetails = async function(e) {
 window.loadCustomersList = async function() {
   const tbody = document.getElementById('customersTableBody');
   tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Loading customers...</td></tr>';
-
   try {
     const snap = await get(ref(db, 'customers'));
     if(!snap.exists()) {
       tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">کوئی کسٹمر موجود نہیں ہے۔</td></tr>';
       return;
     }
-
     window.allCustomersData = {};
     tbody.innerHTML = '';
     let index = 1;
-
     snap.forEach(child => {
       const cId = child.key;
       const c = child.val();
       window.allCustomersData[cId] = c;
-
       tbody.innerHTML += `
         <tr>
           <td style="text-align:center;">${index++}</td>
@@ -407,9 +435,8 @@ window.loadCustomersList = async function() {
         </tr>
       `;
     });
-
   } catch(err) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Failed to load customers: ' + err.message + '</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Failed to load: ' + err.message + '</td></tr>';
   }
 };
 
@@ -417,16 +444,10 @@ window.filterCustomersTable = function() {
   const query = document.getElementById('searchCustomerInput').value.toLowerCase();
   const tbody = document.getElementById('customersTableBody');
   tbody.innerHTML = '';
-  let index = 1;
-  let matches = 0;
-
+  let index = 1, matches = 0;
   Object.keys(window.allCustomersData).forEach(cId => {
     const c = window.allCustomersData[cId];
-    const name = (c.fullName || "").toLowerCase();
-    const phone = (c.phone || "").toLowerCase();
-    const comp = (c.companyName || "").toLowerCase();
-
-    if(name.includes(query) || phone.includes(query) || comp.includes(query)) {
+    if((c.fullName||"").toLowerCase().includes(query) || (c.phone||"").toLowerCase().includes(query) || (c.companyName||"").toLowerCase().includes(query)) {
       matches++;
       tbody.innerHTML += `
         <tr>
@@ -443,10 +464,7 @@ window.filterCustomersTable = function() {
       `;
     }
   });
-
-  if(matches === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">کوئی متعلقہ کسٹمر نہیں ملا۔</td></tr>';
-  }
+  if(matches === 0) tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">کوئی متعلقہ کسٹمر نہیں ملا۔</td></tr>';
 };
 
 window.openCustomerModal = function() {
@@ -459,14 +477,11 @@ window.openCustomerModal = function() {
   document.getElementById('customerModal').style.display = 'flex';
 };
 
-window.closeCustomerModal = function() {
-  document.getElementById('customerModal').style.display = 'none';
-};
+window.closeCustomerModal = function() { document.getElementById('customerModal').style.display = 'none'; };
 
 window.editCustomer = function(cId) {
   const c = window.allCustomersData[cId];
   if(!c) return;
-
   document.getElementById('editCustomerId').value = cId;
   document.getElementById('modalTitle').innerText = "📝 Edit Customer";
   document.getElementById('custName').value = c.fullName || "";
@@ -480,57 +495,25 @@ window.saveCustomerData = async function() {
   const cId = document.getElementById('editCustomerId').value;
   const fullName = document.getElementById('custName').value.trim();
   const phone = document.getElementById('custPhone').value.trim();
-  const companyName = document.getElementById('custCompany').value.trim();
-  const address = document.getElementById('custAddress').value.trim();
-
-  if(!fullName || !phone) {
-    alert("براہ کرم کسٹمر کا نام اور موبائل نمبر درج کریں!");
-    return;
-  }
-
+  if(!fullName || !phone) { alert("براہ کرم کسٹمر کا نام اور موبائل نمبر درج کریں!"); return; }
   try {
-    // Check if phone already exists for another customer
-    const snap = await get(ref(db, 'customers'));
-    let exists = false;
-    if(snap.exists()) {
-      snap.forEach(child => {
-        if(child.key !== cId) {
-          const c = child.val();
-          if((c.phone || "").trim() === phone) {
-            exists = true;
-          }
-        }
-      });
-    }
-
-    if(exists) {
-      alert("معذرت! اس موبائل نمبر سے پہلے ہی ایک کسٹمر رجسٹرڈ ہے۔");
-      return;
-    }
-
     const custData = {
-      fullName,
-      phone,
-      companyName: companyName || fullName,
-      address: address || "",
+      fullName, phone,
+      companyName: document.getElementById('custCompany').value.trim() || fullName,
+      address: document.getElementById('custAddress').value.trim() || "",
       updatedAt: new Date().toISOString()
     };
-
     if(cId) {
       await update(ref(db, 'customers/' + cId), custData);
-      alert("کسٹمر کی معلومات اپ ڈیٹ ہو گئی ہیں!");
+      alert("کسٹمر اپ ڈیٹ ہو گیا ہے!");
     } else {
       custData.createdAt = new Date().toISOString();
-      const newRef = push(ref(db, 'customers'));
-      await set(newRef, custData);
-      alert("نیا کسٹمر کامیابی سے محفوظ ہو گیا ہے!");
+      await set(push(ref(db, 'customers')), custData);
+      alert("نیا کسٹمر محفوظ ہو گیا ہے!");
     }
-
     closeCustomerModal();
     loadCustomersList();
-  } catch(err) {
-    alert("Error: " + err.message);
-  }
+  } catch(err) { alert("Error: " + err.message); }
 };
 
 window.deleteCustomer = async function(cId) {
@@ -539,13 +522,11 @@ window.deleteCustomer = async function(cId) {
       await remove(ref(db, 'customers/' + cId));
       alert("کسٹمر ڈیلیٹ کر دیا گیا ہے!");
       loadCustomersList();
-    } catch(err) {
-      alert("Error: " + err.message);
-    }
+    } catch(err) { alert("Error: " + err.message); }
   }
 };
 
-initPage();
+loadGlobalCompanyDetails();
 </script>
 
 </body>
