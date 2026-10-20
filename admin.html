@@ -27,6 +27,51 @@ body {
 
 .urdu { font-family: 'Noto Nastaliq Urdu', serif; line-height: 1.8 !important; }
 
+/* SIDEBAR STYLING */
+.sidebar-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  z-index: 1100;
+}
+.sidebar {
+  position: fixed;
+  top: 0; left: -280px; width: 280px; height: 100%;
+  background: #fff;
+  box-shadow: 5px 0 25px rgba(0,0,0,0.15);
+  transition: left 0.3s ease;
+  z-index: 1200;
+  display: flex;
+  flex-direction: column;
+}
+.sidebar.open { left: 0; }
+.sidebar-header {
+  background: var(--navy);
+  color: #fff;
+  padding: 20px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.sidebar-header h3 { margin: 0; font-size: 1.1rem; }
+.sidebar-menu { list-style: none; padding: 0; margin: 0; overflow-y: auto; flex: 1; }
+.sidebar-menu li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  color: #334155;
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 1px solid #F1F5F9;
+  transition: background 0.2s;
+}
+.sidebar-menu li a:hover {
+  background: #EFF6FF;
+  color: var(--navy);
+}
+
 .container {
   max-width: 1350px;
   margin: 0 auto;
@@ -58,7 +103,7 @@ body {
 }
 
 label { font-weight: 600; font-size: 0.85rem; color: #334155; display: block; margin-bottom: 4px; text-align: left; }
-input, select {
+input, select, textarea {
   width: 100%;
   padding: 8px;
   border: 1px solid var(--border);
@@ -114,17 +159,8 @@ table { width: 100%; border-collapse: collapse; margin-top: 10px; }
 th, td { border: 1px solid var(--border); padding: 8px; text-align: left; font-size: 0.8rem; vertical-align: middle; }
 th { background: #F1F5F9; color: var(--navy); }
 
-/* STRICT SINGLE LINE WRAPPING FOR DATE & BILTY NO */
-.single-line {
-  white-space: nowrap !important;
-}
-
-/* COMPACT SENDER COLUMN (MAX 2 LINES) */
-.sender-cell {
-  max-width: 160px;
-  word-wrap: break-word;
-  line-height: 1.25;
-}
+.single-line { white-space: nowrap !important; }
+.sender-cell { max-width: 160px; word-wrap: break-word; line-height: 1.25; }
 
 select.status-select {
   padding: 4px;
@@ -158,7 +194,6 @@ select.status-select {
 }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-/* PRINT STYLING FOR EXACT SINGLE PAGE FIT */
 #printArea { display: none; }
 
 @media print {
@@ -178,13 +213,8 @@ select.status-select {
     box-sizing: border-box;
     font-size: 11px;
   }
-  .bilty-page:last-child {
-    page-break-after: avoid;
-  }
-  @page {
-    size: A4;
-    margin: 8mm;
-  }
+  .bilty-page:last-child { page-break-after: avoid; }
+  @page { size: A4; margin: 8mm; }
 }
 </style>
 </head>
@@ -193,7 +223,7 @@ select.status-select {
 <!-- ADMIN LOGIN SECTION -->
 <div id="adminAuthBox" class="auth-box">
   <h2 style="color:var(--navy); margin-top:0;">Admin Login</h2>
-  <p style="color:#64748B; font-size:0.85rem;">Gujrat Mushtarka Control Panel</p>
+  <p style="color:#64748B; font-size:0.85rem;" id="loginSubTitle">Gujrat Mushtarka Control Panel</p>
   
   <div style="margin-bottom:15px;">
     <label>Admin Passcode</label>
@@ -204,17 +234,23 @@ select.status-select {
 
 <!-- ADMIN DASHBOARD PANEL -->
 <div id="adminDashboard" class="container" style="display:none;">
-  <div class="header-title no-print">
-    <h1>GUJRAT MUSHTARKA GOODS TRANSPORT CO.</h1>
-    <p>Admin Booking & Order Management Panel</p>
+  
+  <!-- TOP HEADER WITH MENU BUTTON -->
+  <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid var(--border); padding-bottom:10px; margin-bottom:15px;" class="no-print">
+    <button class="btn btn-navy" onclick="toggleSidebar()" style="font-size:1rem; padding:6px 12px;">☰ Menu</button>
+    <div style="text-align:center; flex:1;">
+      <h1 id="globalCompanyName" style="color:var(--navy); margin:0; font-size:1.6rem; font-weight:800;">GUJRAT MUSHTARKA GOODS TRANSPORT CO.</h1>
+      <p id="globalCompanySub" style="color:#64748B; margin:3px 0 0; font-weight:600; font-size:0.85rem;">Admin Booking & Order Management Panel</p>
+    </div>
+    <div style="width:70px;"></div>
   </div>
 
   <div class="top-bar no-print">
     <div>
       <strong>Live Customer Bookings List</strong>
     </div>
-    <div style="display:flex; gap:8px;">
-      <a href="manifest.html" class="btn btn-success">🚛 Loading Manifest</a>
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <a href="manifest.html" target="_blank" class="btn btn-success">🚛 Loading Manifest</a>
       <button class="btn btn-primary" onclick="printSelectedBookings()">🖨️ Print Selected (<span id="selectedCount">0</span>)</button>
       <button class="btn btn-navy" onclick="loadAllBookings()">🔄 Refresh</button>
       <button class="btn btn-danger" onclick="logoutAdmin()">🚪 Logout</button>
@@ -275,6 +311,21 @@ select.status-select {
   </div>
 </div>
 
+<!-- SIDEBAR NAVIGATION DRAWER -->
+<div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+<div id="appSidebar" class="sidebar">
+  <div class="sidebar-header">
+    <h3>Gujrat Mushtarka Panel</h3>
+    <button class="btn btn-danger" onclick="toggleSidebar()" style="padding:2px 8px;">✕</button>
+  </div>
+  <ul class="sidebar-menu">
+    <li><a href="manifest.html" target="_blank">🚛 Loading Manifest</a></li>
+    <li><a href="customer.html" target="_blank">👥 Customer Management</a></li>
+    <li><a href="partners_2.html" target="_blank">🏢 Partner Management</a></li>
+    <li><a href="#" onclick="toggleSidebar(); openCompanyDetailsModal();">⚙️ Company Details</a></li>
+  </ul>
+</div>
+
 <!-- MAKE BILTY MODAL DIALOG -->
 <div id="biltyModal" class="modal-overlay">
   <div class="modal-box">
@@ -320,13 +371,42 @@ select.status-select {
   </div>
 </div>
 
-<!-- HIDDEN PRINT AREA FOR SINGLE & BULK PRINTING -->
+<!-- COMPANY DETAILS MODAL -->
+<div id="companyDetailsModal" class="modal-overlay">
+  <div class="modal-box">
+    <h3 style="color:var(--navy); margin-top:0; border-bottom:2px solid var(--gold); padding-bottom:8px;">⚙️ Global Company Details</h3>
+    <form id="companyDetailsForm" onsubmit="saveCompanyDetails(event)">
+      <div style="margin-bottom:10px;">
+        <label>Company Name (English)</label>
+        <input type="text" id="compName" required>
+      </div>
+      <div style="margin-bottom:10px;">
+        <label>Company Name (Urdu)</label>
+        <input type="text" id="compNameUrdu" required>
+      </div>
+      <div style="margin-bottom:10px;">
+        <label>Head Office Address & Details</label>
+        <textarea id="compAddress" rows="2" required></textarea>
+      </div>
+      <div style="margin-bottom:15px;">
+        <label>Contact Phone / Helpline</label>
+        <input type="text" id="compPhone" required>
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button type="button" class="btn btn-secondary" onclick="closeCompanyDetailsModal()">Cancel</button>
+        <button type="submit" class="btn btn-navy">💾 Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- HIDDEN PRINT AREA -->
 <div id="printArea"></div>
 
 <!-- Firebase Realtime Database SDKs -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import { getDatabase, ref, get, update, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDsHjE5-6yoKjZG7mU7vKenvJtilvvXthg",
@@ -342,12 +422,76 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 window.allAdminBookings = {};
+window.globalCompanyInfo = {
+  name: "GUJRAT MUSHTARKA GOODS TRANSPORT CO.",
+  nameUrdu: "گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی (رجسٹرڈ)",
+  address: "Head Office: Gujrat | Daily Direct Service to Karachi, Peshawar, Rawalpindi",
+  phone: "053-3729517"
+};
+
+// LOAD GLOBAL COMPANY DETAILS
+async function loadGlobalCompanyDetails() {
+  try {
+    const snap = await get(ref(db, 'companyDetails'));
+    if(snap.exists()) {
+      window.globalCompanyInfo = snap.val();
+      document.getElementById('globalCompanyName').innerText = window.globalCompanyInfo.name;
+      document.getElementById('globalCompanySub').innerText = window.globalCompanyInfo.address;
+    }
+  } catch(e) {}
+}
+
+window.toggleSidebar = function() {
+  const sidebar = document.getElementById('appSidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  if(sidebar.classList.contains('open')) {
+    sidebar.classList.remove('open');
+    overlay.style.display = 'none';
+  } else {
+    sidebar.classList.add('open');
+    overlay.style.display = 'block';
+  }
+};
+
+window.openCompanyDetailsModal = async function() {
+  await loadGlobalCompanyDetails();
+  document.getElementById('compName').value = window.globalCompanyInfo.name;
+  document.getElementById('compNameUrdu').value = window.globalCompanyInfo.nameUrdu;
+  document.getElementById('compAddress').value = window.globalCompanyInfo.address;
+  document.getElementById('compPhone').value = window.globalCompanyInfo.phone;
+  document.getElementById('companyDetailsModal').style.display = 'flex';
+};
+
+window.closeCompanyDetailsModal = function() {
+  document.getElementById('companyDetailsModal').style.display = 'none';
+};
+
+window.saveCompanyDetails = async function(e) {
+  e.preventDefault();
+  const info = {
+    name: document.getElementById('compName').value,
+    nameUrdu: document.getElementById('compNameUrdu').value,
+    address: document.getElementById('compAddress').value,
+    phone: document.getElementById('compPhone').value
+  };
+  try {
+    await set(ref(db, 'companyDetails'), info);
+    window.globalCompanyInfo = info;
+    document.getElementById('globalCompanyName').innerText = info.name;
+    document.getElementById('globalCompanySub').innerText = info.address;
+    alert("کمپنی کی تفصیلات کامیابی سے اپ ڈیٹ ہو گئی ہیں!");
+    closeCompanyDetailsModal();
+  } catch(err) {
+    alert("Error: " + err.message);
+  }
+};
 
 window.loginAdmin = function() {
   const pass = document.getElementById('adminPassInput').value;
   if(pass === "gujrat2001") {
     document.getElementById('adminAuthBox').style.display = 'none';
     document.getElementById('adminDashboard').style.display = 'block';
+    loadGlobalCompanyDetails();
     loadAllBookings();
   } else {
     alert("Incorrect Passcode!");
@@ -548,6 +692,32 @@ window.saveBiltyCharges = async function() {
   const netTotal = freight + rickshaw + labour + adda + other;
 
   try {
+    const booking = window.allAdminBookings[bId];
+    
+    // AUTOMATIC SENDER SAVING CHECK VIA MOBILE NUMBER
+    if (booking && booking.userPhone && booking.userPhone !== "N/A") {
+      const customersSnap = await get(ref(db, 'customers'));
+      let customerExists = false;
+      if (customersSnap.exists()) {
+        customersSnap.forEach(child => {
+          const c = child.val();
+          if ((c.phone || "").trim() === (booking.userPhone || "").trim()) {
+            customerExists = true;
+          }
+        });
+      }
+      if (!customerExists) {
+        const newCustRef = push(ref(db, 'customers'));
+        await set(newCustRef, {
+          fullName: booking.senderName || "N/A",
+          phone: booking.userPhone,
+          companyName: booking.senderName || "N/A",
+          address: "Auto-saved from booking",
+          createdAt: new Date().toISOString()
+        });
+      }
+    }
+
     await update(ref(db, 'bookings/' + bId), {
       freightCharges: freight,
       rickshawFare: rickshaw,
@@ -569,7 +739,7 @@ window.saveBiltyCharges = async function() {
       window.allAdminBookings[bId].status = "Goods received";
     }
 
-    alert("بلٹی محفوظ ہو گئی ہے!");
+    alert("بلٹی محفوظ ہو گئی ہے اور سینڈر (موبائل نمبر کی بنیاد پر) کسٹمرز مینجمنٹ میں محفوظ ہو گیا ہے!");
     closeBiltyModal();
     applyFilters();
   } catch(err) {
@@ -580,7 +750,6 @@ window.saveBiltyCharges = async function() {
   }
 };
 
-// PRINT SINGLE BILTY
 window.printSingleBilty = function(bId) {
   const b = window.allAdminBookings[bId];
   if(!b) return;
@@ -591,7 +760,6 @@ window.printSingleBilty = function(bId) {
   window.print();
 };
 
-// BULK PRINT SELECTED
 window.printSelectedBookings = function() {
   const selectedCheckboxes = document.querySelectorAll('.booking-check:checked');
   if(selectedCheckboxes.length === 0) {
@@ -613,7 +781,6 @@ window.printSelectedBookings = function() {
   window.print();
 };
 
-// TEMPLATE GENERATOR FOR EXACT SINGLE PAGE PRINT
 function generateBiltyHTML(b) {
   let itemsHtml = '';
   let itemsArr = [];
@@ -630,30 +797,27 @@ function generateBiltyHTML(b) {
 
   const mode = b.paymentMode || "TO PAY";
   const borderCol = mode === "PAID" ? "#DC2626" : "#2563EB";
+  const comp = window.globalCompanyInfo;
 
   return `
     <div class="bilty-page" style="position:relative; border:2px solid #0B2545; border-radius:6px; background:#fff; font-family:'Plus Jakarta Sans', sans-serif;">
       
-      <!-- HEADER -->
       <div style="text-align:center; border-bottom:2px solid #0B2545; padding-bottom:6px; margin-bottom:10px;">
-        <h2 style="color:#0B2545; margin:0; font-size:1.3rem; font-weight:800;">GUJRAT MUSHTARKA GOODS TRANSPORT CO.</h2>
-        <h3 class="urdu" style="color:#DC2626; margin:2px 0 0; font-size:1rem;">گجرات مشترکہ گڈز ٹرانسپورٹ کمپنی (رجسٹرڈ)</h3>
-        <p style="color:#475569; margin:1px 0 0; font-size:0.75rem;">Head Office: Gujrat | Daily Direct Service to Karachi, Peshawar, Rawalpindi</p>
+        <h2 style="color:#0B2545; margin:0; font-size:1.3rem; font-weight:800;">${comp.name}</h2>
+        <h3 class="urdu" style="color:#DC2626; margin:2px 0 0; font-size:1rem;">${comp.nameUrdu}</h3>
+        <p style="color:#475569; margin:1px 0 0; font-size:0.75rem;">${comp.address} | Phone: ${comp.phone}</p>
       </div>
 
-      <!-- STAMP -->
       <div style="position:absolute; top:40%; left:50%; transform:translate(-50%, -50%) rotate(-15deg); border:4px double ${borderCol}; color:${borderCol}; font-size:2rem; font-weight:900; padding:10px 25px; opacity:0.25; border-radius:50%; text-transform:uppercase;">
         ${mode}
       </div>
 
-      <!-- BASIC DETAILS -->
       <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px; margin-bottom:10px; border-bottom:1px solid #cbd5e1; padding-bottom:6px; font-size:0.8rem;">
         <div><strong>Bilty / Booking No:</strong> ${b.biltyNo}</div>
         <div><strong>Date:</strong> ${b.date}</div>
         <div><strong>Payment Mode:</strong> <span style="color:${mode==='PAID'?'green':'blue'}; font-weight:700;">${mode}</span></div>
       </div>
 
-      <!-- SENDER / RECEIVER -->
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:10px; font-size:0.8rem;">
         <div style="background:#f8fafc; padding:8px; border-radius:4px; border:1px solid #cbd5e1;">
           <strong style="color:#0B2545;">SENDER (مال بھیجنے والا):</strong><br>
@@ -673,7 +837,6 @@ function generateBiltyHTML(b) {
         <div><strong>Destination:</strong> ${b.destCity}</div>
       </div>
 
-      <!-- ITEMS TABLE -->
       <h4 class="urdu" style="margin:0 0 4px 0; font-size:0.85rem;">تفصیلِ سامان (Items List)</h4>
       <table style="width:100%; border-collapse:collapse; margin-bottom:10px; font-size:0.78rem;">
         <thead>
@@ -693,7 +856,6 @@ function generateBiltyHTML(b) {
         </tfoot>
       </table>
 
-      <!-- CHARGES BREAKDOWN -->
       <div style="border:1px solid #cbd5e1; padding:8px; border-radius:4px; background:#f8fafc; margin-bottom:10px; font-size:0.78rem;">
         <strong>Billing Breakdown:</strong>
         <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap:6px; margin-top:4px;">
