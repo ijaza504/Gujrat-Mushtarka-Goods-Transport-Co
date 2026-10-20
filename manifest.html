@@ -970,7 +970,7 @@ function generateManifestTemplateHTML(m) {
 
   Object.keys(cityGroups).forEach(city => {
     const list = cityGroups[city];
-    let cityFreightSum = 0;
+    let cityTotalFareSum = 0;
     let cityQtySum = 0;
     let rowsHtml = '';
 
@@ -981,9 +981,16 @@ function generateManifestTemplateHTML(m) {
     };
 
     list.forEach((b, index) => {
-      const freight = Number(b.freightCharges) || 0;
+      // Bilty Total Fare Calculation (including all charges)
+      const totalFare = Number(b.totalFare) || (
+        (Number(b.freightCharges) || 0) + 
+        (Number(b.addaCharges) || 0) + 
+        (Number(b.rickshawFare) || 0) + 
+        (Number(b.labourCharges) || 0)
+      );
+      
       const qty = Number(b.totalQty) || 0;
-      cityFreightSum += freight;
+      cityTotalFareSum += totalFare;
       cityQtySum += qty;
 
       rowsHtml += `
@@ -994,7 +1001,7 @@ function generateManifestTemplateHTML(m) {
           <td style="border:1px solid #718096; padding:4px 6px;">${b.receiverName}</td>
           <td style="text-align:center; border:1px solid #718096; padding:4px 5px;">${b.receiverPhone || '0582474487'}</td>
           <td style="text-align:center; font-weight:bold; border:1px solid #718096; padding:4px 5px;">${qty}</td>
-          <td style="text-align:center; font-weight:bold; color:#0056b3; border:1px solid #718096; padding:4px 5px;">Rs. ${freight}</td>
+          <td style="text-align:center; font-weight:bold; color:#0056b3; border:1px solid #718096; padding:4px 5px;">Rs. ${totalFare}</td>
         </tr>
       `;
     });
@@ -1014,15 +1021,15 @@ function generateManifestTemplateHTML(m) {
               <th style="padding:3px 6px;" class="urdu">مال وصول کنندہ</th>
               <th style="text-align:center; padding:3px 5px;" class="urdu">فون نمبر</th>
               <th style="text-align:center; padding:3px 5px;" class="urdu">تعداد</th>
-              <th style="text-align:center; padding:3px 5px;" class="urdu">کرایہ (Freight)</th>
+              <th style="text-align:center; padding:3px 5px;" class="urdu">توٹل کرایہ</th>
             </tr>
           </thead>
           <tbody>
             ${rowsHtml}
             <tr style="background:#fffde7; font-weight:bold; height:26px;">
-              <td colspan="5" style="text-align:center; color:#b78103; padding:3px 5px;" class="urdu">اس شہر کی کل بلٹیاں (${list.length}) اور ڈرائیور وصولی کرایہ:</td>
+              <td colspan="5" style="text-align:center; color:#b78103; padding:3px 5px;" class="urdu">اس شہر کی کل بلٹیاں (${list.length}) اور کل توٹل کرایہ:</td>
               <td style="text-align:center; color:#b78103; padding:3px 5px;">${cityQtySum}</td>
-              <td style="text-align:center; color:#b78103; padding:3px 5px;">Rs. ${cityFreightSum}</td>
+              <td style="text-align:center; color:#b78103; padding:3px 5px;">Rs. ${cityTotalFareSum}</td>
             </tr>
           </tbody>
         </table>
